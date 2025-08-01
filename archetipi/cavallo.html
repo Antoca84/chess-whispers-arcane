@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Il Cavallo - Messaggio Quotidiano | Scacchi Mentali</title>
+    <meta name="description" content="Messaggio quotidiano personalizzato per l'archetipo del Cavallo. Strategia di agilità e creatività.">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><text y='18' font-size='18'>♘</text></svg>">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* Stili specifici per Il Cavallo */
+        :root {
+            --archetipo-color: var(--color-cavallo);
+        }
+        
+        .archetipo-hero {
+            background: radial-gradient(circle at center, #1a3535 0%, var(--color-background) 100%);
+        }
+        
+        .archetipo-icon {
+            color: var(--color-cavallo);
+            text-shadow: 0 0 20px rgba(0, 206, 209, 0.5);
+        }
+        
+        .message-card {
+            border-top: 4px solid var(--color-cavallo);
+        }
+        
+        .action-button.primary {
+            background: linear-gradient(135deg, var(--color-cavallo), #20B2AA);
+        }
+    </style>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'GA_MEASUREMENT_ID');
+    </script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="../index.html">
+                    <img src="../images/logo.png" alt="Scacchi Mentali Logo" class="logo">
+                </a>
+                <h1 class="header-title">Scacchi Mentali</h1>
+            </div>
+        </div>
+    </header>
+
+    <!-- Archetipo Hero -->
+    <section class="archetipo-hero hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="archetipo-icon" style="font-size: 6rem; margin-bottom: 20px;">♘</div>
+                <h1 class="hero-title">Il Cavallo</h1>
+                <p class="archetipo-subtitle">Agile • Imprevedibile • Innovativo</p>
+                <div class="current-date">
+                    <span id="current-date">Caricamento...</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Messaggio Quotidiano -->
+    <section class="messaggio-quotidiano">
+        <div class="container">
+            <div class="message-card">
+                <div class="message-header">
+                    <h2>Il Tuo Messaggio di Oggi</h2>
+                    <img src="../images/archetipi/cavallo.png" alt="Il Cavallo" class="archetipo-image">
+                </div>
+                
+                <div class="message-content">
+                    <p id="daily-message" class="daily-message">
+                        "Cavallo, la tua unicità risiede nel movimento a 'L' - unconventional ma efficace. 
+                        Oggi, abbraccia la tua natura imprevedibile e non temere di sorprendere. 
+                        Mentre altri seguono percorsi lineari, tu hai il dono di saltare sopra gli ostacoli 
+                        e di arrivare dove nessuno si aspetta. La tua agilità mentale è il tuo asso nella manica: 
+                        usala per trovare soluzioni creative ai problemi di oggi. 
+                        Non devi sempre spiegare la tua logica agli altri - a volte il tuo istinto 
+                        vale più di mille ragionamenti. Oggi, fai quel salto che ti porterà 
+                        in una posizione strategica migliore. Fidati del tuo movimento unico."
+                    </p>
+                </div>
+                
+                <div class="message-actions">
+                    <button id="share-button" class="action-button primary" data-archetipo="Cavallo">
+                        📤 Condividi Messaggio
+                    </button>
+                    <button id="save-button" class="action-button secondary" data-archetipo="Cavallo">
+                        💾 Salva Messaggio
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Subscription CTA -->
+    <section class="subscription-cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Vuoi ricevere messaggi quotidiani personalizzati?</h2>
+                <p>Attiva la tua subscription mensile e potenzia ogni giorno la tua agilità strategica.</p>
+                <a href="../subscribe/?archetipo=cavallo" class="cta-button">
+                    🐎 Attiva Subscription per Il Cavallo
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2024 Scacchi Mentali. Tutti i diritti riservati.</p>
+                <div class="footer-links">
+                    <a href="../index.html">Home</a>
+                    <a href="#privacy">Privacy Policy</a>
+                    <a href="#termini">Termini di Servizio</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

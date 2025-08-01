@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Mensile - Scacchi Mentali</title>
+    <meta name="description" content="Attiva la tua subscription mensile per ricevere messaggi quotidiani personalizzati del tuo archetipo degli scacchi mentali.">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2024/svg' viewBox='0 0 24 24'><text y='18' font-size='18'>♟</text></svg>">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* Stili specifici per la pagina subscription */
+        .subscription-hero {
+            background: radial-gradient(circle at center, #2a2215 0%, var(--color-background) 100%);
+            padding: 80px 0;
+        }
+        
+        .pricing-card {
+            background: var(--gradient-card);
+            padding: 60px 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 500px;
+            margin: 40px auto;
+            border-top: 6px solid var(--color-re);
+            box-shadow: var(--shadow-deep);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .price {
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--color-re);
+            margin: 20px 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .price-currency {
+            font-size: 2rem;
+            vertical-align: top;
+        }
+        
+        .price-period {
+            font-size: 1.2rem;
+            color: var(--color-text-secondary);
+            font-weight: 300;
+        }
+        
+        .features-list {
+            list-style: none;
+            padding: 30px 0;
+            margin: 0;
+        }
+        
+        .features-list li {
+            padding: 12px 0;
+            color: var(--color-text-secondary);
+            border-bottom: 1px solid #333;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .features-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .feature-icon {
+            color: var(--color-re);
+            font-size: 1.2rem;
+            min-width: 20px;
+        }
+        
+        .guarantee {
+            background: var(--color-surface);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 40px 0;
+            text-align: center;
+            border: 1px solid #333;
+        }
+        
+        .guarantee-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--color-torre);
+        }
+        
+        .archetipo-badge {
+            display: inline-block;
+            background: var(--gradient-cta);
+            color: var(--color-background);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .testimonials {
+            padding: 80px 0;
+            background: var(--color-surface);
+        }
+        
+        .testimonial {
+            background: var(--color-background);
+            padding: 40px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border-left: 4px solid var(--color-re);
+            box-shadow: var(--shadow-card);
+        }
+        
+        .testimonial-author {
+            margin-top: 20px;
+            color: var(--color-text-secondary);
+            font-style: italic;
+        }
+    </style>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'GA_MEASUREMENT_ID');
+    </script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="../index.html">
+                    <img src="../images/logo.png" alt="Scacchi Mentali Logo" class="logo">
+                </a>
+                <h1 class="header-title">Scacchi Mentali</h1>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="subscription-hero hero">
+        <div class="container">
+            <div class="hero-content">
+                <div id="archetipo-badge" class="archetipo-badge">
+                    Loading...
+                </div>
+                <h1 class="hero-title">Potenzia il Tuo Archetipo</h1>
+                <p class="hero-description">
+                    Ricevi messaggi quotidiani personalizzati, strategie avanzate e content esclusivi 
+                    per sviluppare al massimo il potenziale del tuo archetipo degli scacchi mentali.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing">
+        <div class="container">
+            <div class="pricing-card">
+                <h2>Subscription Premium</h2>
+                <div class="price">
+                    <span class="price-currency">€</span>9<span class="price-period">/mese</span>
+                </div>
+                
+                <ul class="features-list">
+                    <li>
+                        <span class="feature-icon">📱</span>
+                        <span>Messaggio quotidiano personalizzato via QR</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">🧠</span>
+                        <span>Strategie avanzate per il tuo archetipo</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">📊</span>
+                        <span>Analisi settimanale dei tuoi progressi</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">💎</span>
+                        <span>Content esclusivo e approfondimenti</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">🎯</span>
+                        <span>Sfide personalizzate per crescere</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">👥</span>
+                        <span>Accesso alla community premium</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">⚡</span>
+                        <span>Notifiche push intelligenti</span>
+                    </li>
+                </ul>
+                
+                <button class="cta-button" onclick="activateSubscription()">
+                    🚀 Attiva Ora la Subscription
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Garanzia -->
+    <section class="guarantee-section">
+        <div class="container">
+            <div class="guarantee">
+                <div class="guarantee-icon">🛡️</div>
+                <h3>Garanzia 100% Soddisfatti o Rimborsati</h3>
+                <p>
+                    Prova la subscription per 7 giorni. Se non sei completamente soddisfatto, 
+                    ti rimborsiamo immediatamente senza domande.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">Cosa Dicono i Nostri Utenti</h2>
+            
+            <div class="testimonial">
+                <p>
+                    "I messaggi quotidiani del mio archetipo Re mi hanno aiutato a diventare un leader 
+                    più consapevole nel mio team. Ogni mattina ricevo la strategia perfetta per affrontare la giornata."
+                </p>
+                <div class="testimonial-author">- Marco T., Manager</div>
+            </div>
+            
+            <div class="testimonial">
+                <p>
+                    "Come Regina, ho imparato a bilanciare meglio i miei molteplici ruoli. 
+                    Le strategie sono incredibilmente precise e mi aiutano a eccellere in ogni ambito."
+                </p>
+                <div class="testimonial-author">- Sofia R., Imprenditrice</div>
+            </div>
+            
+            <div class="testimonial">
+                <p>
+                    "Il mio archetipo Pedone mi ha insegnato che ogni piccolo passo conta. 
+                    I messaggi mi motivano quotidianamente verso la mia trasformazione personale."
+                </p>
+                <div class="testimonial-author">- Luca M., Studente</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2024 Scacchi Mentali. Tutti i diritti riservati.</p>
+                <div class="footer-links">
+                    <a href="../index.html">Home</a>
+                    <a href="#privacy">Privacy Policy</a>
+                    <a href="#termini">Termini di Servizio</a>
+                    <a href="#supporto">Supporto</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // Gestione parametri URL e personalizzazione della pagina
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const archetipo = urlParams.get('archetipo') || 'generico';
+            
+            // Personalizza la pagina in base all'archetipo
+            personalizeForArchetype(archetipo);
+            
+            // Google Analytics - traccia la visualizzazione della subscription
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'view_subscription_page', {
+                    'archetipo': archetipo,
+                    'event_category': 'subscription',
+                    'event_label': 'page_view'
+                });
+            }
+        });
+        
+        function personalizeForArchetype(archetipo) {
+            const archetipoData = {
+                're': {
+                    name: '👑 Il Re',
+                    color: '#FFD700',
+                    description: 'Leadership e Strategia'
+                },
+                'regina': {
+                    name: '👑 La Regina', 
+                    color: '#8A2BE2',
+                    description: 'Versatilità e Potere'
+                },
+                'torre': {
+                    name: '🏰 La Torre',
+                    color: '#32CD32', 
+                    description: 'Stabilità e Forza'
+                },
+                'alfiere': {
+                    name: '🔥 L\'Alfiere',
+                    color: '#FF4500',
+                    description: 'Visione e Creatività'
+                },
+                'cavallo': {
+                    name: '🐎 Il Cavallo',
+                    color: '#00CED1',
+                    description: 'Agilità e Innovazione'
+                },
+                'pedone': {
+                    name: '👑 Il Pedone',
+                    color: '#DC143C',
+                    description: 'Crescita e Trasformazione'
+                }
+            };
+            
+            const data = archetipoData[archetipo] || {
+                name: '♟ Archetipo Generico',
+                color: '#FFD700',
+                description: 'Strategia Personalizzata'
+            };
+            
+            // Aggiorna il badge dell'archetipo
+            const badge = document.getElementById('archetipo-badge');
+            if (badge) {
+                badge.textContent = `${data.name} • ${data.description}`;
+                badge.style.background = `linear-gradient(135deg, ${data.color}, #FF8C00)`;
+            }
+            
+            // Aggiorna il colore del pricing card
+            const pricingCard = document.querySelector('.pricing-card');
+            if (pricingCard) {
+                pricingCard.style.borderTopColor = data.color;
+            }
+        }
+        
+        function activateSubscription() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const archetipo = urlParams.get('archetipo') || 'generico';
+            
+            // Google Analytics - traccia il click di attivazione
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'click_activate_subscription', {
+                    'archetipo': archetipo,
+                    'event_category': 'subscription',
+                    'event_label': 'activate_button'
+                });
+            }
+            
+            // Qui integrare con sistema di pagamento (Stripe, PayPal, etc.)
+            alert(`Attivazione subscription per ${archetipo}!\n\nQuesta funzionalità sarà disponibile a breve.\nSarai reindirizzato al sistema di pagamento.`);
+            
+            // Esempio di redirect per pagamento
+            // window.location.href = `https://checkout.stripe.com/pay?archetipo=${archetipo}`;
+        }
+    </script>
+</body>
+</html>

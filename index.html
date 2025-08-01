@@ -1,24 +1,136 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>chess-whispers-arcane</title>
-    <meta name="description" content="Lovable Generated Project" />
-    <meta name="author" content="Lovable" />
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scacchi Mentali - Scopri il Tuo Archetipo Psicologico</title>
+    <meta name="description" content="Scopri il tuo archetipo degli scacchi mentali e ricevi messaggi quotidiani personalizzati per sviluppare la tua strategia di vita.">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><text y='18' font-size='18'>♟</text></svg>">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'GA_MEASUREMENT_ID');
+    </script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <img src="images/logo.png" alt="Scacchi Mentali Logo" class="logo">
+                <h1 class="header-title">Scacchi Mentali</h1>
+            </div>
+        </div>
+    </header>
 
-    <meta property="og:title" content="chess-whispers-arcane" />
-    <meta property="og:description" content="Lovable Generated Project" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2 class="hero-title">Scopri il Tuo Archetipo degli Scacchi Mentali</h2>
+                <p class="hero-description">
+                    Ogni persona nasconde dentro di sé la strategia di un pezzo degli scacchi. 
+                    Scopri quale sei tu e ricevi messaggi quotidiani personalizzati per sviluppare 
+                    la tua strategia di vita.
+                </p>
+                <a href="https://forms.gle/TUO_FORM_ID" target="_blank" class="cta-button">
+                    Inizia il Quiz Gratuito
+                </a>
+            </div>
+        </div>
+    </section>
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-  </head>
+    <!-- Archetipi Section -->
+    <section class="archetipi">
+        <div class="container">
+            <h2 class="section-title">I Sei Archetipi degli Scacchi Mentali</h2>
+            <div class="archetipi-grid">
+                <div class="archetipo-card" data-archetipo="re">
+                    <div class="archetipo-icon">♔</div>
+                    <h3 class="archetipo-name">Il Re</h3>
+                    <p class="archetipo-description">Leader naturale, protettivo e strategico. Prende decisioni ponderate e guida con saggezza.</p>
+                </div>
+                <div class="archetipo-card" data-archetipo="regina">
+                    <div class="archetipo-icon">♕</div>
+                    <h3 class="archetipo-name">La Regina</h3>
+                    <p class="archetipo-description">Versatile e potente, combina intuizione e logica. Eccelle in molteplici ambiti della vita.</p>
+                </div>
+                <div class="archetipo-card" data-archetipo="torre">
+                    <div class="archetipo-icon">♖</div>
+                    <h3 class="archetipo-name">La Torre</h3>
+                    <p class="archetipo-description">Stabile e determinato, procede dritto verso i suoi obiettivi con forza e perseveranza.</p>
+                </div>
+                <div class="archetipo-card" data-archetipo="alfiere">
+                    <div class="archetipo-icon">♗</div>
+                    <h3 class="archetipo-name">L'Alfiere</h3>
+                    <p class="archetipo-description">Visionario e creativo, trova soluzioni innovative attraverso prospettive uniche.</p>
+                </div>
+                <div class="archetipo-card" data-archetipo="cavallo">
+                    <div class="archetipo-icon">♘</div>
+                    <h3 class="archetipo-name">Il Cavallo</h3>
+                    <p class="archetipo-description">Agile e imprevedibile, supera gli ostacoli con creatività e movimento strategico.</p>
+                </div>
+                <div class="archetipo-card" data-archetipo="pedone">
+                    <div class="archetipo-icon">♙</div>
+                    <h3 class="archetipo-name">Il Pedone</h3>
+                    <p class="archetipo-description">Determinato e resiliente, avanza passo dopo passo verso la propria trasformazione.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+    <!-- Come Funziona Section -->
+    <section class="come-funziona">
+        <div class="container">
+            <h2 class="section-title">Come Funziona</h2>
+            <div class="steps-grid">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Completa il Quiz</h3>
+                    <p class="step-description">Rispondi alle domande per scoprire il tuo archetipo degli scacchi mentali.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">Ricevi il QR Code</h3>
+                    <p class="step-description">Ti invieremo un QR code personalizzato da salvare sui tuoi dispositivi.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Messaggio Quotidiano</h3>
+                    <p class="step-description">Ogni giorno ricevi una strategia personalizzata per il tuo archetipo.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2024 Scacchi Mentali. Tutti i diritti riservati.</p>
+                <div class="footer-links">
+                    <a href="#privacy">Privacy Policy</a>
+                    <a href="#termini">Termini di Servizio</a>
+                    <a href="#contatti">Contatti</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
 </html>
