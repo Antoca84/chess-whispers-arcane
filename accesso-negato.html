@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accesso Negato | Scacchi Mentali</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 600px;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .error-icon {
+            font-size: 80px;
+            margin-bottom: 30px;
+            color: #ff6b6b;
+        }
+        
+        .title {
+            font-size: 36px;
+            color: #FFD700;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .subtitle {
+            font-size: 20px;
+            color: #ff6b6b;
+            margin-bottom: 30px;
+        }
+        
+        .description {
+            font-size: 16px;
+            color: #ccc;
+            margin-bottom: 40px;
+            line-height: 1.8;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #000;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #4682B4, #1E90FF);
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+        
+        .help-section {
+            background: #2a2a2a;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+            border-left: 4px solid #FFD700;
+        }
+        
+        .help-title {
+            color: #FFD700;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .help-text {
+            color: #ccc;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 28px;
+            }
+            
+            .error-icon {
+                font-size: 60px;
+            }
+            
+            .actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 250px;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="error-icon">🔒</div>
+        
+        <h1 class="title">Accesso Negato</h1>
+        <h2 class="subtitle">QR Code Non Valido</h2>
+        
+        <p class="description">
+            Il QR code che hai scansionato non è valido o è scaduto. 
+            Per accedere ai messaggi personalizzati, devi prima completare 
+            il quiz degli archetipi e ricevere il tuo QR code personale via email.
+        </p>
+        
+        <div class="actions">
+            <a href="/" class="btn btn-primary">
+                🧠 Fai il Quiz Gratuito
+            </a>
+            <a href="mailto:supporto@scacchimentali.com" class="btn btn-secondary">
+                📧 Contatta Supporto
+            </a>
+        </div>
+        
+        <div class="help-section">
+            <h3 class="help-title">💡 Come Ottenere il Tuo QR Code</h3>
+            <div class="help-text">
+                <p><strong>1.</strong> Completa il quiz gratuito degli archetipi</p>
+                <p><strong>2.</strong> Riceverai un'email con i tuoi risultati</p>
+                <p><strong>3.</strong> L'email conterrà il tuo QR code personale</p>
+                <p><strong>4.</strong> Salva il QR code e scansionalo quotidianamente</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Log dell'errore per debugging
+        console.log('Accesso negato - URL:', window.location.href);
+        
+        // Analytics tracking
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'access_denied', {
+                'event_category': 'security',
+                'event_label': 'invalid_token',
+                'page_url': window.location.href
+            });
+        }
+    </script>
+</body>
+</html>
