@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Regina - Messaggio Quotidiano | Scacchi Mentali</title>
+    <meta name="description" content="Messaggio quotidiano personalizzato per l'archetipo della Regina. Strategia di versatilità e potere.">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><text y='18' font-size='18'>♕</text></svg>">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* Stili specifici per La Regina */
+        :root {
+            --archetipo-color: var(--color-regina);
+        }
+        
+        .archetipo-hero {
+            background: radial-gradient(circle at center, #2a1535 0%, var(--color-background) 100%);
+        }
+        
+        .archetipo-icon {
+            color: var(--color-regina);
+            text-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+        }
+        
+        .message-card {
+            border-top: 4px solid var(--color-regina);
+        }
+        
+        .action-button.primary {
+            background: linear-gradient(135deg, var(--color-regina), #9932CC);
+        }
+    </style>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'GA_MEASUREMENT_ID');
+    </script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="../index.html">
+                    <img src="../images/logo.png" alt="Scacchi Mentali Logo" class="logo">
+                </a>
+                <h1 class="header-title">Scacchi Mentali</h1>
+            </div>
+        </div>
+    </header>
+
+    <!-- Archetipo Hero -->
+    <section class="archetipo-hero hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="archetipo-icon" style="font-size: 6rem; margin-bottom: 20px;">♕</div>
+                <h1 class="hero-title">La Regina</h1>
+                <p class="archetipo-subtitle">Versatile • Potente • Intuitiva</p>
+                <div class="current-date">
+                    <span id="current-date">Caricamento...</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Messaggio Quotidiano -->
+    <section class="messaggio-quotidiano">
+        <div class="container">
+            <div class="message-card">
+                <div class="message-header">
+                    <h2>Il Tuo Messaggio di Oggi</h2>
+                    <img src="../images/archetipi/regina.png" alt="La Regina" class="archetipo-image">
+                </div>
+                
+                <div class="message-content">
+                    <p id="daily-message" class="daily-message">
+                        "Oggi, Regina, è il momento di abbracciare la tua natura multifaccettata. 
+                        Come il pezzo più potente della scacchiera, puoi muoverti in ogni direzione, 
+                        ma ricorda che con grande potere viene grande responsabilità. Non cercare di 
+                        essere ovunque contemporaneamente - scegli le tue battaglie con saggezza. 
+                        La tua intuizione è la tua arma segreta: usala per leggere tra le righe, 
+                        per comprendere ciò che gli altri non vedono. Oggi, bilancia la tua forza 
+                        con la tua grazia, la tua logica con la tua emotività. Tu sei la Regina: 
+                        regna con autorità, ma governa con compassione."
+                    </p>
+                </div>
+                
+                <div class="message-actions">
+                    <button id="share-button" class="action-button primary" data-archetipo="Regina">
+                        📤 Condividi Messaggio
+                    </button>
+                    <button id="save-button" class="action-button secondary" data-archetipo="Regina">
+                        💾 Salva Messaggio
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Subscription CTA -->
+    <section class="subscription-cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Vuoi ricevere messaggi quotidiani personalizzati?</h2>
+                <p>Attiva la tua subscription mensile e libera tutto il tuo potenziale regale.</p>
+                <a href="../subscribe/?archetipo=regina" class="cta-button">
+                    👑 Attiva Subscription per La Regina
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2024 Scacchi Mentali. Tutti i diritti riservati.</p>
+                <div class="footer-links">
+                    <a href="../index.html">Home</a>
+                    <a href="#privacy">Privacy Policy</a>
+                    <a href="#termini">Termini di Servizio</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>
