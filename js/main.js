@@ -21,6 +21,9 @@ function initializeApp() {
     // Inizializza i pulsanti di share e save
     initializeButtons();
     
+    // Inizializza la navigazione archetipi
+    initializeArchetipiNavigation();
+    
     // Aggiunge animazioni di ingresso
     addScrollAnimations();
 }
@@ -204,6 +207,59 @@ function getNotificationIcon(type) {
         case 'success': return '✅';
         case 'error': return '❌';
         default: return 'ℹ️';
+    }
+}
+
+/* ===========================================
+   NAVIGAZIONE ARCHETIPI
+   =========================================== */
+
+function initializeArchetipiNavigation() {
+    const archetipiCards = document.querySelectorAll('.archetipo-card');
+    
+    archetipiCards.forEach(card => {
+        card.addEventListener('click', function() {
+            const archetipo = this.dataset.archetipo;
+            
+            // Verifica se l'utente ha completato il quiz
+            if (hasCompletedQuiz()) {
+                // Naviga alla pagina dell'archetipo
+                window.location.href = `archetipi/${archetipo}.html`;
+            } else {
+                // Mostra messaggio che deve fare il quiz prima
+                showQuizRequiredMessage();
+            }
+        });
+        
+        // Aggiunge stile cursor pointer solo se il quiz è completato
+        if (hasCompletedQuiz()) {
+            card.style.cursor = 'pointer';
+            card.classList.add('clickable');
+        } else {
+            card.style.cursor = 'not-allowed';
+            card.classList.add('locked');
+        }
+    });
+}
+
+function hasCompletedQuiz() {
+    // Verifica se l'utente ha completato il quiz
+    // Per ora ritorna sempre true per testing - puoi cambiare questa logica
+    return localStorage.getItem('scacchi_mentali_quiz_completed') === 'true';
+}
+
+function showQuizRequiredMessage() {
+    showNotification('Completa prima il quiz per scoprire il tuo archetipo!', 'info');
+    
+    // Opzionale: scroll al pulsante CTA del quiz
+    const ctaButton = document.querySelector('.cta-button');
+    if (ctaButton) {
+        ctaButton.scrollIntoView({ behavior: 'smooth' });
+        // Effetto flash sul pulsante
+        ctaButton.style.animation = 'flash 1s ease-in-out';
+        setTimeout(() => {
+            ctaButton.style.animation = '';
+        }, 1000);
     }
 }
 

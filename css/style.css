@@ -243,6 +243,43 @@ body {
     box-shadow: var(--shadow-deep), 0 0 25px rgba(255, 215, 0, 0.2);
 }
 
+/* Stili per card cliccabili */
+.archetipo-card.clickable {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.archetipo-card.clickable:hover {
+    transform: translateY(-15px) scale(1.02);
+}
+
+/* Stili per card bloccate */
+.archetipo-card.locked {
+    opacity: 0.7;
+    cursor: not-allowed;
+    position: relative;
+}
+
+.archetipo-card.locked:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.archetipo-card.locked::after {
+    content: "🔒";
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 18px;
+    opacity: 0.8;
+}
+
+/* Animazione flash per il pulsante CTA */
+@keyframes flash {
+    0%, 50%, 100% { transform: scale(1); }
+    25%, 75% { transform: scale(1.05); }
+}
+
 .archetipo-icon {
     font-size: 4rem;
     margin-bottom: 20px;
