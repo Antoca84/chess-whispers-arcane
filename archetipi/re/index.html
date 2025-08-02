@@ -51,6 +51,105 @@
 </head>
     
 <body>
+    <!-- Sistema autenticazione -->
+<script src="/js/tokens.js"></script>
+<script src="/js/auth.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Script caricato, TokenManager:', typeof window.TokenManager);
+    
+    // Controlla se c'è un token nell'URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    
+    console.log('Token trovato:', token);
+    
+    if (token) {
+        // C'è un token, verifica se è valido
+        const pathParts = window.location.pathname.split('/').filter(part => part !== '');
+        const archetipo = pathParts[1]; // re, regina, etc.
+        
+        console.log('Verifico token per archetipo:', archetipo);
+        
+        const userInfo = window.TokenManager.getUserInfo(token, archetipo);
+        
+        console.log('Risultato verifica:', userInfo);
+        
+        if (userInfo) {
+            // Token valido - mostra contenuto privato
+            showPrivateContent(userInfo);
+        } else {
+            // Token non valido - redirect a errore
+            console.log('Token non valido, redirect...');
+            setTimeout(() => {
+                window.location.href = '/accesso-negato.html';
+            }, 2000);
+        }
+    } else {
+        // Nessun token - mostra contenuto pubblico limitato
+        console.log('Nessun token, mostro contenuto pubblico');
+        showPublicContent();
+    }
+});
+
+function showPrivateContent(userInfo) {
+    console.log('Mostro contenuto privato per:', userInfo);
+    
+    // Aggiungi notice di accesso privato
+    const notice = document.createElement('div');
+    notice.className = 'private-notice';
+    notice.innerHTML = '🔒 Accesso Privato Autorizzato - ' + userInfo.email;
+    notice.style.cssText = `
+        background: linear-gradient(45deg, #2a2a2a, #1f1f1f);
+        border: 2px solid #FFD700;
+        border-radius: 10px;
+        padding: 15px;
+        text-align: center;
+        margin: 20px 0;
+        font-size: 14px;
+        color: #FFD700;
+        position: fixed;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    `;
+    document.body.insertBefore(notice, document.body.firstChild);
+    
+    // Evidenzia che è accesso privato
+    document.body.style.border = '3px solid #FFD700';
+}
+
+function showPublicContent() {
+    console.log('Mostro contenuto pubblico limitato');
+    
+    // Nascondi il messaggio completo
+    const messageElement = document.querySelector('.daily-message, #dailyMessage, h2');
+    if (messageElement && messageElement.textContent.includes('Il Tuo Messaggio di Oggi')) {
+        const nextElement = messageElement.nextElementSibling;
+        if (nextElement) {
+            nextElement.innerHTML = 'Per accedere al tuo messaggio personalizzato, scansiona il QR code ricevuto via email dopo aver completato il quiz.';
+            nextElement.style.cssText = 'opacity: 0.7; font-style: italic; background: #333; padding: 20px; border-radius: 10px; border: 1px dashed #666;';
+        }
+    }
+    
+    // Aggiungi notice pubblico
+    const notice = document.createElement('div');
+    notice.innerHTML = '👁️ Accesso Pubblico - Contenuto Limitato';
+    notice.style.cssText = `
+        background: #333;
+        border: 1px solid #666;
+        border-radius: 10px;
+        padding: 10px;
+        text-align: center;
+        margin: 20px 0;
+        font-size: 12px;
+        color: #ccc;
+    `;
+    document.body.insertBefore(notice, document.body.firstChild);
+}
+</script>
     <!-- Header -->
     <header class="header">
         <div class="container">
@@ -151,72 +250,6 @@ document.addEventListener('DOMContentLoaded', function() {
 <script src="/js/tokens.js"></script>
 <script src="/js/auth.js"></script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Controlla se c'è un token nell'URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-    
-    if (token) {
-        // C'è un token, verifica se è valido
-        const pathParts = window.location.pathname.split('/').filter(part => part !== '');
-        const archetipo = pathParts[1]; // re, regina, etc.
-        
-        const userInfo = window.TokenManager.getUserInfo(token, archetipo);
-        
-        if (userInfo) {
-            // Token valido - mostra contenuto privato
-            showPrivateContent(userInfo);
-        } else {
-            // Token non valido - redirect a errore
-            window.location.href = '/accesso-negato.html';
-        }
-    } else {
-        // Nessun token - mostra contenuto pubblico limitato
-        showPublicContent();
-    }
-});
-
-function showPrivateContent(userInfo) {
-    // Nascondi elementi pubblici, mostra contenuto privato
-    document.body.classList.add('private-access');
-    
-    // Aggiungi notice di accesso privato
-    const notice = document.createElement('div');
-    notice.className = 'private-notice';
-    notice.innerHTML = '🔒 Accesso Privato - Messaggio personalizzato per ' + userInfo.email;
-    document.body.insertBefore(notice, document.body.firstChild);
-    
-    // Tracking
-    console.log('Accesso privato autorizzato:', userInfo);
-}
-
-function showPublicContent() {
-    // Nascondi messaggi sensibili, mostra solo anteprima
-    const messageElement = document.querySelector('.daily-message, #dailyMessage');
-    if (messageElement) {
-        messageElement.innerHTML = 'Per accedere al tuo messaggio personalizzato, scansiona il QR code ricevuto via email dopo aver completato il quiz.';
-        messageElement.style.opacity = '0.7';
-    }
-    
-    // Aggiungi CTA per quiz
-    const ctaElement = document.createElement('div');
-    ctaElement.innerHTML = `
-        <div style="background: #2a2a2a; padding: 20px; border-radius: 10px; text-align: center; margin: 20px 0;">
-            <h3 style="color: #FFD700;">🎯 Vuoi il tuo messaggio personalizzato?</h3>
-            <p style="color: #ccc;">Completa il quiz gratuito per ricevere il tuo QR code personale</p>
-            <a href="/" style="background: linear-gradient(45deg, #FFD700, #FFA500); color: #000; padding: 15px 30px; text-decoration: none; border-radius: 25px; font-weight: bold; display: inline-block; margin-top: 10px;">
-                🧠 Fai il Quiz Gratuito
-            </a>
-        </div>
-    `;
-    
-    const container = document.querySelector('.container, .main-content');
-    if (container) {
-        container.appendChild(ctaElement);
-    }
-}
-</script>
 
 <style>
 .private-notice {
