@@ -6,45 +6,38 @@ class AuthManager {
     }
     
     init() {
-        // Controlla se siamo su una pagina privata
-        this.checkPrivateAccess();
+        // Controlla se siamo su una pagina con token
+        this.checkTokenAccess();
     }
     
-    checkPrivateAccess() {
-        const path = window.location.pathname;
-        const pathParts = path.split('/').filter(part => part !== '');
+    checkTokenAccess() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
         
-        // Controlla se il path corrisponde a: /archetipi/[archetipo]/[token]
-        if (pathParts.length === 3 && pathParts[0] === 'archetipi') {
-            const archetipo = pathParts[1];
-            const token = pathParts[2];
+        if (token) {
+            const pathParts = window.location.pathname.split('/').filter(part => part !== '');
             
-            this.validatePrivateAccess(archetipo, token);
+            // Controlla se siamo su una pagina archetipo
+            if (pathParts.length >= 2 && pathParts[0] === 'archetipi') {
+                const archetipo = pathParts[1];
+                this.validateTokenAccess(archetipo, token);
+            }
         }
     }
     
-    validatePrivateAccess(archetipo, token) {
+    validateTokenAccess(archetipo, token) {
         // Verifica se il token è valido
         const userInfo = window.TokenManager.getUserInfo(token, archetipo);
         
         if (userInfo) {
-            // Token valido - carica contenuto privato
+            // Token valido
             this.currentUser = userInfo;
-            this.loadPrivateContent(archetipo, token);
             this.trackAccess(userInfo);
+            return true;
         } else {
             // Token non valido - redirect a pagina errore
             this.redirectToError();
-        }
-    }
-    
-    loadPrivateContent(archetipo, token) {
-        // Redirect alla pagina private.html dell'archetipo
-        const privateUrl = `/archetipi/${archetipo}/private.html?token=${token}`;
-        
-        // Se non siamo già sulla pagina private, fai redirect
-        if (!window.location.pathname.includes('private.html')) {
-            window.location.href = privateUrl;
+            return false;
         }
     }
     
@@ -83,6 +76,11 @@ class AuthManager {
         }
         
         return null;
+    }
+    
+    isPrivateAccess() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.has('token');
     }
 }
 
