@@ -3,151 +3,449 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Torre - Messaggio Quotidiano | Scacchi Mentali</title>
-    <meta name="description" content="Messaggio quotidiano personalizzato per l'archetipo della Torre. Strategia di stabilità e determinazione.">
-    
-    <!-- Favicon -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><text y='18' font-size='18'>♖</text></svg>">
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Styles -->
-    <link rel="stylesheet" href="../../css/style.css">
+    <title>La Regina - Messaggio Privato | Scacchi Mentali</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+    <!-- Meta tags per SEO -->
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Descrizione completa dell'archetipo Regina - La Versatile">
+
     <style>
-        /* Stili specifici per La Torre */
-        :root {
-            --archetipo-color: var(--color-torre);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
-        .archetipo-hero {
-            background: radial-gradient(circle at center, #1a3522 0%, var(--color-background) 100%);
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+            color: white;
+            min-height: 100vh;
+            line-height: 1.6;
         }
-        
-        .archetipo-icon {
-            color: var(--color-torre);
-            text-shadow: 0 0 20px rgba(50, 205, 50, 0.5);
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
         }
-        
-        .message-card {
-            border-top: 4px solid var(--color-torre);
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px 0;
         }
-        
-        .action-button.primary {
-            background: linear-gradient(135deg, var(--color-torre), #228B22);
+
+        .logo {
+            color: #FFD700;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .archetipo-header {
+            background: linear-gradient(135deg, #FFD70022, #FFD70011);
+            border: 2px solid #FFD700;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .archetipo-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, #FFD70008 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.7; }
+        }
+
+        .archetipo-symbol {
+            font-size: 4rem;
+            color: #FFD700;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            position: relative;
+            z-index: 1;
+        }
+
+        .archetipo-title {
+            font-size: 2.5rem;
+            color: #FFD700;
+            margin-bottom: 10px;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+        }
+
+        .archetipo-subtitle {
+            color: #cccccc;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .date-badge {
+            background: #FFD700;
+            color: #000;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-top: 15px;
+            display: inline-block;
+            position: relative;
+            z-index: 1;
+        }
+
+        .private-access {
+            background: linear-gradient(135deg, #1a4d1a, #0d2d0d);
+            border: 1px solid #4CAF50;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .content-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .content-section h2 {
+            color: #FFD700;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .motto {
+            font-size: 1.3rem;
+            font-style: italic;
+            text-align: center;
+            color: #FFD700;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid #FFD700;
+        }
+
+        .description-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            text-align: justify;
+        }
+
+        .characteristics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .characteristic-card {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .characteristic-card h3 {
+            color: #FFD700;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .characteristic-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .characteristic-card li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .characteristic-card li::before {
+            content: "♕";
+            position: absolute;
+            left: 0;
+            color: #FFD700;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-share {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .subscription-section {
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            border: 2px solid #FFD700;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .subscription-title {
+            color: #FFD700;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .subscription-text {
+            color: #cccccc;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .early-adopter-note {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 15px 0;
+            display: inline-block;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 5px rgba(255, 107, 53, 0.5); }
+            to { box-shadow: 0 0 20px rgba(255, 107, 53, 0.8); }
+        }
+
+        .btn-subscription {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+            font-size: 1.1rem;
+            padding: 15px 30px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .archetipo-title {
+                font-size: 2rem;
+            }
+
+            .characteristics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
         }
     </style>
-    
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'GA_MEASUREMENT_ID');
-    </script>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <a href="../../index.html">
-                    <img src="../../images/logo.png" alt="Scacchi Mentali Logo" class="logo">
-                </a>
-                <h1 class="header-title">Scacchi Mentali</h1>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">♕ SCACCHI MENTALI ♕</div>
+        </div>
+
+        <!-- Private Access Indicator -->
+        <div class="private-access">
+            🔒 Accesso Privato - Questo è il tuo contenuto personalizzato
+        </div>
+
+        <!-- Archetipo Header -->
+        <div class="archetipo-header">
+            <div class="archetipo-symbol">♕</div>
+            <h1 class="archetipo-title">La Regina</h1>
+            <p class="archetipo-subtitle">LA VERSATILE • MULTITALENTO • STRATEGICA</p>
+            <div class="date-badge" id="currentDate"></div>
+        </div>
+
+        <!-- Motto Section -->
+        <div class="content-section">
+            <div class="motto">
+                "Hai tutti i talenti. Il segreto è combinarli nel momento giusto."
             </div>
         </div>
-    </header>
 
-    <!-- Archetipo Hero -->
-    <section class="archetipo-hero hero">
-        <div class="container">
-            <div class="hero-content">
-                <div class="archetipo-icon" style="font-size: 6rem; margin-bottom: 20px;">♖</div>
-                <h1 class="hero-title">La Torre</h1>
-                <p class="archetipo-subtitle">Stabile • Determinata • Indomabile</p>
-                <div class="current-date">
-                    <span id="current-date">Caricamento...</span>
-                </div>
+        <!-- Main Description -->
+        <div class="content-section">
+            <h2>👑 LA VERSATILE</h2>
+            <div class="description-text">
+                La Regina è il pezzo più potente degli scacchi perché combina i movimenti di tutti gli altri pezzi. Rappresenta l'archetipo della versatilità strategica e dell'adattabilità intelligente. Le persone Regina non eccellono in una sola area, ma nella capacità di orchestrare multiple competenze per raggiungere obiettivi complessi. Sono i veri jolly della vita, capaci di adattarsi e prosperare in qualsiasi situazione.
             </div>
         </div>
-    </section>
 
-    <!-- Messaggio Quotidiano -->
-    <section class="messaggio-quotidiano">
-        <div class="container">
-            <div class="message-card">
-                <div class="message-header">
-                    <h2>Il Tuo Messaggio di Oggi</h2>
-                    <img src="../../images/archetipi/torre.png" alt="La Torre" class="archetipo-image">
-                </div>
-                
-                <div class="message-content">
-                    <p id="daily-message" class="daily-message">
-                        "Torre, la tua forza risiede nella costanza e nella determinazione. 
-                        Oggi, concentrati sulla direzione che hai scelto e procedi dritto verso il tuo obiettivo. 
-                        Non lasciare che le distrazioni laterali ti facciano deviare dal percorso. 
-                        Come una torre che domina il campo di battaglia con la sua presenza imponente, 
-                        tu hai il potere di creare stabilità nel caos che ti circonda. 
-                        La tua perseveranza è la tua arma più potente - usala saggiamente. 
-                        Oggi, sii il punto fermo su cui gli altri possono contare, ma ricorda 
-                        che anche le torri più solide hanno bisogno di fondamenta sicure. 
-                        Controlla le tue basi prima di avanzare."
-                    </p>
-                </div>
-                
-                <div class="message-actions">
-                    <button id="share-button" class="action-button primary" data-archetipo="Torre">
-                        📤 Condividi Messaggio
-                    </button>
-                    <button id="save-button" class="action-button secondary" data-archetipo="Torre">
-                        💾 Salva Messaggio
-                    </button>
-                </div>
+        <!-- Characteristics Grid -->
+        <div class="characteristics-grid">
+            <div class="characteristic-card">
+                <h3>🧠 Caratteristiche Psicologiche</h3>
+                <ul>
+                    <li>Multitalento naturale</li>
+                    <li>Capacità di vedere connessioni tra ambiti diversi</li>
+                    <li>Leadership attraverso la competenza</li>
+                    <li>Adattabilità strategica</li>
+                    <li>Visione d'insieme</li>
+                    <li>Curiosità intellettuale insaziabile</li>
+                </ul>
+            </div>
+
+            <div class="characteristic-card">
+                <h3>💪 Punti di Forza</h3>
+                <ul>
+                    <li>Versatilità estrema</li>
+                    <li>Capacità di problem-solving complesso</li>
+                    <li>Leadership situazionale</li>
+                    <li>Innovazione attraverso combinazione di idee</li>
+                    <li>Efficacia in ambienti dinamici</li>
+                </ul>
+            </div>
+
+            <div class="characteristic-card">
+                <h3>🎯 Sfide Evolutive</h3>
+                <ul>
+                    <li>Dispersione energetica</li>
+                    <li>Difficoltà a specializzarsi profondamente</li>
+                    <li>Possibile superficialità</li>
+                    <li>Tendenza al burnout per eccesso di impegni</li>
+                    <li>Sindrome dell'impostore in aree specifiche</li>
+                </ul>
+            </div>
+
+            <div class="characteristic-card">
+                <h3>🚀 Applicazioni Pratiche</h3>
+                <ul>
+                    <li>Imprenditori seriali</li>
+                    <li>Consulenti strategici</li>
+                    <li>Creative director</li>
+                    <li>Ruoli che richiedono visione multidisciplinare</li>
+                    <li>Eccellenti in startup e ambienti di rapido cambiamento</li>
+                </ul>
             </div>
         </div>
-    </section>
 
-    <!-- Subscription CTA -->
-    <section class="subscription-cta">
-        <div class="container">
-            <div class="cta-content">
-                <h2>Vuoi ricevere messaggi quotidiani personalizzati?</h2>
-                <p>Attiva la tua subscription mensile e fortifica ogni giorno la tua determinazione.</p>
-                <a href="../../subscribe/?archetipo=torre" class="cta-button">
-                    🏰 Attiva Subscription per La Torre
-                </a>
-            </div>
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="btn btn-share" onclick="shareContent()">
+                📤 Condividi Contenuto
+            </button>
+            <button class="btn btn-save" onclick="saveContent()">
+                💾 Salva Contenuto
+            </button>
         </div>
-    </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <p>&copy; 2024 Scacchi Mentali. Tutti i diritti riservati.</p>
-                <div class="footer-links">
-                    <a href="../../index.html">Home</a>
-                    <a href="#privacy">Privacy Policy</a>
-                    <a href="#termini">Termini di Servizio</a>
-                </div>
+        <!-- Subscription Section -->
+        <div class="subscription-section">
+            <h3 class="subscription-title">Vuoi accedere a tutti gli archetipi?</h3>
+            <p class="subscription-text">
+                Attiva la tua subscription mensile e scopri tutti i 6 archetipi con contenuti esclusivi e messaggi quotidiani personalizzati.
+            </p>
+            <div class="early-adopter-note">
+                🎉 Early Adopters: Solo 4,99€ per i prossimi 15 giorni dal lancio!
             </div>
+            <a href="#" class="btn btn-subscription">
+                👑 Attiva Subscription per La Regina - 4,99€
+            </a>
         </div>
-    </footer>
+    </div>
 
-    <script src="../../js/main.js"></script>
-<!-- Include sistema autenticazione -->
-<script src="../../js/tokens.js"></script>
-<script src="../../js/auth.js"></script>
+    <script>
+        // Set current date
+        document.addEventListener('DOMContentLoaded', function() {
+            const dateElement = document.getElementById('currentDate');
+            const today = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            dateElement.textContent = today.toLocaleDateString('it-IT', options);
+        });
 
-<script>
-// Controlla se siamo stati chiamati con un token
-document.addEventListener('DOMContentLoaded', function() {
-    // Il sistema auth.js gestirà automaticamente il redirect se necessario
-});
-</script>
+        // Share functionality
+        function shareContent() {
+            const shareText = `Scopri l'archetipo della Regina - La Versatile:\n\n"Hai tutti i talenti. Il segreto è combinarli nel momento giusto."\n\n🧠🔥 Scopri il tuo archetipo su Scacchi Mentali`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'La Regina - La Versatile',
+                    text: shareText,
+                    url: window.location.href
+                });
+            } else {
+                navigator.clipboard.writeText(shareText + '\n\n' + window.location.href);
+                alert('Contenuto copiato negli appunti!');
+            }
+        }
+
+        // Save functionality
+        function saveContent() {
+            const content = document.querySelector('.container').innerHTML;
+            const blob = new Blob([content], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'la-regina-archetipo.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
 </body>
 </html>
