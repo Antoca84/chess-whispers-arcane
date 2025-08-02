@@ -3,185 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accesso Negato | Scacchi Mentali</title>
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <title>Accesso Negato - Scacchi Mentali</title>
+    <meta name="description" content="Token non valido o scaduto. Ripeti il quiz per ottenere l'accesso ai contenuti personalizzati.">
     
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><text y='18' font-size='18'>♟</text></svg>">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
-            color: white;
-            min-height: 100vh;
+        .error-hero {
+            background: radial-gradient(circle at center, #330000 0%, var(--color-background) 100%);
+            min-height: 70vh;
             display: flex;
             align-items: center;
-            justify-content: center;
-            line-height: 1.6;
-        }
-        
-        .container {
-            max-width: 600px;
-            padding: 40px;
-            text-align: center;
         }
         
         .error-icon {
-            font-size: 80px;
-            margin-bottom: 30px;
-            color: #ff6b6b;
+            font-size: 8rem;
+            color: #FF4500;
+            text-shadow: 0 0 30px rgba(255, 69, 0, 0.5);
+            animation: pulse 2s ease-in-out infinite;
         }
         
-        .title {
-            font-size: 36px;
-            color: #FFD700;
-            margin-bottom: 20px;
-            font-weight: bold;
+        .error-content {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
         }
         
-        .subtitle {
-            font-size: 20px;
-            color: #ff6b6b;
-            margin-bottom: 30px;
+        .error-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #FF4500;
+            margin: 20px 0;
         }
         
-        .description {
-            font-size: 16px;
-            color: #ccc;
+        .error-description {
+            font-size: 1.2rem;
+            color: var(--color-text-secondary);
             margin-bottom: 40px;
-            line-height: 1.8;
-        }
-        
-        .actions {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .btn {
-            padding: 15px 30px;
-            border: none;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            color: #000;
-        }
-        
-        .btn-secondary {
-            background: linear-gradient(45deg, #4682B4, #1E90FF);
-            color: white;
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
-        }
-        
-        .help-section {
-            background: #2a2a2a;
-            border-radius: 15px;
-            padding: 30px;
-            margin-top: 40px;
-            border-left: 4px solid #FFD700;
-        }
-        
-        .help-title {
-            color: #FFD700;
-            font-size: 20px;
-            margin-bottom: 15px;
-        }
-        
-        .help-text {
-            color: #ccc;
-            font-size: 14px;
             line-height: 1.6;
         }
         
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
-            
-            .title {
-                font-size: 28px;
-            }
-            
-            .error-icon {
-                font-size: 60px;
-            }
-            
-            .actions {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .btn {
-                width: 250px;
-                justify-content: center;
-            }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="error-icon">🔒</div>
-        
-        <h1 class="title">Accesso Negato</h1>
-        <h2 class="subtitle">QR Code Non Valido</h2>
-        
-        <p class="description">
-            Il QR code che hai scansionato non è valido o è scaduto. 
-            Per accedere ai messaggi personalizzati, devi prima completare 
-            il quiz degli archetipi e ricevere il tuo QR code personale via email.
-        </p>
-        
-        <div class="actions">
-            <a href="/" class="btn btn-primary">
-                🧠 Fai il Quiz Gratuito
-            </a>
-            <a href="mailto:supporto@scacchimentali.com" class="btn btn-secondary">
-                📧 Contatta Supporto
-            </a>
-        </div>
-        
-        <div class="help-section">
-            <h3 class="help-title">💡 Come Ottenere il Tuo QR Code</h3>
-            <div class="help-text">
-                <p><strong>1.</strong> Completa il quiz gratuito degli archetipi</p>
-                <p><strong>2.</strong> Riceverai un'email con i tuoi risultati</p>
-                <p><strong>3.</strong> L'email conterrà il tuo QR code personale</p>
-                <p><strong>4.</strong> Salva il QR code e scansionalo quotidianamente</p>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html">
+                    <img src="images/logo.png" alt="Scacchi Mentali Logo" class="logo">
+                </a>
+                <h1 class="header-title">Scacchi Mentali</h1>
             </div>
         </div>
-    </div>
-    
-    <script>
-        // Log dell'errore per debugging
-        console.log('Accesso negato - URL:', window.location.href);
-        
-        // Analytics tracking
-        if (typeof gtag !== 'undefined') {
-            gtag('event', 'access_denied', {
-                'event_category': 'security',
-                'event_label': 'invalid_token',
-                'page_url': window.location.href
-            });
-        }
-    </script>
+    </header>
+
+    <!-- Error Hero -->
+    <section class="error-hero">
+        <div class="container">
+            <div class="error-content">
+                <div class="error-icon">🚫</div>
+                <h1 class="error-title">Accesso Negato</h1>
+                <p class="error-description">
+                    Il token fornito non è valido o è scaduto. 
+                    Per accedere ai contenuti personalizzati del tuo archetipo, 
+                    devi completare il quiz e ricevere il tuo QR code personale via email.
+                </p>
+                <div class="cta-buttons">
+                    <a href="index.html" class="cta-button">
+                        🏠 Torna alla Home
+                    </a>
+                    <a href="https://forms.gle/TUO_FORM_ID" class="cta-button secondary" target="_blank">
+                        📋 Rifai il Quiz
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Help Section -->
+    <section class="help-section">
+        <div class="container">
+            <div class="help-content">
+                <h2>Hai bisogno di aiuto?</h2>
+                <div class="help-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>Completa il Quiz</h3>
+                            <p>Rispondi alle domande per scoprire il tuo archetipo scacchistico</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>Ricevi il QR Code</h3>
+                            <p>Ti invieremo via email il tuo QR code personalizzato</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>Scansiona e Accedi</h3>
+                            <p>Usa il QR code per accedere ai tuoi contenuti quotidiani</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2024 Scacchi Mentali. Tutti i diritti riservati.</p>
+                <div class="footer-links">
+                    <a href="index.html">Home</a>
+                    <a href="#privacy">Privacy Policy</a>
+                    <a href="#termini">Termini di Servizio</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
 </body>
 </html>
