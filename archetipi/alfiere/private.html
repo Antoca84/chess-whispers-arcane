@@ -251,7 +251,7 @@
             font-size: 1.1rem;
         }
 
-        .early-adopter-note { 
+        .early-adopter-note {
             background: linear-gradient(135deg, #ff6b35, #f7931e);
             color: white;
             padding: 10px 15px;
@@ -265,6 +265,56 @@
         @keyframes glow {
             from { box-shadow: 0 0 5px rgba(255, 107, 53, 0.5); }
             to { box-shadow: 0 0 20px rgba(255, 107, 53, 0.8); }
+        }
+
+        .countdown-container {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border: 2px solid #ff6b35;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .countdown-title {
+            color: #ff6b35;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .countdown-item {
+            background: rgba(255, 107, 53, 0.1);
+            border: 1px solid #ff6b35;
+            border-radius: 10px;
+            padding: 15px 10px;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .countdown-number {
+            display: block;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff6b35;
+            line-height: 1;
+        }
+
+        .countdown-label {
+            display: block;
+            font-size: 0.8rem;
+            color: #cccccc;
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .btn-subscription {
@@ -380,6 +430,28 @@
             <div class="early-adopter-note">
                 🎉 Early Adopters: Solo 4,99€ per i prossimi 15 giorni dal lancio!
             </div>
+            
+            <div class="countdown-container">
+                <div class="countdown-title">⏰ Offerta scade tra:</div>
+                <div class="countdown-timer" id="countdown">
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="days">--</span>
+                        <span class="countdown-label">Giorni</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="hours">--</span>
+                        <span class="countdown-label">Ore</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="minutes">--</span>
+                        <span class="countdown-label">Minuti</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="seconds">--</span>
+                        <span class="countdown-label">Secondi</span>
+                    </div>
+                </div>
+            </div>
             <a href="#" class="btn btn-subscription">
                 🎩 Attiva Subscription per L'Alfiere - 4,99€
             </a>
@@ -391,14 +463,47 @@
         document.addEventListener('DOMContentLoaded', function() {
             const dateElement = document.getElementById('currentDate');
             const today = new Date();
-            const options = {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
             };
             dateElement.textContent = today.toLocaleDateString('it-IT', options);
+            
+            // Initialize countdown
+            initCountdown();
         });
+
+        // Countdown functionality
+        function initCountdown() {
+            // IMPORTANTE: Modifica questa data per impostare la scadenza dell'offerta
+            // Formato: Anno, Mese (0-11), Giorno, Ora, Minuto, Secondo
+            const endDate = new Date(2025, 7, 18, 23, 59, 59); // 18 Agosto 2025, 23:59:59
+            
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const distance = endDate.getTime() - now;
+
+                if (distance < 0) {
+                    document.getElementById('countdown').innerHTML = '<div style="color: #ff6b35; font-size: 1.2rem;">Offerta scaduta!</div>';
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById('days').textContent = days.toString().padStart(2, '0');
+                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            }
+
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        }
 
         // Share functionality
         function shareContent() {
