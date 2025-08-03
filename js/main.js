@@ -26,6 +26,12 @@ function initializeApp() {
     
     // Aggiunge animazioni di ingresso
     addScrollAnimations();
+    
+    // Inizializza funzionalità sales optimization
+    initializeSalesFeatures();
+    
+    // Carica messaggi JSON dinamici se siamo su una pagina archetipo
+    loadDailyMessage();
 }
 
 /* ===========================================
@@ -381,10 +387,129 @@ addNotificationStyles();
    FUNZIONI PUBBLICHE (USATE NELLE PAGINE HTML)
    =========================================== */
 
+/* ===========================================
+   FUNZIONALITÀ SALES OPTIMIZATION
+   =========================================== */
+
+function initializeSalesFeatures() {
+    // Countdown timer per offerta
+    initializeCountdown();
+    
+    // Counter utenti dinamico
+    animateUserCounter();
+    
+    // Testimonials rotation 
+    initializeTestimonials();
+}
+
+function initializeCountdown() {
+    const countdownDays = document.getElementById('countdown-days');
+    const countdownTimer = document.getElementById('countdown-timer');
+    
+    // Calcola giorni rimasti (fino al 15° giorno da oggi)
+    const endDate = new Date();
+    endDate.setDate(endDate.getDate() + 12); // 12 giorni rimasti
+    
+    function updateCountdown() {
+        const now = new Date();
+        const timeLeft = endDate - now;
+        
+        if (timeLeft > 0) {
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            
+            if (countdownDays) {
+                countdownDays.textContent = days;
+            }
+            
+            if (countdownTimer) {
+                countdownTimer.textContent = `${days}g ${hours}h ${minutes}m`;
+            }
+        }
+    }
+    
+    updateCountdown();
+    setInterval(updateCountdown, 60000); // Aggiorna ogni minuto
+}
+
+function animateUserCounter() {
+    const counter = document.getElementById('users-counter');
+    if (!counter) return;
+    
+    const targetNumber = 2847;
+    const increment = targetNumber / 100;
+    let current = 0;
+    
+    const timer = setInterval(() => {
+        current += increment;
+        if (current >= targetNumber) {
+            current = targetNumber;
+            clearInterval(timer);
+        }
+        counter.textContent = Math.floor(current).toLocaleString('it-IT');
+    }, 30);
+}
+
+function initializeTestimonials() {
+    // Implementazione futura per rotazione testimonials
+    console.log('📈 Testimonials system initialized');
+}
+
+function loadDailyMessage() {
+    // Verifica se siamo in una pagina archetipo
+    const pathParts = window.location.pathname.split('/');
+    const isArchetipoPage = pathParts.includes('archetipi');
+    
+    if (!isArchetipoPage) return;
+    
+    // Estrai il nome dell'archetipo dal path
+    const archetipo = pathParts[pathParts.length - 2] || pathParts[pathParts.length - 1].replace('.html', '');
+    
+    if (!archetipo || archetipo === 'archetipi') return;
+    
+    // Carica il messaggio dal JSON
+    fetchDailyMessage(archetipo);
+}
+
+function fetchDailyMessage(archetipo) {
+    const messagePath = `../../messages/${archetipo}-messages.json`;
+    
+    fetch(messagePath)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data && data.messages && data.messages.length > 0) {
+                // Usa la data per determinare quale messaggio mostrare
+                const today = new Date();
+                const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
+                const messageIndex = dayOfYear % data.messages.length;
+                
+                const dailyMessage = data.messages[messageIndex];
+                
+                // Aggiorna il messaggio nella pagina
+                const messageElement = document.getElementById('daily-message');
+                if (messageElement && dailyMessage) {
+                    messageElement.textContent = dailyMessage;
+                    console.log(`📝 Messaggio caricato per ${archetipo}:`, dailyMessage.substring(0, 50) + '...');
+                }
+            }
+        })
+        .catch(error => {
+            console.warn(`⚠️ Impossibile caricare messaggio per ${archetipo}:`, error);
+            // Il messaggio di fallback nel HTML rimane visibile
+        });
+}
+
 // Esporta le funzioni per l'uso globale
 window.ScacchiMentali = {
     shareMessage,
     saveMessage,
     getSavedMessages,
-    showNotification
+    showNotification,
+    loadDailyMessage
 };
