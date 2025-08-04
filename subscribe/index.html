@@ -25,15 +25,21 @@
         
         .pricing-card {
             background: var(--gradient-card);
-            padding: 60px 40px;
+            padding: 40px 30px;
             border-radius: 20px;
             text-align: center;
-            max-width: 100px;
+            max-width: 480px;
             margin: 40px auto;
-            border-top: 6px solid var(--color-re);
+            border-top: 4px solid var(--color-re);
             box-shadow: var(--shadow-deep);
             position: relative;
             overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
         
         .pricing-card::before {
@@ -53,22 +59,44 @@
         }
         
         .price {
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: 700;
             color: var(--color-re);
-            margin: 20px 0;
+            margin: 15px 0;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 5px;
         }
         
         .price-currency {
-            font-size: 2rem;
+            font-size: 1.8rem;
             vertical-align: top;
         }
         
         .price-period {
-            font-size: 1.2rem;
+            font-size: 1rem;
             color: var(--color-text-secondary);
             font-weight: 300;
+        }
+        
+        .offer-badge {
+            background: linear-gradient(135deg, #FF4500, #FFD700);
+            color: #1a1a1a;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(255, 69, 0, 0.3);
+        }
+        
+        .countdown-container {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            opacity: 0.9;
         }
         
         .features-list {
@@ -189,8 +217,12 @@
                 <h2>Subscription Premium</h2>
                 <div class="price">
                     <span class="price-currency">€</span>4,99<span class="price-period">/mese</span>
-                    <div class="offer-badge">
-                        🚀 Offerta Early Adopters - Solo <span id="countdown-timer">12g 7h 23m</span> rimasti!
+                </div>
+                
+                <div class="offer-badge">
+                    🚀 Offerta Early Adopters
+                    <div class="countdown-container">
+                        Solo <span id="countdown-timer">12g 7h 23m</span> rimasti!
                     </div>
                 </div>
                 
