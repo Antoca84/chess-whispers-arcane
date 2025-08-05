@@ -3,7 +3,8 @@
 // Questo file gestisce l'autenticazione tramite Google Apps Script Web App
 
 // URL della tua Web App Google Apps Script
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz6VbEhxx8j2Tw0PQ_Iwv7e2Kr8ua7iIjnIS3YbKVEq578z6AxlOdt3zgeVJN88cGqnmQ/exec'; // SOSTITUISCI CON IL TUO URL
+// IMPORTANTE: Verifica che questo URL sia corretto dalla tua implementazione Google Apps Script
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz6VbEhxx8j2Tw0PQ_Iwv7e2Kr8ua7iIjnIS3YbKVEq578z6AxlOdt3zgeVJN88cGqnmQ/exec';
 
 // Cache per evitare chiamate ripetute
 const tokenCache = new Map();
@@ -29,8 +30,10 @@ async function verifyToken(token, archetipo) {
         const response = await fetch(url, {
             method: 'GET',
             headers: {
-                'Accept': 'application/json'
-            }
+                'Accept': 'application/json',
+                'Cache-Control': 'no-cache'
+            },
+            mode: 'cors'
         });
         
         if (!response.ok) {
@@ -61,7 +64,14 @@ async function verifyToken(token, archetipo) {
 async function getTokenStats() {
     try {
         const url = `${WEB_APP_URL}?action=stats`;
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Cache-Control': 'no-cache'
+            },
+            mode: 'cors'
+        });
         const data = await response.json();
         console.log('Statistiche token:', data);
         return data;
@@ -313,18 +323,19 @@ function showInlineError(message) {
 // Inizializza sistema autenticazione
 function initAuth() {
     console.log('Inizializzazione sistema autenticazione...');
+    console.log('🌐 Web App URL:', WEB_APP_URL);
+    
+    // Test connettività Web App
+    getTokenStats().then(stats => {
+        if (stats) {
+            console.log('✅ Connessione Web App OK - Statistiche:', stats);
+        } else {
+            console.error('❌ Connessione Web App fallita');
+        }
+    });
     
     // Avvia controllo accesso
     checkAccess();
-    
-    // Debug: mostra statistiche in console (solo in development)
-    if (window.location.hostname === 'localhost' || window.location.hostname.includes('github.io')) {
-        getTokenStats().then(stats => {
-            if (stats) {
-                console.log('📊 Statistiche Token:', stats);
-            }
-        });
-    }
 }
 
 // Avvia quando DOM è pronto
