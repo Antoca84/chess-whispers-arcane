@@ -4,7 +4,7 @@
 
 // URL della tua Web App Google Apps Script
 // IMPORTANTE: Verifica che questo URL sia corretto dalla tua implementazione Google Apps Script
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxwiJXFXA7Xu3eMEMe-XeVCmCgTfkUeAI3jEzPEFAIvbVBTEOk4qiRxHpJCBtI94ICuWw/exec';
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbweYcCMsWIaHb6TpZzY4-Tk5NcwzM4WNAZBsEKd92mxY6inWuq9h1Bm3r3szdEqL9nthg/exec';
 
 // Cache per evitare chiamate ripetute
 const tokenCache = new Map();
