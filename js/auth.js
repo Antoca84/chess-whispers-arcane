@@ -99,7 +99,7 @@ async function checkAccess() {
         
         if (!archetipo) {
             console.error('Impossibile determinare archetipo dall\'URL');
-            redirectToError('URL non valido');
+            redirectToError('URL non valido - impossibile determinare archetipo');
             return;
         }
         
@@ -115,12 +115,12 @@ async function checkAccess() {
         } else {
             // Token non valido = redirect errore
             console.log('Token non valido:', verification.error);
-            redirectToError(verification.error || 'Token non valido');
+            redirectToError(verification.error || 'Token non valido o scaduto');
         }
         
     } catch (error) {
         console.error('Errore nel controllo accesso:', error);
-        redirectToError('Errore interno');
+        redirectToError('Errore di connessione al sistema di autenticazione');
     }
 }
 
@@ -285,23 +285,9 @@ function addUserInfo(userInfo) {
 function redirectToError(message = 'Accesso negato') {
     console.log('Redirect errore:', message);
     
-    // Prova redirect a pagina errore dedicata
-    const errorPageUrl = '/accesso-negato.html';
-    
-    // Controlla se la pagina errore esiste
-    fetch(errorPageUrl, { method: 'HEAD' })
-        .then(response => {
-            if (response.ok) {
-                window.location.href = `${errorPageUrl}?error=${encodeURIComponent(message)}`;
-            } else {
-                // Fallback: mostra errore inline
-                showInlineError(message);
-            }
-        })
-        .catch(() => {
-            // Fallback: mostra errore inline
-            showInlineError(message);
-        });
+    // Redirect diretto alla pagina errore
+    const errorPageUrl = 'https://antoca84.github.io/chess-whispers-arcane/accesso-negato.html';
+    window.location.href = `${errorPageUrl}?error=${encodeURIComponent(message)}`;
 }
 
 // Mostra errore inline se pagina errore non esiste
