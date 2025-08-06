@@ -328,10 +328,10 @@ function initAuth() {
 // Avvia quando DOM è pronto - con timeout per permettere debug
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(initAuth, 100); // Breve delay per debug
+        setTimeout(initAuth, 5000); // Breve delay per debug
     });
 } else {
-    setTimeout(initAuth, 1000);
+    setTimeout(initAuth, 100);
 }
 
 // Esporta funzioni per uso globale
