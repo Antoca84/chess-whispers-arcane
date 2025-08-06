@@ -19,123 +19,61 @@
 
   <style>
     :root { --archetipo-color: var(--color-re); }
-
     body { font-family: 'Montserrat', sans-serif; margin:0; padding:0; }
-
-    /* HERO */
-    .archetipo-hero {
-      background: radial-gradient(circle at center, #2a2215 0%, var(--color-background) 100%);
-      color: #fff;
-      padding: 60px 0;
-      text-align: center;
-    }
-    .archetipo-icon { font-size: 6rem; color: var(--color-re); text-shadow: 0 0 20px rgba(255,215,0,0.5); }
-    .hero-title { font-size: 2.5rem; margin: 0.5rem 0; }
-    .archetipo-subtitle { font-size: 1.1rem; opacity: 0.9; }
-
-    /* MESSAGGIO QUOTIDIANO */
-    .messaggio-quotidiano { padding: 40px 0; }
-    .message-card {
-      max-width: 700px;
-      margin: 0 auto;
-      background: #fff;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-      border-top: 4px solid var(--color-re);
-    }
-    .message-header { padding: 20px; display: flex; align-items: center; }
+    /* Hero */
+    .archetipo-hero { background: radial-gradient(circle at center, #2a2215 0%, var(--color-background) 100%); color:#fff; padding:60px 0; text-align:center; }
+    .archetipo-icon { font-size:6rem; color:var(--color-re); text-shadow:0 0 20px rgba(255,215,0,0.5); }
+    .hero-title { font-size:2.5rem; margin:0.5rem 0; }
+    .archetipo-subtitle { font-size:1.1rem; opacity:0.9; }
+    /* Message */
+    .messaggio-quotidiano { padding:40px 0; }
+    .message-card { max-width:700px; margin:0 auto; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.1); border-top:4px solid var(--color-re); }
+    .message-header { padding:20px; display:flex; align-items:center; }
     .message-header h2 { flex:1; margin:0; font-size:1.8rem; }
-    .message-header img { width: 60px; margin-left: 1rem; }
-    .message-content { padding: 0 20px 20px; font-size:1rem; line-height:1.6; }
-    .message-actions { padding: 0 20px 20px; display:flex; gap:10px; }
-    .action-button {
-      flex:1;
-      padding: 12px;
-      border:none;
-      border-radius: 8px;
-      font-size:1rem;
-      cursor:pointer;
-    }
-    .action-button.primary {
-      background: linear-gradient(135deg, var(--color-re), #FFB000);
-      color:#000;
-      font-weight:600;
-    }
-    .action-button.secondary {
-      background: #eee;
-      color:#333;
-    }
-
-    /* CTA QUIZ */
-    .quiz-cta {
-      max-width: 700px;
-      margin: 30px auto;
-      background: linear-gradient(135deg,#1a1a1a,#2a2a2a);
-      border: 2px solid #FFD700;
-      border-radius: 15px;
-      padding: 30px;
-      text-align: center;
-    }
-    .quiz-cta h3 { color: #FFD700; margin-bottom:15px; font-size:1.5rem; }
-    .quiz-cta p  { color: #ccc; margin-bottom:20px; }
-    .quiz-cta a  {
-      background: linear-gradient(45deg,#FFD700,#FFA500);
-      color: #000;
-      padding: 15px 30px;
-      text-decoration: none;
-      border-radius: 25px;
-      font-weight: bold;
-      font-size:1rem;
-      display: inline-block;
-    }
-
-    /* ERROR NOTICE & AUTH */
-    .access-notice {
-      position: fixed; top:0; left:0; right:0;
-      padding:15px; text-align:center;
-      font-weight:bold; font-size:1rem;
-      z-index:10000;
-    }
-    .access-notice.private {
-      background: linear-gradient(45deg, #FFD700, #FFA500);
-      color:#000;
-    }
-    .access-notice.public {
-      background: linear-gradient(45deg, #666, #888);
-      color:#fff;
-    }
-    body.authenticated {
-      border: 3px solid #FFD700;
-      box-shadow: 0 0 30px rgba(255,215,0,0.3);
-    }
-
-    /* nascondi sezioni private di default */
-    .private-content { display: none; }
+    .message-header img { width:60px; margin-left:1rem; }
+    .message-content { padding:0 20px 20px; font-size:1rem; line-height:1.6; }
+    .message-actions { padding:0 20px 20px; display:flex; gap:10px; }
+    .action-button { flex:1; padding:12px; border:none; border-radius:8px; font-size:1rem; cursor:pointer; }
+    .action-button.primary { background:linear-gradient(135deg, var(--color-re), #FFB000); color:#000; font-weight:600; }
+    .action-button.secondary { background:#eee; color:#333; }
+    /* CTA Quiz */
+    .quiz-cta { max-width:700px; margin:30px auto; background:linear-gradient(135deg,#1a1a1a,#2a2a2a); border:2px solid #FFD700; border-radius:15px; padding:30px; text-align:center; }
+    .quiz-cta h3 { color:#FFD700; margin-bottom:15px; font-size:1.5rem; }
+    .quiz-cta p { color:#ccc; margin-bottom:20px; }
+    .quiz-cta a { background:linear-gradient(45deg,#FFD700,#FFA500); color:#000; padding:15px 30px; text-decoration:none; border-radius:25px; font-weight:bold; font-size:1rem; display:inline-block; }
+    /* Notices */
+    .access-notice { position:fixed; top:0; left:0; right:0; padding:15px; text-align:center; font-weight:bold; font-size:1rem; z-index:10000; }
+    .access-notice.private { background:linear-gradient(45deg,#FFD700,#FFA500); color:#000; }
+    .access-notice.public { background:linear-gradient(45deg,#666,#888); color:#fff; }
+    @keyframes slideDown { from{transform:translateY(-100%);} to{transform:translateY(0);} }
+    /* Hide private by default */
+    .private-content { display:none; }
+    /* Authenticated style */
+    body.authenticated { border:3px solid #FFD700; box-shadow:0 0 30px rgba(255,215,0,0.3); }
   </style>
 
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
   <script>
-    window.dataLayer = window.dataLayer || [];
+    window.dataLayer = window.dataLayer||[];
     function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'GA_MEASUREMENT_ID');
+    gtag('js',new Date());
+    gtag('config','GA_MEASUREMENT_ID');
   </script>
 
-  <!-- Authenticator (solo verifyToken) -->
+  <!-- Authenticator -->
   <script defer src="/js/auth.js"></script>
 </head>
 <body>
-  <!-- HEADER -->
+  <!-- Header -->
   <header class="header">
     <div class="container" style="padding:15px 0; text-align:center;">
-      <a href="../../index.html"><img src="../../images/logo.png" alt="Scacchi Mentali Logo" style="height:40px;"></a>
+      <a href="../../index.html"><img src="../../images/logo.png" alt="Logo" style="height:40px;"></a>
       <h1 style="margin-top:10px;font-weight:600;">Scacchi Mentali</h1>
     </div>
   </header>
 
-  <!-- HERO -->
+  <!-- Hero -->
   <section class="archetipo-hero hero">
     <div class="container">
       <div class="archetipo-icon">♔</div>
@@ -147,16 +85,16 @@
     </div>
   </section>
 
-  <!-- CONTAINER PER CTA PUBBLICA -->
+  <!-- Public CTA container -->
   <div id="public-cta-container"></div>
 
-  <!-- MESSAGGIO QUOTIDIANO (privato) -->
+  <!-- Private sections -->
   <section class="messaggio-quotidiano private-content">
     <div class="container">
       <div class="message-card">
         <div class="message-header">
           <h2>Il Tuo Messaggio di Oggi</h2>
-          <img src="../../images/archetipi/re.png" alt="Il Re" class="archetipo-image">
+          <img src="../../images/archetipi/re.png" alt="Il Re">
         </div>
         <div class="message-content">
           <p id="daily-message">
@@ -165,94 +103,132 @@
         </div>
         <div class="message-actions">
           <button id="share-button" class="action-button primary">📤 Condividi Messaggio</button>
-          <button id="save-button"  class="action-button secondary">💾 Salva Messaggio</button>
+          <button id="save-button" class="action-button secondary">💾 Salva Messaggio</button>
         </div>
       </div>
     </div>
   </section>
-
-  <!-- SUBSCRIPTION CTA (privato) -->
   <section class="subscription-cta private-content">
     <div class="container" style="text-align:center; padding:30px 0;">
       <h2>Vuoi ricevere messaggi quotidiani personalizzati?</h2>
       <p>Attiva la tua subscription mensile e non perdere mai un giorno di crescita strategica.</p>
-      <a href="../../subscribe/?archetipo=re" class="cta-button" style="background: linear-gradient(45deg,#FFD700,#FFA500); color:#000; padding:12px 24px; border-radius:20px; font-weight:bold; text-decoration:none;">👑 Attiva Subscription per Il Re</a>
+      <a href="../../subscribe/?archetipo=re" class="cta-button" style="background:linear-gradient(45deg,#FFD700,#FFA500); color:#000; padding:12px 24px; border-radius:20px; font-weight:bold; text-decoration:none;">
+        👑 Attiva Subscription per Il Re
+      </a>
     </div>
   </section>
 
-  <!-- FOOTER -->
+  <!-- Footer -->
   <footer class="footer">
     <div class="container" style="padding:20px 0; text-align:center; color:#777;">
       <p>&copy; 2025 Scacchi Mentali. Tutti i diritti riservati.</p>
       <div class="footer-links" style="margin-top:10px;">
         <a href="../../index.html" style="margin:0 8px;color:inherit;text-decoration:none;">Home</a>
-        <a href="#privacy" style="margin:0 8px;color:inherit;text-decoration:none;">Privacy Policy</a>
-        <a href="#termini" style="margin:0 8px;color:inherit;text-decoration:none;">Termini di Servizio</a>
+        <a href="#privacy" style="margin:0 8px;color:inherit;text-decoration:none;">Privacy</a>
+        <a href="#termini" style="margin:0 8px;color:inherit;text-decoration:none;">Termini</a>
       </div>
     </div>
   </footer>
 
-  <!-- INLINE SCRIPT DI AUTENTICAZIONE & UI -->
-  <script defer>
-  document.addEventListener('DOMContentLoaded', async () => {
-    // 1. Mostra data
-    document.getElementById('current-date').textContent =
-      new Date().toLocaleDateString('it-IT', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+  <!-- Init script -->
+  <script>
+  (function(){
+    function init() {
+      // mostra data
+      document.getElementById('current-date').textContent =
+        new Date().toLocaleDateString('it-IT', {
+          weekday:'long', year:'numeric', month:'long', day:'numeric'
+        });
 
-    // Helpers UI
-    function addAccessNotice(type, msg) {
-      const n = document.createElement('div');
-      n.className = `access-notice ${type}`;
-      n.textContent = msg;
-      document.body.appendChild(n);
-    }
-    function showQuizCTA() {
-      const container = document.getElementById('public-cta-container');
-      container.innerHTML = `
-        <div class="quiz-cta">
-          <h3>🧠 Vuoi accedere ai messaggi completi?</h3>
-          <p>Completa il quiz gratuito per ricevere i tuoi messaggi personalizzati.</p>
-          <a href="/" target="_self">🎯 Inizia il Quiz Gratuito</a>
-        </div>`;
-    }
-    function showPrivateSections() {
-      document.body.classList.add('authenticated');
-      document.querySelectorAll('.private-content').forEach(el => el.style.display = 'block');
-    }
-    function hidePrivateSections() {
-      document.querySelectorAll('.private-content').forEach(el => el.style.display = 'none');
-    }
-
-    // 2. Leggi token & archetipo
-    const params    = new URLSearchParams(window.location.search);
-    const token     = params.get('token');
-    const parts     = window.location.pathname.split('/').filter(p => p);
-    const archetipo = parts[1] || '';
-
-    // 3. Flusso
-    if (!token) {
-      // pubblico
-      hidePrivateSections();
-      addAccessNotice('public', '👁️ Accesso Pubblico - Contenuto Limitato');
-      showQuizCTA();
-      return;
-    }
-
-    // 4. Verifica con Web App
-    try {
-      const resp = await window.AuthSystem.verifyToken(token, archetipo);
-      if (resp.valid) {
-        addAccessNotice('private', `🔒 Accesso Privato Autorizzato - ${resp.userInfo.archetipo}`);
-        showPrivateSections();
-      } else {
-        // token invalido → redirect
-        window.location.href = `/accesso-negato.html?error=${encodeURIComponent(resp.error || 'Token non valido')}`;
+      // helper UI
+      function addNotice(type, msg) {
+        const n = document.createElement('div');
+        n.className = 'access-notice ' + type;
+        n.textContent = msg;
+        document.body.appendChild(n);
+        n.style.animation = 'slideDown 0.4s ease-out';
       }
-    } catch (e) {
-      console.error('Errore autenticazione:', e);
-      window.location.href = `/accesso-negato.html?error=${encodeURIComponent('Errore di connessione')}`;
+      function showQuizCTA() {
+        document.getElementById('public-cta-container').innerHTML = `
+          <div class="quiz-cta">
+            <h3>🧠 Vuoi accedere ai messaggi completi?</h3>
+            <p>Completa il quiz gratuito per ricevere i tuoi messaggi personalizzati.</p>
+            <a href="/" target="_self">🎯 Inizia il Quiz Gratuito</a>
+          </div>`;
+      }
+      function showPrivate() {
+        document.body.classList.add('authenticated');
+        document.querySelectorAll('.private-content').forEach(el=>el.style.display='block');
+      }
+      function hidePrivate() {
+        document.querySelectorAll('.private-content').forEach(el=>el.style.display='none');
+      }
+
+      // share & save handlers
+      function bindShareSave() {
+        const text = document.getElementById('daily-message').innerText;
+        const url  = window.location.href;
+        const shareBtn = document.getElementById('share-button');
+        const saveBtn  = document.getElementById('save-button');
+        if (shareBtn) {
+          shareBtn.addEventListener('click', async ()=>{
+            if (navigator.share) {
+              try { await navigator.share({ title:'Messaggio Quotidiano', text, url }); }
+              catch{}  
+            } else {
+              await navigator.clipboard.writeText(text + '\n' + url);
+              alert('Testo copiato negli appunti');
+            }
+          });
+        }
+        if (saveBtn) {
+          saveBtn.addEventListener('click', ()=>{
+            const blob = new Blob([text],{type:'text/plain'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'messaggio_il_re.txt';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+          });
+        }
+      }
+
+      // auth flow
+      const params    = new URLSearchParams(window.location.search);
+      const token     = params.get('token');
+      const parts     = window.location.pathname.split('/').filter(p=>p);
+      const archetipo = parts[1]||'';
+
+      if (!token) {
+        hidePrivate();
+        addNotice('public','👁️ Accesso Pubblico - Contenuto Limitato');
+        showQuizCTA();
+        return;
+      }
+
+      // verify
+      window.AuthSystem.verifyToken(token, archetipo)
+        .then(resp => {
+          if (resp.valid) {
+            addNotice('private', `🔒 Accesso Privato Autorizzato - ${resp.userInfo.archetipo}`);
+            showPrivate();
+            bindShareSave();
+          } else {
+            window.location.href = `/chess-whispers-arcane/accesso-negato.html?error=${encodeURIComponent(resp.error||'Token non valido')}`;
+          }
+        })
+        .catch(()=>{
+          window.location.href = `/chess-whispers-arcane/accesso-negato.html?error=${encodeURIComponent('Errore di connessione')}`;
+        });
     }
-  });
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
   </script>
 </body>
 </html>
