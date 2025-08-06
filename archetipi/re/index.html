@@ -2,10 +2,10 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Il Re - Messaggio Quotidiano | Scacchi Mentali</title>
   <meta name="description" content="Messaggio quotidiano personalizzato per l'archetipo del Re. Strategia di leadership e saggezza.">
-  
+
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><text y='18' font-size='18'>♔</text></svg>">
 
@@ -14,72 +14,77 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-  <!-- Styles -->
+  <!-- Main Styles -->
   <link rel="stylesheet" href="../../css/style.css">
+
   <style>
-    /* Stili specifici per Il Re */
     :root { --archetipo-color: var(--color-re); }
+
+    /* Hero */
     .archetipo-hero {
       background: radial-gradient(circle at center, #2a2215 0%, var(--color-background) 100%);
     }
     .archetipo-icon {
       color: var(--color-re);
-      text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+      text-shadow: 0 0 20px rgba(255,215,0,0.5);
     }
+
+    /* Messaggio */
     .message-card {
       border-top: 4px solid var(--color-re);
     }
     .action-button.primary {
       background: linear-gradient(135deg, var(--color-re), #FFB000);
     }
-    /* Notices */
+
+    /* Nasconde tutto il contenuto privato finché non viene autenticato */
+    .private-content {
+      display: none;
+    }
+
+    /* Notice a comparsa */
     .access-notice {
-      position: fixed;
-      top: 0; left: 0; right: 0;
+      position: fixed; top: 0; left: 0; right: 0;
+      padding: 15px; text-align: center;
+      font-weight: bold; font-size: 16px;
       z-index: 10000;
-      padding: 15px;
-      text-align: center;
-      font-weight: bold;
-      font-size: 16px;
-      animation: slideDown 0.5s ease-out;
+      animation: slideDown 0.4s ease-out;
     }
     .access-notice.private {
       background: linear-gradient(45deg, #FFD700, #FFA500);
-      color: #000;
-      border-bottom: 3px solid #FFD700;
-      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+      color: #000; border-bottom: 3px solid #FFD700;
     }
     .access-notice.public {
       background: linear-gradient(45deg, #666, #888);
-      color: #fff;
-      border-bottom: 3px solid #666;
+      color: #fff; border-bottom: 3px solid #666;
     }
     @keyframes slideDown {
       from { transform: translateY(-100%); }
-      to   { transform: translateY(0);       }
+      to   { transform: translateY(0);      }
     }
-    .message-content.limited {
-      opacity: 0.6;
-      font-style: italic;
-      background: rgba(255,255,255,0.05);
-      padding: 20px;
-      border-radius: 10px;
-      border: 2px dashed rgba(255,255,255,0.2);
-      text-align: center;
-    }
+
+    /* CTA quiz per accesso pubblico */
     .quiz-cta {
       background: linear-gradient(135deg,#1a1a1a,#2a2a2a);
       border: 2px solid #FFD700;
       border-radius: 15px;
       padding: 30px;
-      margin: 30px 0;
+      margin: 30px;
       text-align: center;
-      animation: glow 2s ease-in-out infinite alternate;
     }
-    @keyframes glow {
-      from { box-shadow: 0 0 5px rgba(255,215,0,0.3); }
-      to   { box-shadow: 0 0 20px rgba(255,215,0,0.6); }
+    .quiz-cta h3 { color: #FFD700; margin-bottom: 15px; }
+    .quiz-cta p  { color: #ccc; margin-bottom: 20px; }
+    .quiz-cta a  {
+      background: linear-gradient(45deg,#FFD700,#FFA500);
+      color: #000;
+      padding: 15px 30px;
+      text-decoration: none;
+      border-radius: 25px;
+      font-weight: bold;
+      font-size: 16px;
     }
+
+    /* Se autenticato, evidenzia bordo */
     body.authenticated {
       border: 3px solid #FFD700;
       box-shadow: 0 0 30px rgba(255,215,0,0.3);
@@ -90,100 +95,91 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag(){ dataLayer.push(arguments); }
     gtag('js', new Date());
     gtag('config', 'GA_MEASUREMENT_ID');
   </script>
 
-  <!-- Authentication & main script -->
+  <!-- Authenticator (solo auth.js!) -->
   <script defer src="/js/auth.js"></script>
-  <script defer src="/js/main.js"></script>
 </head>
-
 <body>
-  <!-- Header -->
+
+  <!-- HEADER -->
   <header class="header">
     <div class="container">
-      <div class="header-content">
-        <a href="../../index.html">
-          <img src="../../images/logo.png" alt="Scacchi Mentali Logo" class="logo">
-        </a>
-        <h1 class="header-title">Scacchi Mentali</h1>
-      </div>
+      <a href="../../index.html"><img src="../../images/logo.png" alt="Scacchi Mentali Logo" class="logo"></a>
+      <h1 class="header-title">Scacchi Mentali</h1>
     </div>
   </header>
 
-  <!-- Archetipo Hero -->
+  <!-- HERO -->
   <section class="archetipo-hero hero">
     <div class="container">
       <div class="hero-content">
-        <div class="archetipo-icon" style="font-size:6rem;margin-bottom:20px;">♔</div>
+        <div class="archetipo-icon" style="font-size:6rem;">♔</div>
         <h1 class="hero-title">Il Re</h1>
         <p class="archetipo-subtitle">Leader strategico • Protettore • Saggio</p>
-        <div class="current-date">
-          <span id="current-date">Caricamento...</span>
-        </div>
+        <div class="current-date"><span id="current-date">Caricamento...</span></div>
       </div>
     </div>
   </section>
 
-  <!-- Messaggio Quotidiano -->
-  <section class="messaggio-quotidiano">
+  <!-- MESSAGGIO QUOTIDIANO (privato) -->
+  <section class="messaggio-quotidiano private-content">
     <div class="container">
       <div class="message-card">
         <div class="message-header">
           <h2>Il Tuo Messaggio di Oggi</h2>
           <img src="../../images/archetipi/re.png" alt="Il Re" class="archetipo-image">
         </div>
-
         <div class="message-content">
-          <p id="daily-message" class="daily-message">
-            "Oggi, come un vero Re, ricorda che la tua forza non risiede nel dominare, ma nel proteggere. 
-            Ogni decisione che prendi dovrebbe riflettere la saggezza di chi ha visto molte battaglie e 
-            ha imparato che la vera vittoria è quella che porta pace e prosperità a tutti i tuoi 'sudditi' 
-            - che siano familiari, colleghi o amici. Un Re governa con il cuore, ma decide con la mente. 
-            Oggi, ascolta prima di parlare, rifletti prima di agire, e guida con l'esempio. 
-            Il tuo regno si estende ovunque arrivi la tua influenza positiva."
+          <p id="daily-message">
+            "Oggi, come un vero Re, ricorda che la tua forza non risiede nel dominare, ma nel proteggere…
           </p>
         </div>
-
         <div class="message-actions">
-          <button id="share-button" class="action-button primary" data-archetipo="Re">
-            📤 Condividi Messaggio
-          </button>
-          <button id="save-button" class="action-button secondary" data-archetipo="Re">
-            💾 Salva Messaggio
-          </button>
+          <button id="share-button" class="action-button primary">📤 Condividi Messaggio</button>
+          <button id="save-button"  class="action-button secondary">💾 Salva Messaggio</button>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Subscription CTA -->
-  <section class="subscription-cta">
+  <!-- SUBSCRIPTION CTA (privato) -->
+  <section class="subscription-cta private-content">
     <div class="container">
-      <div class="cta-content">
-        <h2>Vuoi ricevere messaggi quotidiani personalizzati?</h2>
-        <p>Attiva la tua subscription mensile e non perdere mai un giorno di crescita strategica.</p>
-        <a href="../../subscribe/?archetipo=re" class="cta-button">
-          👑 Attiva Subscription per Il Re
-        </a>
-      </div>
+      <h2>Vuoi ricevere messaggi quotidiani personalizzati?</h2>
+      <p>Attiva la tua subscription mensile e non perdere mai un giorno di crescita strategica.</p>
+      <a href="../../subscribe/?archetipo=re" class="cta-button">👑 Attiva Subscription per Il Re</a>
     </div>
   </section>
 
-  <!-- Footer -->
+  <!-- FOOTER -->
   <footer class="footer">
     <div class="container">
-      <div class="footer-content">
-        <p>&copy; 2025 Scacchi Mentali. Tutti i diritti riservati.</p>
-        <div class="footer-links">
-          <a href="../../index.html">Home</a>
-          <a href="#privacy">Privacy Policy</a>
-          <a href="#termini">Termini di Servizio</a>
-        </div>
+      <p>&copy; 2025 Scacchi Mentali. Tutti i diritti riservati.</p>
+      <div class="footer-links">
+        <a href="../../index.html">Home</a>
+        <a href="#privacy">Privacy Policy</a>
+        <a href="#termini">Termini di Servizio</a>
       </div>
     </div>
   </footer>
+
+  <!-- Inline: aggiorna data corrente e avvia auth.js -->
+  <script>
+    // Mostra data in italiano
+    document.getElementById('current-date').textContent =
+      new Date().toLocaleDateString('it-IT', {
+        weekday:'long', year:'numeric', month:'long', day:'numeric'
+      });
+
+    // L'autenticazione parte automaticamente grazie a auth.js
+    // auth.js nasconde `.private-content` e poi:
+    // - se token valido → aggiunge class="authenticated" e mostra private-content
+    // - se token errato → redirige a /accesso-negato.html
+    // - se nessun token → mostra call-to-action per il quiz
+  </script>
 </body>
 </html>
