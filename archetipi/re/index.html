@@ -200,5 +200,12 @@
 
     <script src="../../js/main.js"></script>
     <script src="../../js/auth.js"></script>
+    
+    <!-- Debug script per verificare caricamento -->
+    <script>
+        console.log('Pagina caricata, auth system:', window.AuthSystem);
+        console.log('URL corrente:', window.location.href);
+        console.log('Parametri URL:', new URLSearchParams(window.location.search));
+    </script>
 </body>
 </html>
