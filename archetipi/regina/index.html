@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Regina - Messaggio Quotidiano | Scacchi Mentali</title>
+    <meta name="description" content="Messaggio quotidiano personalizzato per l'archetipo della Regina. Strategia di versatilità e potere.">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><text y='18' font-size='18'>♕</text></svg>">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="../../css/style.css">
+    <style>
+        /* Stili specifici per La Regina */
+        :root {
+            --archetipo-color: var(--color-regina);
+        }
+        
+        .archetipo-hero {
+            background: radial-gradient(circle at center, #2a1535 0%, var(--color-background) 100%);
+        }
+        
+        .archetipo-icon {
+            color: var(--color-regina);
+            text-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+        }
+        
+        .message-card {
+            border-top: 4px solid var(--color-regina);
+        }
+        
+        .action-button.primary {
+            background: linear-gradient(135deg, var(--color-regina), #9932CC);
+        }
+        
+        /* Design improvements for authentication */
+        .access-notice {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10000;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            animation: slideDown 0.5s ease-out;
+        }
+        
+        .access-notice.private {
+            background: linear-gradient(45deg, #8A2BE2, #9932CC);
+            color: white;
+            border-bottom: 3px solid #8A2BE2;
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
+        }
+        
+        .access-notice.public {
+            background: linear-gradient(45deg, #666, #888);
+            color: white;
+            border-bottom: 3px solid #666;
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+        
+        .message-content.limited {
+            opacity: 0.6;
+            font-style: italic;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+        
+        .quiz-cta {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border: 2px solid #8A2BE2;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 5px rgba(138, 43, 226, 0.3); }
+            to { box-shadow: 0 0 20px rgba(138, 43, 226, 0.6); }
+        }
+        
+        body.authenticated {
+            border: 3px solid #8A2BE2;
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.3);
+        }
+    </style>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'GA_MEASUREMENT_ID');
+    </script>
+ <!-- Authenticator (solo verifyToken) -->
+  <script defer src="/js/auth.js"></script>
+  
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="../../index.html">
+                    <img src="../../images/logo.png" alt="Scacchi Mentali Logo" class="logo">
+                </a>
+                <h1 class="header-title">Scacchi Mentali</h1>
+            </div>
+        </div>
+    </header>
+
+    <!-- Archetipo Hero -->
+    <section class="archetipo-hero hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="archetipo-icon" style="font-size: 6rem; margin-bottom: 20px;">♕</div>
+                <h1 class="hero-title">La Regina</h1>
+                <p class="archetipo-subtitle">Versatile • Potente • Intuitiva</p>
+                <div class="current-date">
+                    <span id="current-date">Caricamento...</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Messaggio Quotidiano -->
+    <section class="messaggio-quotidiano">
+        <div class="container">
+            <div class="message-card">
+                <div class="message-header">
+                    <h2>Il Tuo Messaggio di Oggi</h2>
+                    <img src="../../images/archetipi/regina.png" alt="La Regina" class="archetipo-image">
+                </div>
+                
+                <div class="message-content">
+                    <p id="daily-message" class="daily-message">
+                        "Oggi, Regina, è il momento di abbracciare la tua natura multifaccettata. 
+                        Come il pezzo più potente della scacchiera, puoi muoverti in ogni direzione, 
+                        ma ricorda che con grande potere viene grande responsabilità. Non cercare di 
+                        essere ovunque contemporaneamente - scegli le tue battaglie con saggezza. 
+                        La tua intuizione è la tua arma segreta: usala per leggere tra le righe, 
+                        per comprendere ciò che gli altri non vedono. Oggi, bilancia la tua forza 
+                        con la tua grazia, la tua logica con la tua emotività. Tu sei la Regina: 
+                        regna con autorità, ma governa con compassione."
+                    </p>
+                </div>
+                
+                <div class="message-actions">
+                    <button id="share-button" class="action-button primary" data-archetipo="Regina">
+                        📤 Condividi Messaggio
+                    </button>
+                    <button id="save-button" class="action-button secondary" data-archetipo="Regina">
+                        💾 Salva Messaggio
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Subscription CTA -->
+    <section class="subscription-cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Vuoi ricevere messaggi quotidiani personalizzati?</h2>
+                <p>Attiva la tua subscription mensile e libera tutto il tuo potenziale regale.</p>
+                <a href="../../subscribe/?archetipo=regina" class="cta-button">
+                    👑 Attiva Subscription per La Regina
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2024 Scacchi Mentali. Tutti i diritti riservati.</p>
+                <div class="footer-links">
+                    <a href="../../index.html">Home</a>
+                    <a href="#privacy">Privacy Policy</a>
+                    <a href="#termini">Termini di Servizio</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+<!-- INLINE SCRIPT DI AUTENTICAZIONE & UI -->
+  <script defer>
+  document.addEventListener('DOMContentLoaded', async () => {
+    // 1. Mostra data
+    document.getElementById('current-date').textContent =
+      new Date().toLocaleDateString('it-IT', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+    // Helpers UI
+    function addAccessNotice(type, msg) {
+      const n = document.createElement('div');
+      n.className = `access-notice ${type}`;
+      n.textContent = msg;
+      document.body.appendChild(n);
+    }
+    function showQuizCTA() {
+      const container = document.getElementById('public-cta-container');
+      container.innerHTML = `
+        <div class="quiz-cta">
+          <h3>🧠 Vuoi accedere ai messaggi completi?</h3>
+          <p>Completa il quiz gratuito per ricevere i tuoi messaggi personalizzati.</p>
+          <a href="/" target="_self">🎯 Inizia il Quiz Gratuito</a>
+        </div>`;
+    }
+    function showPrivateSections() {
+      document.body.classList.add('authenticated');
+      document.querySelectorAll('.private-content').forEach(el => el.style.display = 'block');
+    }
+    function hidePrivateSections() {
+      document.querySelectorAll('.private-content').forEach(el => el.style.display = 'none');
+    }
+
+    // 2. Leggi token & archetipo
+    const params    = new URLSearchParams(window.location.search);
+    const token     = params.get('token');
+    const parts     = window.location.pathname.split('/').filter(p => p);
+    const archetipo = parts[1] || '';
+
+    // 3. Flusso
+    if (!token) {
+      // pubblico
+      hidePrivateSections();
+      addAccessNotice('public', '👁️ Accesso Pubblico - Contenuto Limitato');
+      showQuizCTA();
+      return;
+    }
+
+    // 4. Verifica con Web App
+    try {
+      const resp = await window.AuthSystem.verifyToken(token, archetipo);
+      if (resp.valid) {
+        addAccessNotice('private', `🔒 Accesso Privato Autorizzato - ${resp.userInfo.archetipo}`);
+        showPrivateSections();
+      } else {
+        // token invalido → redirect
+        window.location.href = `/accesso-negato.html?error=${encodeURIComponent(resp.error || 'Token non valido')}`;
+      }
+    } catch (e) {
+      console.error('Errore autenticazione:', e);
+      window.location.href = `/accesso-negato.html?error=${encodeURIComponent('Errore di connessione')}`;
+    }
+  });
+  </script>
+   
+</body>
+</html>
