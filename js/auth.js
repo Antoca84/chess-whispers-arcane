@@ -331,7 +331,7 @@ if (document.readyState === 'loading') {
         setTimeout(initAuth, 100); // Breve delay per debug
     });
 } else {
-    setTimeout(initAuth, 100);
+    setTimeout(initAuth, 1000);
 }
 
 // Esporta funzioni per uso globale
