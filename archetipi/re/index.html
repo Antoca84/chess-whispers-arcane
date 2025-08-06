@@ -38,6 +38,68 @@
         .action-button.primary {
             background: linear-gradient(135deg, var(--color-re), #FFB000);
         }
+        
+        /* Design improvements for authentication */
+        .access-notice {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10000;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            animation: slideDown 0.5s ease-out;
+        }
+        
+        .access-notice.private {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #000;
+            border-bottom: 3px solid #FFD700;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        }
+        
+        .access-notice.public {
+            background: linear-gradient(45deg, #666, #888);
+            color: white;
+            border-bottom: 3px solid #666;
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+        
+        .message-content.limited {
+            opacity: 0.6;
+            font-style: italic;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+        
+        .quiz-cta {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border: 2px solid #FFD700;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 5px rgba(255, 215, 0, 0.3); }
+            to { box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
+        }
+        
+        body.authenticated {
+            border: 3px solid #FFD700;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
     </style>
     
     <!-- Google Analytics -->
@@ -51,105 +113,6 @@
 </head>
     
 <body>
-    <!-- Sistema autenticazione -->
-<script src="/js/tokens.js"></script>
-<script src="/js/auth.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Script caricato, TokenManager:', typeof window.TokenManager);
-    
-    // Controlla se c'è un token nell'URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-    
-    console.log('Token trovato:', token);
-    
-    if (token) {
-        // C'è un token, verifica se è valido
-        const pathParts = window.location.pathname.split('/').filter(part => part !== '');
-        const archetipo = pathParts[1]; // re, regina, etc.
-        
-        console.log('Verifico token per archetipo:', archetipo);
-        
-        const userInfo = window.TokenManager.getUserInfo(token, archetipo);
-        
-        console.log('Risultato verifica:', userInfo);
-        
-        if (userInfo) {
-            // Token valido - mostra contenuto privato
-            showPrivateContent(userInfo);
-        } else {
-            // Token non valido - redirect a errore
-            console.log('Token non valido, redirect...');
-            setTimeout(() => {
-                window.location.href = '/accesso-negato.html';
-            }, 2000);
-        }
-    } else {
-        // Nessun token - mostra contenuto pubblico limitato
-        console.log('Nessun token, mostro contenuto pubblico');
-        showPublicContent();
-    }
-});
-
-function showPrivateContent(userInfo) {
-    console.log('Mostro contenuto privato per:', userInfo);
-    
-    // Aggiungi notice di accesso privato
-    const notice = document.createElement('div');
-    notice.className = 'private-notice';
-    notice.innerHTML = '🔒 Accesso Privato Autorizzato - ' + userInfo.email;
-    notice.style.cssText = `
-        background: linear-gradient(45deg, #2a2a2a, #1f1f1f);
-        border: 2px solid #FFD700;
-        border-radius: 10px;
-        padding: 15px;
-        text-align: center;
-        margin: 20px 0;
-        font-size: 14px;
-        color: #FFD700;
-        position: fixed;
-        top: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 1000;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    `;
-    document.body.insertBefore(notice, document.body.firstChild);
-    
-    // Evidenzia che è accesso privato
-    document.body.style.border = '3px solid #FFD700';
-}
-
-function showPublicContent() {
-    console.log('Mostro contenuto pubblico limitato');
-    
-    // Nascondi il messaggio completo
-    const messageElement = document.querySelector('.daily-message, #dailyMessage, h2');
-    if (messageElement && messageElement.textContent.includes('Il Tuo Messaggio di Oggi')) {
-        const nextElement = messageElement.nextElementSibling;
-        if (nextElement) {
-            nextElement.innerHTML = 'Per accedere al tuo messaggio personalizzato, scansiona il QR code ricevuto via email dopo aver completato il quiz.';
-            nextElement.style.cssText = 'opacity: 0.7; font-style: italic; background: #333; padding: 20px; border-radius: 10px; border: 1px dashed #666;';
-        }
-    }
-    
-    // Aggiungi notice pubblico
-    const notice = document.createElement('div');
-    notice.innerHTML = '👁️ Accesso Pubblico - Contenuto Limitato';
-    notice.style.cssText = `
-        background: #333;
-        border: 1px solid #666;
-        border-radius: 10px;
-        padding: 10px;
-        text-align: center;
-        margin: 20px 0;
-        font-size: 12px;
-        color: #ccc;
-    `;
-    document.body.insertBefore(notice, document.body.firstChild);
-}
-</script>
     <!-- Header -->
     <header class="header">
         <div class="container">
@@ -236,38 +199,6 @@ function showPublicContent() {
     </footer>
 
     <script src="../../js/main.js"></script>
-<!-- Include sistema autenticazione -->
-<script src="../../js/tokens.js"></script>
-<script src="../../js/auth.js"></script>
-
-<script>
-// Controlla se siamo stati chiamati con un token
-document.addEventListener('DOMContentLoaded', function() {
-    // Il sistema auth.js gestirà automaticamente il redirect se necessario
-});
-</script>
-    <!-- Include sistema autenticazione -->
-<script src="/js/tokens.js"></script>
-<script src="/js/auth.js"></script>
-
-
-<style>
-.private-notice {
-    background: linear-gradient(45deg, #2a2a2a, #1f1f1f);
-    border: 1px solid #FFD700;
-    border-radius: 10px;
-    padding: 15px;
-    text-align: center;
-    margin: 20px 0;
-    font-size: 14px;
-    color: #FFD700;
-    position: fixed;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-}
-</style>
+    <script src="../../js/auth.js"></script>
 </body>
 </html>
