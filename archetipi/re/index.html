@@ -10,228 +10,402 @@ Così evitiamo dipendenze da funzioni globali di auth.js che potrebbero mancare.
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Il Re – Messaggio Quotidiano | Scacchi Mentali</title>
-  <meta name="description" content="Messaggio quotidiano personalizzato per l'archetipo del Re.">
-
-  <!-- Favicon -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><text y='18' font-size='18'>♔</text></svg>">
-
-  <!-- Font & CSS principali -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../css/style.css">
-
-  <!-- Stili minimi aggiuntivi -->
-  <style>
-    :root { --archetipo-color: var(--color-re); }
-    body   { margin:0; font-family:'Montserrat',sans-serif; }
-    .access-banner{position:fixed;top:0;left:0;right:0;padding:15px;text-align:center;font-weight:600;font-size:15px;z-index:9999}
-    .access-banner.public{background:#444;color:#fff}
-    .access-banner.private{background:linear-gradient(45deg,#FFD700,#FFA500);color:#000}
-    /* CTA quiz */
-    .quiz-cta{max-width:700px;margin:40px auto;background:linear-gradient(135deg,#1a1a1a,#2a2a2a);padding:30px;border:2px solid #FFD700;border-radius:15px;text-align:center}
-    .quiz-cta h3{color:#FFD700;margin:0 0 15px}
-    .quiz-cta p{color:#ccc;margin:0 0 20px}
-    .quiz-cta a{display:inline-block;background:linear-gradient(45deg,#FFD700,#FFA500);color:#000;padding:12px 24px;border-radius:25px;font-weight:700;text-decoration:none}
-  </style>
-
-  <!-- auth.js che espone AuthSystem.verifyToken -->
-  <script defer src="/js/auth.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Il Re - Messaggio Quotidiano | Scacchi Mentali</title>
+    <meta name="description" content="Messaggio quotidiano personalizzato per l'archetipo del Re. Leadership e saggezza strategica.">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><text y='18' font-size='18'>♔</text></svg>">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="../../css/style.css">
+    <style>
+        /* Stili specifici per Il Re */
+        :root {
+            --archetipo-color: var(--color-re);
+        }
+        
+        .archetipo-hero {
+            background: radial-gradient(circle at center, #2a2215 0%, var(--color-background) 100%);
+        }
+        
+        .archetipo-icon {
+            color: var(--color-re);
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        
+        .message-card {
+            border-top: 4px solid var(--color-re);
+        }
+        
+        .action-button.primary {
+            background: linear-gradient(135deg, var(--color-re), #FFB000);
+        }
+        
+        /* Design migliorato per autenticazione */
+        .access-notice {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10000;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            animation: slideDown 0.5s ease-out;
+        }
+        
+        .access-notice.private {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #000;
+            border-bottom: 3px solid #FFD700;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        }
+        
+        .access-notice.public {
+            background: linear-gradient(45deg, #666, #888);
+            color: white;
+            border-bottom: 3px solid #666;
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+        
+        .message-content.limited {
+            opacity: 0.6;
+            font-style: italic;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+        
+        .quiz-cta {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border: 2px solid #FFD700;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px auto;
+            max-width: 700px;
+            text-align: center;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        .quiz-cta h3 {
+            color: #FFD700;
+            margin: 0 0 15px;
+        }
+        
+        .quiz-cta p {
+            color: #ccc;
+            margin: 0 0 20px;
+        }
+        
+        .quiz-cta a {
+            display: inline-block;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #000;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 5px rgba(255, 215, 0, 0.3); }
+            to { box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
+        }
+        
+        body.authenticated {
+            border: 3px solid #FFD700;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
+    </style>
 </head>
 <body>
-  <!-- HEADER sintetico -->
-  <header style="background:#111;color:#fff;padding:20px 0;text-align:center">
-    <a href="../../index.html"><img src="../../images/logo.png" alt="Logo" style="height:40px"></a>
-    <h1 style="margin:10px 0 0;font-size:24px">Scacchi Mentali</h1>
-  </header>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="../../index.html">
+                    <img src="../../images/logo.png" alt="Scacchi Mentali Logo" class="logo">
+                </a>
+                <h1 class="header-title">Scacchi Mentali</h1>
+            </div>
+        </div>
+    </header>
 
-  <!-- HERO -->
-  <section style="padding:60px 0;text-align:center;background:radial-gradient(circle at center,#2a2215 0%,#000 100%)">
-    <div style="font-size:6rem;color:var(--archetipo-color);text-shadow:0 0 20px rgba(255,215,0,.5)">♔</div>
-    <h2 style="font-size:2.5rem;margin:0.5rem 0;color:#fff">Il Re</h2>
-    <p style="color:#bbb;margin:0 0 20px;letter-spacing:1px">LEADER STRATEGICO · PROTETTORE · SAGGIO</p>
-    <div style="display:inline-block;background:#222;color:#ddd;padding:6px 18px;border-radius:20px;font-size:14px">
-      <span id="today">Caricamento…</span>
+    <!-- Archetipo Hero -->
+    <section class="archetipo-hero hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="archetipo-icon" style="font-size: 6rem; margin-bottom: 20px;">♔</div>
+                <h1 class="hero-title">Il Re</h1>
+                <p class="archetipo-subtitle">Leader Strategico • Protettore • Saggio</p>
+                <div class="current-date">
+                    <span id="current-date">Caricamento...</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Messaggio Quotidiano -->
+    <section class="messaggio-quotidiano">
+        <div class="container">
+            <div class="message-card">
+                <div class="message-header">
+                    <h2>Il Tuo Messaggio di Oggi</h2>
+                    <img src="../../images/archetipi/re.png" alt="Il Re" class="archetipo-image">
+                </div>
+                
+                <div class="message-content">
+                    <p id="daily-message" class="daily-message">
+                        Caricamento del messaggio quotidiano...
+                    </p>
+                </div>
+                
+                <div class="message-actions">
+                    <button id="share-button" class="action-button primary" data-archetipo="Re">
+                        📤 Condividi Messaggio
+                    </button>
+                    <button id="save-button" class="action-button secondary" data-archetipo="Re">
+                        💾 Salva Messaggio
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Subscription CTA -->
+    <section class="subscription-cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Vuoi ricevere messaggi quotidiani personalizzati?</h2>
+                <p>Attiva la tua subscription mensile e non perdere mai un giorno di crescita strategica.</p>
+                <a href="../../subscribe/?archetipo=re" class="cta-button">
+                    👑 Attiva Subscription per Il Re
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Quiz (per utenti pubblici) -->
+    <div id="quiz-container" style="display: none;">
+        <section style="padding: 40px 20px;">
+            <div class="quiz-cta">
+                <h3>🧠 Vuoi accedere ai messaggi completi?</h3>
+                <p>Completa il quiz gratuito per scoprire il tuo archetipo e sbloccare contenuti personalizzati.</p>
+                <a href="../../index.html">🎯 Inizia il Quiz Gratuito</a>
+            </div>
+        </section>
     </div>
-  </section>
 
-  <!-- MESSAGGIO QUOTIDIANO (PRIVATO DI DEFAULT VISIBILE) -->
-  <main id="private-wrapper">
-    <section style="padding:40px 20px">
-      <div style="max-width:700px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.1);border-top:4px solid var(--archetipo-color)">
-        <div style="display:flex;align-items:center;padding:22px">
-          <h3 style="flex:1;margin:0;font-size:1.8rem">Il Tuo Messaggio di Oggi</h3>
-          <img src="../../images/archetipi/re.png" alt="Il Re" style="width:60px">
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2025 Scacchi Mentali. Tutti i diritti riservati.</p>
+                <div class="footer-links">
+                    <a href="../../index.html">Home</a>
+                    <a href="#privacy">Privacy Policy</a>
+                    <a href="#termini">Termini di Servizio</a>
+                </div>
+            </div>
         </div>
-        <div style="padding:0 22px 22px;line-height:1.6;font-size:1rem">
-          <p id="daily-msg">«Oggi, come un vero Re, ricorda che la tua forza non risiede nel dominare, ma nel proteggere…»</p>
-        </div>
-        <div style="padding:0 22px 30px;display:flex;gap:10px">
-          <button id="share-btn" style="flex:1;background:linear-gradient(135deg,var(--archetipo-color),#FFB000);border:none;border-radius:8px;padding:12px;font-weight:600;cursor:pointer">📤 Condividi</button>
-          <button id="save-btn"  style="flex:1;background:#eee;border:none;border-radius:8px;padding:12px;cursor:pointer">💾 Salva</button>
-        </div>
-      </div>
-    </section>
+    </footer>
 
-    <!-- CTA subscription -->
-    <section style="text-align:center;padding:30px 0">
-      <h3>Vuoi ricevere messaggi quotidiani personalizzati?</h3>
-      <p>Attiva la tua subscription mensile e non perdere mai un giorno di crescita strategica.</p>
-      <a href="../../subscribe/?archetipo=re" style="background:linear-gradient(45deg,#FFD700,#FFA500);color:#000;padding:12px 24px;border-radius:25px;font-weight:700;text-decoration:none">👑 Attiva Subscription</a>
-    </section>
-  </main>
-
-  <!-- CTA QUIZ (inserita via JS se pubblico) -->
-  <div id="public-container"></div>
-
-  <!-- FOOTER minimo -->
-  <footer style="background:#111;color:#666;text-align:center;padding:30px 0;font-size:14px">© 2025 Scacchi Mentali</footer>
-
-  <!-- JS Sistema Autenticazione -->
-  <script>
-  // Imposta data corrente
-  document.getElementById('today').textContent = new Date().toLocaleDateString('it-IT', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
-
-  // Funzione per caricare messaggi giornalieri
-  async function loadDailyMessage() {
-    try {
-      const response = await fetch('../../messages/re-messages.json');
-      const messages = await response.json();
-      
-      // Data di oggi in formato YYYY-MM-DD
-      const today = new Date().toISOString().split('T')[0];
-      
-      // Cerca messaggio per oggi
-      if (messages[today]) {
-        document.getElementById('daily-msg').textContent = messages[today];
-      } else {
-        // Messaggio di fallback
-        document.getElementById('daily-msg').textContent = 'Oggi, come un vero Re, ricorda che la tua forza non risiede nel dominare, ma nel proteggere. Ogni decisione che prendi dovrebbe riflettere la saggezza di chi ha visto molte battaglie.';
-      }
-    } catch (error) {
-      console.error('Errore caricamento messaggio:', error);
-    }
-  }
-
-  // Parametri URL
-  const params = new URLSearchParams(location.search);
-  const token = params.get('token');
-  const sections = document.getElementById('private-wrapper');
-  const publicBox = document.getElementById('public-container');
-
-  // Banner di accesso
-  function addBanner(type, text) {
-    const banner = document.createElement('div');
-    banner.className = 'access-banner ' + type;
-    banner.textContent = text;
-    banner.style.cssText = `
-      position: fixed; top: 0; left: 0; right: 0; padding: 15px; text-align: center; 
-      font-weight: 600; font-size: 15px; z-index: 9999;
-      ${type === 'private' ? 'background: linear-gradient(45deg,#FFD700,#FFA500); color: #000;' : 'background: #444; color: #fff;'}
-    `;
-    document.body.appendChild(banner);
-    document.body.style.paddingTop = '60px';
-  }
-
-  // Contenuto pubblico (senza token)
-  function showPublicContent() {
-    sections.style.display = 'none';
-    addBanner('public', '👁️ Contenuto limitato – completa il quiz per sbloccare');
-    publicBox.innerHTML = `
-      <div class="quiz-cta">
-        <h3>🧠 Vuoi accedere ai messaggi completi?</h3>
-        <p>Completa il quiz gratuito per scoprire il tuo archetipo.</p>
-        <a href="/">🎯 Inizia il Quiz</a>
-      </div>
-    `;
-  }
-
-  // Contenuto privato (token valido)
-  function showPrivateContent(userInfo) {
-    addBanner('private', '🔒 Accesso Privato Autorizzato');
-    
-    // Carica messaggio giornaliero
-    loadDailyMessage();
-    
-    // Abilita funzioni share/save
-    const msgElement = document.getElementById('daily-msg');
-    
-    document.getElementById('share-btn').onclick = async () => {
-      const text = msgElement.textContent;
-      if (navigator.share) {
-        try {
-          await navigator.share({
-            title: 'Messaggio del Re',
-            text: text,
-            url: location.href
-          });
-        } catch (e) {
-          console.log('Share cancelled');
-        }
-      } else {
-        await navigator.clipboard.writeText(`${text}\n${location.href}`);
-        alert('Messaggio copiato negli appunti!');
-      }
-    };
-    
-    document.getElementById('save-btn').onclick = () => {
-      const text = msgElement.textContent;
-      const blob = new Blob([text], { type: 'text/plain' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'messaggio_il_re.txt';
-      a.click();
-    };
-  }
-
-  // Controllo accesso principale
-  async function checkAccess() {
-    if (!token) {
-      // Nessun token = accesso pubblico
-      showPublicContent();
-      return;
-    }
-
-    try {
-      // Estrai archetipo dall'URL
-      const pathParts = location.pathname.split('/').filter(Boolean);
-      const archetipoIndex = pathParts.indexOf('archetipi');
-      const archetipo = archetipoIndex > -1 ? pathParts[archetipoIndex + 1] : 're';
-
-      // Verifica token usando AuthSystem globale
-      if (window.AuthSystem && window.AuthSystem.verifyToken) {
-        const result = await window.AuthSystem.verifyToken(token, archetipo);
+    <!-- JavaScript di autenticazione semplificato -->
+    <script>
+        // Configurazione Web App
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwaWL9vr7YzGG4WCpgWmLJjBGrTpLnEiXcEJGFB7AZM3LQI9sR8M7rz7N9DhGI4n7RN/exec';
         
-        if (result.valid) {
-          showPrivateContent(result.userInfo);
-        } else {
-          // Token non valido - redirect a pagina errore
-          location.href = `/chess-whispers-arcane/accesso-negato.html?error=${encodeURIComponent(result.error || 'Token non valido')}`;
+        // Inizializzazione pagina
+        document.addEventListener('DOMContentLoaded', function() {
+            // Imposta data corrente
+            const today = new Date().toLocaleDateString('it-IT', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+            document.getElementById('current-date').textContent = today;
+            
+            // Gestione autenticazione
+            handleAuthentication();
+        });
+
+        // Gestione principale autenticazione
+        async function handleAuthentication() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            
+            if (!token) {
+                // Scenario pubblico - mostra contenuto limitato
+                showPublicContent();
+                return;
+            }
+            
+            try {
+                // Verifica token
+                const isValid = await verifyToken(token);
+                
+                if (isValid) {
+                    // Token valido - mostra contenuto completo
+                    showPrivateContent();
+                } else {
+                    // Token non valido - redirect
+                    redirectToError('Token non valido o scaduto');
+                }
+            } catch (error) {
+                console.error('Errore verifica token:', error);
+                redirectToError('Errore di connessione al servizio di autenticazione');
+            }
         }
-      } else {
-        throw new Error('Sistema autenticazione non disponibile');
-      }
-    } catch (error) {
-      console.error('Errore autenticazione:', error);
-      location.href = `/chess-whispers-arcane/accesso-negato.html?error=${encodeURIComponent('Errore di connessione')}`;
-    }
-  }
 
-  // Avvia controllo accesso quando AuthSystem è disponibile
-  function initPage() {
-    if (window.AuthSystem) {
-      checkAccess();
-    } else {
-      // Riprova dopo un breve delay
-      setTimeout(initPage, 100);
-    }
-  }
+        // Verifica token via Google Apps Script
+        async function verifyToken(token) {
+            try {
+                const response = await fetch(`${WEB_APP_URL}?action=verify&token=${encodeURIComponent(token)}&archetipo=re`);
+                
+                if (!response.ok) {
+                    throw new Error('Errore nella risposta del server');
+                }
+                
+                const data = await response.json();
+                return data.valid === true;
+            } catch (error) {
+                console.error('Errore verifica token:', error);
+                return false;
+            }
+        }
 
-  // Avvia inizializzazione
-  initPage();
-  </script>
+        // Carica messaggio giornaliero
+        async function loadDailyMessage() {
+            try {
+                const response = await fetch('../../messages/re-messages.json');
+                if (!response.ok) throw new Error('Errore caricamento messaggi');
+                
+                const messages = await response.json();
+                const today = new Date().toISOString().split('T')[0];
+                
+                let message = messages[today];
+                if (!message) {
+                    // Messaggio di fallback
+                    message = 'Oggi, come un vero Re, ricorda che la tua forza non risiede nel dominare, ma nel proteggere. Ogni decisione che prendi dovrebbe riflettere la saggezza di chi ha visto molte battaglie e ha imparato che la vera vittoria è quella che porta pace e prosperità a tutti i tuoi "sudditi".';
+                }
+                
+                document.getElementById('daily-message').textContent = message;
+                
+                // Abilita funzioni condivisione e salvataggio
+                enableMessageActions(message);
+                
+            } catch (error) {
+                console.error('Errore caricamento messaggio:', error);
+                document.getElementById('daily-message').textContent = 'Errore nel caricamento del messaggio quotidiano. Riprova più tardi.';
+            }
+        }
+
+        // Mostra contenuto pubblico (senza token)
+        function showPublicContent() {
+            // Mostra banner accesso limitato
+            addAccessNotice('public', '👁️ Contenuto limitato - Completa il quiz per accedere');
+            
+            // Mostra messaggio limitato
+            const messageEl = document.getElementById('daily-message');
+            messageEl.textContent = 'Come Re, la tua leadership naturale ti permette di... [Completa il quiz per leggere il messaggio completo]';
+            messageEl.parentElement.classList.add('limited');
+            
+            // Disabilita azioni
+            document.getElementById('share-button').disabled = true;
+            document.getElementById('save-button').disabled = true;
+            
+            // Mostra CTA quiz
+            document.getElementById('quiz-container').style.display = 'block';
+        }
+
+        // Mostra contenuto privato (con token valido)
+        function showPrivateContent() {
+            // Mostra banner accesso autorizzato
+            addAccessNotice('private', '🔒 Accesso Autorizzato - Contenuto Completo Disponibile');
+            
+            // Aggiungi stile autenticato
+            document.body.classList.add('authenticated');
+            
+            // Carica messaggio completo
+            loadDailyMessage();
+            
+            // Nascondi CTA quiz
+            document.getElementById('quiz-container').style.display = 'none';
+        }
+
+        // Aggiungi banner di notifica
+        function addAccessNotice(type, message) {
+            const notice = document.createElement('div');
+            notice.className = `access-notice ${type}`;
+            notice.textContent = message;
+            document.body.appendChild(notice);
+            document.body.style.paddingTop = '70px';
+        }
+
+        // Abilita azioni messaggio
+        function enableMessageActions(message) {
+            // Condivisione
+            document.getElementById('share-button').onclick = async function() {
+                if (navigator.share) {
+                    try {
+                        await navigator.share({
+                            title: 'Messaggio del Re - Scacchi Mentali',
+                            text: message,
+                            url: window.location.href
+                        });
+                    } catch (e) {
+                        // Fallback su copia negli appunti
+                        copyToClipboard(message);
+                    }
+                } else {
+                    copyToClipboard(message);
+                }
+            };
+            
+            // Salvataggio
+            document.getElementById('save-button').onclick = function() {
+                const blob = new Blob([message], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `messaggio_re_${new Date().toISOString().split('T')[0]}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            };
+        }
+
+        // Copia negli appunti
+        async function copyToClipboard(text) {
+            try {
+                await navigator.clipboard.writeText(`${text}\n\nScacchi Mentali - ${window.location.href}`);
+                alert('Messaggio copiato negli appunti!');
+            } catch (e) {
+                alert('Impossibile copiare automaticamente. Copia manualmente il messaggio.');
+            }
+        }
+
+        // Redirect a pagina errore
+        function redirectToError(errorMessage) {
+            const errorUrl = `../../accesso-negato.html?error=${encodeURIComponent(errorMessage)}`;
+            window.location.href = errorUrl;
+        }
+    </script>
 </body>
 </html>
