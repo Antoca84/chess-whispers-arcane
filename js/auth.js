@@ -127,7 +127,8 @@ async function checkAccess() {
 // Estrai archetipo dall'URL
 function extractArchetypeFromUrl() {
     const path = window.location.pathname;
-    const matches = path.match(/\/archetipi\/([^\/]+)\//);
+    // Correggi per supportare sia /archetipi/re/ che /archetipi/re/index.html
+    const matches = path.match(/\/archetipi\/([^\/]+)/);
     return matches ? matches[1] : null;
 }
 
@@ -324,11 +325,13 @@ function initAuth() {
     checkAccess();
 }
 
-// Avvia quando DOM è pronto
+// Avvia quando DOM è pronto - con timeout per permettere debug
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAuth);
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(initAuth, 100); // Breve delay per debug
+    });
 } else {
-    initAuth();
+    setTimeout(initAuth, 100);
 }
 
 // Esporta funzioni per uso globale
