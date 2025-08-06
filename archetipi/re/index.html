@@ -201,11 +201,33 @@
     <script src="../../js/main.js"></script>
     <script src="../../js/auth.js"></script>
     
-    <!-- Debug script per verificare caricamento -->
+    <!-- Script di inizializzazione autenticazione -->
     <script>
-        console.log('Pagina caricata, auth system:', window.AuthSystem);
-        console.log('URL corrente:', window.location.href);
-        console.log('Parametri URL:', new URLSearchParams(window.location.search));
+        // Assicurati che auth.js sia caricato prima di inizializzare
+        function waitForAuth() {
+            if (window.AuthSystem) {
+                console.log('✅ AuthSystem caricato:', window.AuthSystem);
+                console.log('🌐 URL corrente:', window.location.href);
+                console.log('🔍 Parametri URL:', new URLSearchParams(window.location.search));
+                
+                // Forza l'inizializzazione dell'autenticazione
+                if (window.AuthSystem.checkAccess) {
+                    window.AuthSystem.checkAccess();
+                } else {
+                    console.error('❌ checkAccess non disponibile');
+                }
+            } else {
+                console.log('⏳ Aspettando caricamento AuthSystem...');
+                setTimeout(waitForAuth, 100);
+            }
+        }
+        
+        // Avvia il controllo dopo che tutto è caricato
+        if (document.readyState === 'complete') {
+            waitForAuth();
+        } else {
+            window.addEventListener('load', waitForAuth);
+        }
     </script>
 </body>
 </html>
