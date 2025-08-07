@@ -1,0 +1,141 @@
+<!--
+Versione semplificata
+• I contenuti PRIVATI sono VISIBILI di default.
+• Se non c’è token ➜ nasconde privato e mostra CTA.
+• Se token c’è ➜ chiama AuthSystem.verifyToken().
+   – valido   ➜ lascia tutto visibile, aggiunge banner.
+   – non valido ➜ redirect a accesso‑negato.
+Così evitiamo dipendenze da funzioni globali di auth.js che potrebbero mancare.
+-->
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Il Re – Messaggio Quotidiano | Scacchi Mentali</title>
+  <meta name="description" content="Messaggio quotidiano personalizzato per l'archetipo del Re.">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><text y='18' font-size='18'>♔</text></svg>">
+
+  <!-- Font & CSS principali -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+
+  <!-- Stili minimi aggiuntivi -->
+  <style>
+    :root { --archetipo-color: var(--color-re); }
+    body   { margin:0; font-family:'Montserrat',sans-serif; }
+    .access-banner{position:fixed;top:0;left:0;right:0;padding:15px;text-align:center;font-weight:600;font-size:15px;z-index:9999}
+    .access-banner.public{background:#444;color:#fff}
+    .access-banner.private{background:linear-gradient(45deg,#FFD700,#FFA500);color:#000}
+    /* CTA quiz */
+    .quiz-cta{max-width:700px;margin:40px auto;background:linear-gradient(135deg,#1a1a1a,#2a2a2a);padding:30px;border:2px solid #FFD700;border-radius:15px;text-align:center}
+    .quiz-cta h3{color:#FFD700;margin:0 0 15px}
+    .quiz-cta p{color:#ccc;margin:0 0 20px}
+    .quiz-cta a{display:inline-block;background:linear-gradient(45deg,#FFD700,#FFA500);color:#000;padding:12px 24px;border-radius:25px;font-weight:700;text-decoration:none}
+  </style>
+
+  <!-- auth.js che espone AuthSystem.verifyToken -->
+  <script defer src="/js/auth.js"></script>
+</head>
+<body>
+  <!-- HEADER sintetico -->
+  <header style="background:#111;color:#fff;padding:20px 0;text-align:center">
+    <a href="../../index.html"><img src="../../images/logo.png" alt="Logo" style="height:40px"></a>
+    <h1 style="margin:10px 0 0;font-size:24px">Scacchi Mentali</h1>
+  </header>
+
+  <!-- HERO -->
+  <section style="padding:60px 0;text-align:center;background:radial-gradient(circle at center,#2a2215 0%,#000 100%)">
+    <div style="font-size:6rem;color:var(--archetipo-color);text-shadow:0 0 20px rgba(255,215,0,.5)">♔</div>
+    <h2 style="font-size:2.5rem;margin:0.5rem 0;color:#fff">Il Re</h2>
+    <p style="color:#bbb;margin:0 0 20px;letter-spacing:1px">LEADER STRATEGICO · PROTETTORE · SAGGIO</p>
+    <div style="display:inline-block;background:#222;color:#ddd;padding:6px 18px;border-radius:20px;font-size:14px">
+      <span id="today">Caricamento…</span>
+    </div>
+  </section>
+
+  <!-- MESSAGGIO QUOTIDIANO (PRIVATO DI DEFAULT VISIBILE) -->
+  <main id="private-wrapper">
+    <section style="padding:40px 20px">
+      <div style="max-width:700px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.1);border-top:4px solid var(--archetipo-color)">
+        <div style="display:flex;align-items:center;padding:22px">
+          <h3 style="flex:1;margin:0;font-size:1.8rem">Il Tuo Messaggio di Oggi</h3>
+          <img src="../../images/archetipi/re.png" alt="Il Re" style="width:60px">
+        </div>
+        <div style="padding:0 22px 22px;line-height:1.6;font-size:1rem">
+          <p id="daily-msg">«Oggi, come un vero Re, ricorda che la tua forza non risiede nel dominare, ma nel proteggere…»</p>
+        </div>
+        <div style="padding:0 22px 30px;display:flex;gap:10px">
+          <button id="share-btn" style="flex:1;background:linear-gradient(135deg,var(--archetipo-color),#FFB000);border:none;border-radius:8px;padding:12px;font-weight:600;cursor:pointer">📤 Condividi</button>
+          <button id="save-btn"  style="flex:1;background:#eee;border:none;border-radius:8px;padding:12px;cursor:pointer">💾 Salva</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA subscription -->
+    <section style="text-align:center;padding:30px 0">
+      <h3>Vuoi ricevere messaggi quotidiani personalizzati?</h3>
+      <p>Attiva la tua subscription mensile e non perdere mai un giorno di crescita strategica.</p>
+      <a href="../../subscribe/?archetipo=re" style="background:linear-gradient(45deg,#FFD700,#FFA500);color:#000;padding:12px 24px;border-radius:25px;font-weight:700;text-decoration:none">👑 Attiva Subscription</a>
+    </section>
+  </main>
+
+  <!-- CTA QUIZ (inserita via JS se pubblico) -->
+  <div id="public-container"></div>
+
+  <!-- FOOTER minimo -->
+  <footer style="background:#111;color:#666;text-align:center;padding:30px 0;font-size:14px">© 2025 Scacchi Mentali</footer>
+
+  <!-- JS di controllo accesso -->
+  <script>
+  document.getElementById('today').textContent = new Date().toLocaleDateString('it-IT', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+  const params    = new URLSearchParams(location.search);
+  const token     = params.get('token');
+  const sections  = document.getElementById('private-wrapper');
+  const publicBox = document.getElementById('public-container');
+
+  // helper per mostrare banner
+  function banner(type, text){
+    const b=document.createElement('div');b.className='access-banner '+type;b.textContent=text;document.body.appendChild(b);
+  }
+  // nasconde privato e mostra CTA quiz
+  function toPublic(){
+    sections.style.display='none';
+    banner('public','👁️ Contenuto limitato – completa il quiz per sbloccare');
+    publicBox.innerHTML=`<div class="quiz-cta"><h3>🧠 Vuoi accedere ai messaggi completi?</h3><p>Completa il quiz gratuito per scoprire il tuo archetipo.</p><a href="/">🎯 Inizia il Quiz</a></div>`;
+  }
+  // token valido: lascia visibile, abilita share/save
+  function toPrivate(uInfo){
+    banner('private','🔒 Accesso Privato Autorizzato');
+    // share/save
+    const txt=document.getElementById('daily-msg').innerText;
+    document.getElementById('share-btn').onclick=async()=>{
+      if(navigator.share){try{await navigator.share({title:'Messaggio del Re',text:txt,url:location.href});}catch(e){}}
+      else{await navigator.clipboard.writeText(`${txt}\n${location.href}`);alert('Copiato negli appunti');}
+    };
+    document.getElementById('save-btn').onclick=()=>{
+      const blob=new Blob([txt],{type:'text/plain'});
+      const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='messaggio_il_re.txt';a.click();};
+  }
+
+  // FLOW
+  if(!token){
+    toPublic();
+  }else{
+    // ricava archetipo dalla path /archetipi/{key}/
+    const pathParts=location.pathname.split('/').filter(Boolean);
+    const idx=pathParts.indexOf('archetipi');
+    const arch = idx>-1? pathParts[idx+1] : '';
+
+    window.AuthSystem.verifyToken(token,arch)
+      .then(r=>{ if(r.valid){ toPrivate(r.userInfo);} else{ location.href='/chess-whispers-arcane/accesso-negato.html?error='+encodeURIComponent(r.error||'Token non valido'); }})
+      .catch(()=>location.href='/chess-whispers-arcane/accesso-negato.html?error='+encodeURIComponent('Errore di connessione'));
+  }
+  </script>
+</body>
+</html>
