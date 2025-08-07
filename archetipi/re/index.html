@@ -57,11 +57,13 @@
   <!-- HERO -->
   <section class="archetipo-hero hero">
     <div class="container">
-      <div class="archetipo-icon" style="font-size:6rem;margin-bottom:20px;">♔</div>
-      <h1 class="hero-title">Il Re</h1>
-      <p class="archetipo-subtitle">Leader Strategico • Protettore • Saggio</p>
-      <div style="margin-top:10px;color:#ccc;">
-        <span id="current-date">Caricamento…</span>
+      <div class="hero-content">
+        <div class="archetipo-icon" style="font-size: 4rem; margin-bottom: 20px;">♔</div>
+        <h1 class="hero-title">Il Re</h1>
+        <p class="archetipo-subtitle">Leader Strategico • Protettore • Saggio</p>
+        <div class="current-date">
+          <span id="current-date">Caricamento…</span>
+        </div>
       </div>
     </div>
   </section>
@@ -75,7 +77,7 @@
       <div class="message-card">
         <div class="message-header">
           <h2>Il Tuo Messaggio di Oggi</h2>
-          <img src="../../images/archetipi/re.png" alt="Il Re">
+          <img src="../../images/archetipi/re.png" alt="Il Re" class="archetipo-image">
         </div>
         <div class="message-content">
           <p id="daily-message">Caricamento del messaggio…</p>
@@ -126,7 +128,7 @@
     document.getElementById('public-cta-container').innerHTML=
       `<div class="quiz-cta">
          <h3>🧠 Vuoi accedere ai messaggi completi?</h3>
-         <p>Completa il quiz gratuito per sbloccare i contenuti personalizzati.</p>
+         <p>Se non l'hai già fatto completa il quiz gratuito per scoprire il tuo archetipo e sbloccare contenuti personalizzati.</p>
          <a href="../../index.html">🎯 Inizia il Quiz Gratuito</a>
        </div>`;
   }
