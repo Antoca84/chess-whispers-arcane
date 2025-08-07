@@ -276,7 +276,7 @@ Così evitiamo dipendenze da funzioni globali di auth.js che potrebbero mancare.
                 console.log('🔍 Verificando token:', token);
                 
                 // Simulazione per test - rimuovi quando hai un token reale
-                if (token === 'test123' || token.length > 10) {
+                if (token === 'test123' || token.length > 20) {
                     console.log('✅ Token valido (simulazione)');
                     return true;
                 }
