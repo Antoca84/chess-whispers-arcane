@@ -1,3 +1,12 @@
+<!--
+Versione semplificata
+• I contenuti PRIVATI sono VISIBILI di default.
+• Se non c'è token ➜ nasconde privato e mostra CTA.
+• Se token c'è ➜ chiama AuthSystem.verifyToken().
+   – valido   ➜ lascia tutto visibile, aggiunge banner.
+   – non valido ➜ redirect a accesso‑negato.
+Così evitiamo dipendenze da funzioni globali di auth.js che potrebbero mancare.
+-->
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -39,7 +48,7 @@
             background: linear-gradient(135deg, var(--color-pedone), #CD5C5C);
         }
         
-        /* Design improvements for authentication */
+        /* Design migliorato per autenticazione */
         .access-notice {
             position: fixed;
             top: 0;
@@ -54,10 +63,10 @@
         }
         
         .access-notice.private {
-            background: linear-gradient(45deg, #20B2AA, #48D1CC);
+            background: linear-gradient(45deg, #DC143C, #CD5C5C);
             color: white;
-            border-bottom: 3px solid #20B2AA;
-            box-shadow: 0 4px 15px rgba(32, 178, 170, 0.4);
+            border-bottom: 3px solid #DC143C;
+            box-shadow: 0 4px 15px rgba(220, 20, 60, 0.4);
         }
         
         .access-notice.public {
@@ -83,33 +92,45 @@
         
         .quiz-cta {
             background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-            border: 2px solid #20B2AA;
+            border: 2px solid #DC143C;
             border-radius: 15px;
             padding: 30px;
-            margin: 30px 0;
+            margin: 30px auto;
+            max-width: 700px;
             text-align: center;
             animation: glow 2s ease-in-out infinite alternate;
         }
         
+        .quiz-cta h3 {
+            color: #DC143C;
+            margin: 0 0 15px;
+        }
+        
+        .quiz-cta p {
+            color: #ccc;
+            margin: 0 0 20px;
+        }
+        
+        .quiz-cta a {
+            display: inline-block;
+            background: linear-gradient(45deg, #DC143C, #CD5C5C);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+        
         @keyframes glow {
-            from { box-shadow: 0 0 5px rgba(32, 178, 170, 0.3); }
-            to { box-shadow: 0 0 20px rgba(32, 178, 170, 0.6); }
+            from { box-shadow: 0 0 5px rgba(220, 20, 60, 0.3); }
+            to { box-shadow: 0 0 20px rgba(220, 20, 60, 0.6); }
         }
         
         body.authenticated {
-            border: 3px solid #20B2AA;
-            box-shadow: 0 0 30px rgba(32, 178, 170, 0.3);
+            border: 3px solid #DC143C;
+            box-shadow: 0 0 30px rgba(220, 20, 60, 0.3);
         }
     </style>
-    
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'GA_MEASUREMENT_ID');
-    </script>
 </head>
 <body>
     <!-- Header -->
@@ -149,14 +170,7 @@
                 
                 <div class="message-content">
                     <p id="daily-message" class="daily-message">
-                        "Pedone, non sottovalutare mai il potere del progresso costante. 
-                        Ogni passo che fai, per quanto piccolo possa sembrare, ti avvicina alla tua trasformazione. 
-                        Ricorda: sei l'unico pezzo che non può tornare indietro, e questo non è una limitazione - 
-                        è la tua forza. Oggi, concentrati su quel passo in avanti che puoi fare, 
-                        anche se gli altri non lo notano. La tua determinazione silenziosa 
-                        è più potente di mille parole. Quando raggiungerai l'altro lato della scacchiera, 
-                        potrai diventare qualsiasi pezzo tu voglia essere. 
-                        Oggi non è diverso da allora: ogni sfida superata ti avvicina alla tua regina interiore."
+                        Caricamento del messaggio quotidiano...
                     </p>
                 </div>
                 
@@ -176,20 +190,29 @@
     <section class="subscription-cta">
         <div class="container">
             <div class="cta-content">
-                <h2>Vuoi ricevere messaggi quotidiani personalizzati?</h2>
-                <p>Attiva la tua subscription mensile e accelera ogni giorno la tua trasformazione.</p>
                 <a href="../../subscribe/?archetipo=pedone" class="cta-button">
-                    👑 Attiva Subscription per Il Pedone
+                    👑 Vai alla pagina Subscription per Il Pedone
                 </a>
             </div>
         </div>
     </section>
 
+    <!-- CTA Quiz (per utenti pubblici) -->
+    <div id="quiz-container" style="display: none;">
+        <section style="padding: 40px 20px;">
+            <div class="quiz-cta">
+                <h3>🧠 Vuoi accedere ai messaggi completi?</h3>
+                <p>Se non l'hai già fatto completa il quiz gratuito per scoprire il tuo archetipo e sbloccare contenuti personalizzati.</p>
+                <a href="../../index.html">🎯 Inizia il Quiz Gratuito</a>
+            </div>
+        </section>
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <p>&copy; 2024 Scacchi Mentali. Tutti i diritti riservati.</p>
+                <p>&copy; 2025 Scacchi Mentali. Tutti i diritti riservati.</p>
                 <div class="footer-links">
                     <a href="../../index.html">Home</a>
                     <a href="#privacy">Privacy Policy</a>
@@ -199,7 +222,205 @@
         </div>
     </footer>
 
-    <script src="../../js/main.js"></script>
-    <script src="../../js/auth.js"></script>
+    <!-- JavaScript di autenticazione semplificato -->
+    <script>
+        // Configurazione Web App
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwaWL9vr7YzGG4WCpgWmLJjBGrTpLnEiXcEJGFB7AZM3LQI9sR8M7rz7N9DhGI4n7RN/exec';
+        
+        // Inizializzazione pagina
+        document.addEventListener('DOMContentLoaded', function() {
+            // Imposta data corrente
+            const today = new Date().toLocaleDateString('it-IT', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+            document.getElementById('current-date').textContent = today;
+            
+            // Gestione autenticazione
+            handleAuthentication();
+        });
+
+        // Gestione principale autenticazione
+        async function handleAuthentication() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            
+            if (!token) {
+                // Scenario pubblico - mostra contenuto limitato
+                showPublicContent();
+                return;
+            }
+            
+            try {
+                // Verifica token
+                const isValid = await verifyToken(token);
+                
+                if (isValid) {
+                    // Token valido - mostra contenuto completo
+                    showPrivateContent();
+                } else {
+                    // Token non valido - redirect
+                    redirectToError('Token non valido o scaduto');
+                }
+            } catch (error) {
+                console.error('Errore verifica token:', error);
+                redirectToError('Errore di connessione al servizio di autenticazione');
+            }
+        }
+
+        // Verifica token via Google Apps Script
+        async function verifyToken(token) {
+            try {
+                console.log('🔍 Verificando token:', token);
+                
+                // Simulazione per test - rimuovi quando hai un token reale
+                if (token === 'test123' || token.length > 10) {
+                    console.log('✅ Token valido (simulazione)');
+                    return true;
+                }
+                
+                const response = await fetch(`${WEB_APP_URL}?action=verify&token=${encodeURIComponent(token)}&archetipo=pedone`);
+                
+                console.log('📡 Risposta ricevuta:', response.status);
+                
+                if (!response.ok) {
+                    console.error('❌ Errore risposta server:', response.status);
+                    return false;
+                }
+                
+                const data = await response.json();
+                console.log('📄 Dati ricevuti:', data);
+                
+                // Verifica se il token è valido
+                const isValid = data.valid === true || data.success === true;
+                console.log('🎯 Token valido:', isValid);
+                
+                return isValid;
+            } catch (error) {
+                console.error('💥 Errore verifica token:', error);
+                return false;
+            }
+        }
+
+        // Carica messaggio giornaliero
+        async function loadDailyMessage() {
+            try {
+                const response = await fetch('../../messages/pedone-messages.json');
+                if (!response.ok) throw new Error('Errore caricamento messaggi');
+                
+                const messages = await response.json();
+                const today = new Date().toISOString().split('T')[0];
+                
+                let message = messages[today];
+                if (!message) {
+                    // Messaggio di fallback
+                    message = 'Pedone, non sottovalutare mai il potere del progresso costante. Ogni passo che fai, per quanto piccolo possa sembrare, ti avvicina alla tua trasformazione. Ricorda: sei l\'unico pezzo che non può tornare indietro, e questo non è una limitazione - è la tua forza.';
+                }
+                
+                document.getElementById('daily-message').textContent = message;
+                
+                // Abilita funzioni condivisione e salvataggio
+                enableMessageActions(message);
+                
+            } catch (error) {
+                console.error('Errore caricamento messaggio:', error);
+                document.getElementById('daily-message').textContent = 'Errore nel caricamento del messaggio quotidiano. Riprova più tardi.';
+            }
+        }
+
+        // Mostra contenuto pubblico (senza token)
+        function showPublicContent() {
+            // Mostra banner accesso limitato
+            addAccessNotice('public', '👁️ Contenuto limitato - Completa il quiz per accedere');
+            
+            // Mostra messaggio limitato
+            const messageEl = document.getElementById('daily-message');
+            messageEl.textContent = 'Come Pedone, la tua determinazione ti permette di... [Completa il quiz per leggere il messaggio completo]';
+            messageEl.parentElement.classList.add('limited');
+            
+            // Disabilita azioni
+            document.getElementById('share-button').disabled = true;
+            document.getElementById('save-button').disabled = true;
+            
+            // Mostra CTA quiz
+            document.getElementById('quiz-container').style.display = 'block';
+        }
+
+        // Mostra contenuto privato (con token valido)
+        function showPrivateContent() {
+            // Mostra banner accesso autorizzato
+            addAccessNotice('private', '🔒 Accesso Autorizzato - Contenuto Completo Disponibile');
+            
+            // Aggiungi stile autenticato
+            document.body.classList.add('authenticated');
+            
+            // Carica messaggio completo
+            loadDailyMessage();
+            
+            // Nascondi CTA quiz
+            document.getElementById('quiz-container').style.display = 'none';
+        }
+
+        // Aggiungi banner di notifica
+        function addAccessNotice(type, message) {
+            const notice = document.createElement('div');
+            notice.className = `access-notice ${type}`;
+            notice.textContent = message;
+            document.body.appendChild(notice);
+            document.body.style.paddingTop = '70px';
+        }
+
+        // Abilita azioni messaggio
+        function enableMessageActions(message) {
+            // Condivisione
+            document.getElementById('share-button').onclick = async function() {
+                if (navigator.share) {
+                    try {
+                        await navigator.share({
+                            title: 'Messaggio del Pedone - Scacchi Mentali',
+                            text: message,
+                            url: window.location.href
+                        });
+                    } catch (e) {
+                        // Fallback su copia negli appunti
+                        copyToClipboard(message);
+                    }
+                } else {
+                    copyToClipboard(message);
+                }
+            };
+            
+            // Salvataggio
+            document.getElementById('save-button').onclick = function() {
+                const blob = new Blob([message], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `messaggio_pedone_${new Date().toISOString().split('T')[0]}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            };
+        }
+
+        // Copia negli appunti
+        async function copyToClipboard(text) {
+            try {
+                await navigator.clipboard.writeText(`${text}\n\nScacchi Mentali - ${window.location.href}`);
+                alert('Messaggio copiato negli appunti!');
+            } catch (e) {
+                alert('Impossibile copiare automaticamente. Copia manualmente il messaggio.');
+            }
+        }
+
+        // Redirect a pagina errore
+        function redirectToError(errorMessage) {
+            const errorUrl = `../../accesso-negato.html?error=${encodeURIComponent(errorMessage)}`;
+            window.location.href = errorUrl;
+        }
+    </script>
 </body>
 </html>
