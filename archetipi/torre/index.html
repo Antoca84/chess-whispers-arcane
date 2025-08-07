@@ -130,6 +130,7 @@ Così evitiamo dipendenze da funzioni globali di auth.js che potrebbero mancare.
             border: 3px solid #4682B4;
             box-shadow: 0 0 30px rgba(70, 130, 180, 0.3);
         }
+        .private-content{display:none;}
     </style>
 </head>
 <body>
@@ -159,8 +160,11 @@ Così evitiamo dipendenze da funzioni globali di auth.js che potrebbero mancare.
         </div>
     </section>
 
+    <!-- CTA Pubblica -->
+    <div id="public-cta-container"></div>
+
     <!-- Messaggio Quotidiano -->
-    <section class="messaggio-quotidiano">
+    <section class="messaggio-quotidiano private-content">
         <div class="container">
             <div class="message-card">
                 <div class="message-header">
@@ -175,10 +179,10 @@ Così evitiamo dipendenze da funzioni globali di auth.js che potrebbero mancare.
                 </div>
                 
                 <div class="message-actions">
-                    <button id="share-button" class="action-button primary" data-archetipo="Torre">
+                    <button id="share-button" class="action-button primary" data-archetipo="Torre" disabled>
                         📤 Condividi Messaggio
                     </button>
-                    <button id="save-button" class="action-button secondary" data-archetipo="Torre">
+                    <button id="save-button" class="action-button secondary" data-archetipo="Torre" disabled>
                         💾 Salva Messaggio
                     </button>
                 </div>
@@ -187,7 +191,7 @@ Così evitiamo dipendenze da funzioni globali di auth.js che potrebbero mancare.
     </section>
 
     <!-- Subscription CTA -->
-    <section class="subscription-cta">
+    <section class="subscription-cta private-content">
         <div class="container">
             <div class="cta-content">
                 <a href="../../subscribe/?archetipo=torre" class="cta-button">
@@ -222,205 +226,105 @@ Così evitiamo dipendenze da funzioni globali di auth.js che potrebbero mancare.
         </div>
     </footer>
 
-    <!-- JavaScript di autenticazione semplificato -->
+    <!-- SCRIPT AUTENTICAZIONE + LOGICA UI (Metodo RE) -->
     <script>
-        // Configurazione Web App
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwaWL9vr7YzGG4WCpgWmLJjBGrTpLnEiXcEJGFB7AZM3LQI9sR8M7rz7N9DhGI4n7RN/exec';
-        
-        // Inizializzazione pagina
-        document.addEventListener('DOMContentLoaded', function() {
-            // Imposta data corrente
-            const today = new Date().toLocaleDateString('it-IT', {
-                weekday: 'long',
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            });
-            document.getElementById('current-date').textContent = today;
-            
-            // Gestione autenticazione
-            handleAuthentication();
-        });
+    /* -------------------- CONFIG -------------------- */
+    const WEB_APP_URL   = 'https://script.google.com/macros/s/AKfycbweYcCMsWIaHb6TpZzY4-Tk5NcwzM4WNAZBsEKd92mxY6inWuq9h1Bm3r3szdEqL9nthg/exec';
+    const ERROR_PAGE    = 'https://antoca84.github.io/chess-whispers-arcane/accesso-negato.html';
+    const ARCHETIPO     = 'torre';
 
-        // Gestione principale autenticazione
-        async function handleAuthentication() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const token = urlParams.get('token');
-            
-            if (!token) {
-                // Scenario pubblico - mostra contenuto limitato
-                showPublicContent();
-                return;
-            }
-            
-            try {
-                // Verifica token
-                const isValid = await verifyToken(token);
-                
-                if (isValid) {
-                    // Token valido - mostra contenuto completo
-                    showPrivateContent();
-                } else {
-                    // Token non valido - redirect
-                    redirectToError('Token non valido o scaduto');
-                }
-            } catch (error) {
-                console.error('Errore verifica token:', error);
-                redirectToError('Errore di connessione al servizio di autenticazione');
-            }
-        }
+    /* -------------------- UTILITY UI -------------------- */
+    function addBanner(type,msg){
+      const b=document.createElement('div');
+      b.className=`access-notice ${type}`; b.textContent=msg;
+      document.body.prepend(b); document.body.style.paddingTop='60px';
+    }
+    function showQuizCTA(){
+      const el=document.getElementById('public-cta-container'); if(!el) return;
+      el.innerHTML=
+        `<div class="quiz-cta">
+           <h3>🧠 Vuoi accedere ai messaggi completi?</h3>
+           <p>Completa il quiz gratuito per scoprire il tuo archetipo e sbloccare contenuti personalizzati.</p>
+           <a href="../../index.html">🎯 Inizia il Quiz Gratuito</a>
+         </div>`;
+    }
+    function showPrivateSections(){
+      document.querySelectorAll('.private-content').forEach(el=>el.style.display='block');
+      const sb=document.getElementById('share-button'); if(sb) sb.disabled=false;
+      const sv=document.getElementById('save-button');  if(sv) sv.disabled=false;
+    }
+    function hidePrivateSections(){
+      document.querySelectorAll('.private-content').forEach(el=>el.style.display='none');
+    }
 
-        // Verifica token via Google Apps Script
-        async function verifyToken(token) {
-            try {
-                console.log('🔍 Verificando token:', token);
-                
-                // Simulazione per test - rimuovi quando hai un token reale
-                if (token === 'test123' || token.length > 10) {
-                    console.log('✅ Token valido (simulazione)');
-                    return true;
-                }
-                
-                const response = await fetch(`${WEB_APP_URL}?action=verify&token=${encodeURIComponent(token)}&archetipo=torre`);
-                
-                console.log('📡 Risposta ricevuta:', response.status);
-                
-                if (!response.ok) {
-                    console.error('❌ Errore risposta server:', response.status);
-                    return false;
-                }
-                
-                const data = await response.json();
-                console.log('📄 Dati ricevuti:', data);
-                
-                // Verifica se il token è valido
-                const isValid = data.valid === true || data.success === true;
-                console.log('🎯 Token valido:', isValid);
-                
-                return isValid;
-            } catch (error) {
-                console.error('💥 Errore verifica token:', error);
-                return false;
-            }
-        }
+    /* -------------------- TOKEN FLOW -------------------- */
+    async function verifyToken(token){
+      try{
+        const r = await fetch(`${WEB_APP_URL}?action=verify&token=${encodeURIComponent(token)}&archetipo=${ARCHETIPO}`);
+        if(!r.ok) return {valid:false};
+        return await r.json();
+      }catch(e){ console.error(e); return {valid:false}; }
+    }
 
-        // Carica messaggio giornaliero
-        async function loadDailyMessage() {
-            try {
-                const response = await fetch('../../messages/torre-messages.json');
-                if (!response.ok) throw new Error('Errore caricamento messaggi');
-                
-                const messages = await response.json();
-                const today = new Date().toISOString().split('T')[0];
-                
-                let message = messages[today];
-                if (!message) {
-                    // Messaggio di fallback
-                    message = 'Torre, la tua forza risiede nella stabilità e nella perseveranza. Come un architetto del destino, costruisci il tuo futuro mattone dopo mattone, con pazienza e precisione. Oggi, concentrati sulle fondamenta.';
-                }
-                
-                document.getElementById('daily-message').textContent = message;
-                
-                // Abilita funzioni condivisione e salvataggio
-                enableMessageActions(message);
-                
-            } catch (error) {
-                console.error('Errore caricamento messaggio:', error);
-                document.getElementById('daily-message').textContent = 'Errore nel caricamento del messaggio quotidiano. Riprova più tardi.';
-            }
-        }
+    async function handleAuth(){
+      document.getElementById('current-date').textContent =
+        new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 
-        // Mostra contenuto pubblico (senza token)
-        function showPublicContent() {
-            // Mostra banner accesso limitato
-            addAccessNotice('public', '👁️ Contenuto limitato - Completa il quiz per accedere');
-            
-            // Mostra messaggio limitato
-            const messageEl = document.getElementById('daily-message');
-            messageEl.textContent = 'Come Torre, la tua stabilità ti permette di... [Completa il quiz per leggere il messaggio completo]';
-            messageEl.parentElement.classList.add('limited');
-            
-            // Disabilita azioni
-            document.getElementById('share-button').disabled = true;
-            document.getElementById('save-button').disabled = true;
-            
-            // Mostra CTA quiz
-            document.getElementById('quiz-container').style.display = 'block';
-        }
+      const params = new URLSearchParams(window.location.search);
+      const token  = params.get('token');
 
-        // Mostra contenuto privato (con token valido)
-        function showPrivateContent() {
-            // Mostra banner accesso autorizzato
-            addAccessNotice('private', '🔒 Accesso Autorizzato - Contenuto Completo Disponibile');
-            
-            // Aggiungi stile autenticato
-            document.body.classList.add('authenticated');
-            
-            // Carica messaggio completo
-            loadDailyMessage();
-            
-            // Nascondi CTA quiz
-            document.getElementById('quiz-container').style.display = 'none';
-        }
+      if(!token){
+        addBanner('public','👁️ Contenuto Limitato – nessun token presente');
+        hidePrivateSections(); showQuizCTA(); return;
+      }
 
-        // Aggiungi banner di notifica
-        function addAccessNotice(type, message) {
-            const notice = document.createElement('div');
-            notice.className = `access-notice ${type}`;
-            notice.textContent = message;
-            document.body.appendChild(notice);
-            document.body.style.paddingTop = '70px';
-        }
+      addBanner('public','⏳ Verifica token in corso…');
+      const res = await verifyToken(token);
+      const n=document.querySelector('.access-notice'); if(n) n.remove();
 
-        // Abilita azioni messaggio
-        function enableMessageActions(message) {
-            // Condivisione
-            document.getElementById('share-button').onclick = async function() {
-                if (navigator.share) {
-                    try {
-                        await navigator.share({
-                            title: 'Messaggio della Torre - Scacchi Mentali',
-                            text: message,
-                            url: window.location.href
-                        });
-                    } catch (e) {
-                        // Fallback su copia negli appunti
-                        copyToClipboard(message);
-                    }
-                } else {
-                    copyToClipboard(message);
-                }
-            };
-            
-            // Salvataggio
-            document.getElementById('save-button').onclick = function() {
-                const blob = new Blob([message], { type: 'text/plain' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `messaggio_torre_${new Date().toISOString().split('T')[0]}.txt`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            };
-        }
+      if(res && res.valid){
+        addBanner('private','🔒 Accesso Privato Autorizzato – TORRE');
+        showPrivateSections(); loadDailyMessage(); enableActions();
+      }else{
+        window.location.href = `${ERROR_PAGE}?error=${encodeURIComponent(res.error || 'Token non valido')}`;
+      }
+    }
 
-        // Copia negli appunti
-        async function copyToClipboard(text) {
-            try {
-                await navigator.clipboard.writeText(`${text}\n\nScacchi Mentali - ${window.location.href}`);
-                alert('Messaggio copiato negli appunti!');
-            } catch (e) {
-                alert('Impossibile copiare automaticamente. Copia manualmente il messaggio.');
-            }
-        }
+    /* -------------------- MESSAGGI -------------------- */
+    async function loadDailyMessage(){
+      try{
+        const r = await fetch('../../messages/torre-messages.json');
+        const data = await r.json();
+        const today = new Date().toISOString().split('T')[0];
+        const msg = data[today] || 'Messaggio non disponibile per oggi.';
+        document.getElementById('daily-message').textContent = msg;
+        window._currentMsg = msg;
+      }catch(e){
+        document.getElementById('daily-message').textContent = 'Errore nel caricamento del messaggio.';
+      }
+    }
 
-        // Redirect a pagina errore
-        function redirectToError(errorMessage) {
-            const errorUrl = `../../accesso-negato.html?error=${encodeURIComponent(errorMessage)}`;
-            window.location.href = errorUrl;
-        }
+    /* -------------------- AZIONI SHARE / SAVE -------------------- */
+    function enableActions(){
+      const shareBtn=document.getElementById('share-button');
+      const saveBtn =document.getElementById('save-button');
+
+      shareBtn.onclick=async()=>{
+        const text=window._currentMsg+'\n\nScacchi Mentali';
+        if(navigator.share){ try{await navigator.share({title:'Messaggio della Torre',text, url:location.href});}catch{} }
+        else{ try{await navigator.clipboard.writeText(text); alert('Messaggio copiato negli appunti!');}catch{} }
+      };
+
+      saveBtn.onclick=()=>{
+        const blob=new Blob([window._currentMsg],{type:'text/plain'});
+        const url=URL.createObjectURL(blob);
+        const a=document.createElement('a');
+        a.href=url; a.download=`messaggio-torre-${new Date().toISOString().split('T')[0]}.txt`;
+        document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+      };
+    }
+
+    document.addEventListener('DOMContentLoaded',handleAuth);
     </script>
 </body>
 </html>
