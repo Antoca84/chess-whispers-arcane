@@ -606,7 +606,7 @@
 
     <script>
         // Configurazione Stripe
-        const stripe = Stripe('pk_test_TUA_PUBLISHABLE_KEY_QUI'); // Sostituire con la tua chiave
+        const stripe = Stripe('pk_test_51RyviuC8ycMPK5PJz6IDpZzCr2RGC0M4BTwJwRrNen3PTVJXfqpDgAeZ6xS2PunKjBTVbbnkcZEqToF1uMgdiX7O006dB6buFB'); // Sostituire con la tua chiave
 
         // Gestione click sui pulsanti
         document.getElementById('checkout-button').addEventListener('click', handleCheckout);
@@ -620,7 +620,7 @@
                 // Reindirizza direttamente a Stripe Checkout
                 const { error } = await stripe.redirectToCheckout({
                     lineItems: [{
-                        price: 'price_TUO_PRICE_ID_QUI', // Sostituire con il tuo Price ID
+                        price: 'price_1Ryvs8C8ycMPK5PJQHke95PR', // Sostituire con il tuo Price ID
                         quantity: 1,
                     }],
                     mode: 'payment',
