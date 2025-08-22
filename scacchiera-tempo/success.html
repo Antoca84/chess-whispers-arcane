@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamento Completato - Scacchi Mentali</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 50%, #000000 100%);
+            color: white;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .success-icon {
+            font-size: 80px;
+            margin-bottom: 30px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #fbbf24;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            color: #e5e7eb;
+        }
+
+        .info-box {
+            background: rgba(51, 65, 85, 0.5);
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .info-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #fbbf24;
+        }
+
+        .info-list {
+            text-align: left;
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .info-list li {
+            padding: 8px 0;
+            color: #d1d5db;
+        }
+
+        .session-id {
+            font-size: 14px;
+            color: #9ca3af;
+            font-family: monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 30px;
+            background: #fbbf24;
+            color: #000;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #f59e0b;
+            transform: translateY(-2px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 40px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #fbbf24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">🎉</div>
+        
+        <h1>Pagamento Completato!</h1>
+        
+        <p class="subtitle">
+            Grazie per aver acquistato la Scacchiera del Tempo!
+        </p>
+
+        <div class="info-box">
+            <h2 class="info-title">📧 Cosa Succede Ora?</h2>
+            <ul class="info-list">
+                <li>✅ Riceverai un'email con tutti i file entro 5 minuti</li>
+                <li>✅ Controlla anche la cartella spam/promozioni</li>
+                <li>✅ Accesso immediato alla community privata</li>
+                <li>✅ Supporto completo per 30 giorni</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <h2 class="info-title">📦 Cosa Hai Ricevuto:</h2>
+            <ul class="info-list">
+                <li>📊 File Excel "Scacchiera del Tempo" (pronto all'uso)</li>
+                <li>📖 Guida completa all'utilizzo (PDF dettagliato)</li>
+                <li>👥 Accesso alla community privata Scacchi Mentali</li>
+                <li>🎁 Bonus: Template per obiettivi mensili</li>
+            </ul>
+        </div>
+
+        <a href="https://antoca84.github.io/chess-whispers-arcane/index.html" class="btn">
+            <span>🏠</span>
+            <span>Torna a Scacchi Mentali</span>
+        </a>
+
+        <div class="session-id" id="session-info">
+            Caricamento informazioni sessione...
+        </div>
+
+        <div class="logo">
+            <span>♔</span>
+            <span>SCACCHI MENTALI</span>
+        </div>
+    </div>
+
+    <script>
+        // Ottieni session ID dall'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionId = urlParams.get('session_id');
+        
+        if (sessionId) {
+            document.getElementById('session-info').textContent = `Sessione ID: ${sessionId}`;
+        } else {
+            document.getElementById('session-info').textContent = 'Pagamento completato con successo!';
+        }
+    </script>
+</body>
+</html>
+
