@@ -353,7 +353,7 @@
 
   <script>
     // Inizializza Stripe con la tua chiave pubblica (sostituire pk_test_YourPublicKeyHere)
-    const stripe = Stripe('pk_test_51RyviuC8ycMPK5PJz6IDpZzCr2RGC0M4BTwJwRrNen3PTVJXfqpDgAeZ6xS2PunKjBTVbbnkcZEqToF1uMgdiX7O006dB6buFB');
+    const stripe = Stripe('pk_live_51RyvikCPGerjPt82LPcFpAgr3grN1xcuV9mjwuhpsdYnLJsUoeetYlJqeu8EzA2hrgUFc2wK6LfYwdOsoUPjpqSG00ac6dzhlj');
 
     // Associa i pulsanti alla stessa funzione
     document.getElementById('checkout-button').addEventListener('click', handleCheckout);
@@ -374,7 +374,7 @@
       try {
         const { successUrl, cancelUrl } = getReturnUrls();
         const { error } = await stripe.redirectToCheckout({
-          lineItems: [{ price: 'price_1Ryvs8C8ycMPK5PJQHke95PR', quantity: 1 }], // sostituisci con il tuo Price ID
+          lineItems: [{ price: 'price_1RyxqqCPGerjPt821oCxVcmk', quantity: 1 }], // sostituisci con il tuo Price ID
           mode: 'payment',
           successUrl: successUrl,
           cancelUrl: cancelUrl
