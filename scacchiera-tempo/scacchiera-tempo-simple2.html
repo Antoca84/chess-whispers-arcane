@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scacchiera del Tempo - La Tua Strategia per una Vita da Dio | Scacchi Mentali</title>
+  <!-- Stripe.js -->
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    :root {
+      --color-accent: #fbbf24;
+      --color-accent-dark: #f59e0b;
+      --color-danger: #ef4444;
+      --color-bg-1: #1e293b;
+      --color-bg-2: #0f172a;
+      --color-bg-3: #000000;
+      --color-text: #ffffff;
+      --color-muted: #9ca3af;
+      --color-highlight: #fca5a5;
+      --glass-border: rgba(255,255,255,0.15);
+      --glass-bg: rgba(255,255,255,0.04);
+      --glass-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+      background:linear-gradient(135deg,var(--color-bg-1) 0%,var(--color-bg-2) 50%,var(--color-bg-3) 100%);
+      color:var(--color-text);
+      line-height:1.6;
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+    .container{max-width:1200px;margin:0 auto;padding:0 20px;}
+    /* Header */
+    .header{padding:20px 0;border-bottom:1px solid rgba(255,255,255,0.1);position:relative;z-index:1;}
+    .header-content{display:flex;justify-content:space-between;align-items:center;}
+    .logo{display:flex;align-items:center;gap:10px;font-size:24px;font-weight:bold;color:var(--color-accent);}
+    .badge{background:var(--color-accent);color:#000;padding:8px 16px;border-radius:20px;font-size:14px;font-weight:700;box-shadow:0 4px 12px rgba(0,0,0,0.25);}
+    /* Hero Section */
+    .hero{
+      position:relative;text-align:center;padding:100px 20px;overflow:hidden;border-radius:18px;
+      background:var(--glass-bg);border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);
+      backdrop-filter:blur(8px);margin-top:40px;
+    }
+    /* Effetto radiale e pulsazione ispirati alle pagine archetipi:contentReference[oaicite:2]{index=2}:contentReference[oaicite:3]{index=3} */
+    .hero::before{
+      content:"";position:absolute;top:-50%;left:-50%;right:-50%;bottom:-50%;
+      background:radial-gradient(circle at var(--mouseX,50%) var(--mouseY,50%), rgba(251,191,36,0.15), transparent 70%);
+      animation:pulse 6s ease-in-out infinite;z-index:-1;
+    }
+    @keyframes pulse{0%,100%{opacity:.4;}50%{opacity:.8;}}
+    .hero-badge{
+      display:inline-block;padding:12px 24px;border-radius:30px;font-weight:700;font-size:16px;
+      color:var(--color-accent);background:rgba(251,191,36,0.2);border:1px solid var(--color-accent);margin-bottom:30px;
+    }
+    .hero h1{
+      font-size:clamp(3rem,8vw,5rem);font-weight:900;
+      background:linear-gradient(135deg,var(--color-accent) 0%,var(--color-accent-dark) 100%);
+      -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:16px;line-height:1.1;
+    }
+    .hero-subtitle{font-size:clamp(1.5rem,4vw,2rem);margin-bottom:15px;color:var(--color-muted);}
+    .hero-description{font-size:18px;color:var(--color-muted);max-width:640px;margin:0 auto 40px;}
+    .social-proof{display:flex;justify-content:center;gap:30px;margin-bottom:40px;flex-wrap:wrap;}
+    .social-proof-item{display:flex;align-items:center;gap:8px;color:var(--color-muted);}
+    .social-proof-item .star{color:var(--color-accent);font-size:20px;}
+    /* Price box con effetto vetro */
+    .price-box{
+      background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.4);
+      border-radius:20px;padding:30px 24px;max-width:420px;margin:0 auto 40px;
+      backdrop-filter:blur(8px);box-shadow:0 8px 24px rgba(0,0,0,0.35);
+      transition:transform .3s ease,box-shadow .3s ease;
+    }
+    .price-box:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,0.45);}
+    .price-label{color:var(--color-highlight);font-weight:600;margin-bottom:10px;}
+    .price{font-size:2.2rem;font-weight:900;display:flex;justify-content:center;align-items:baseline;gap:10px;}
+    .price-old{text-decoration:line-through;color:var(--color-muted);font-size:1.2rem;}
+    .price-new{color:var(--color-accent);}
+    .price-urgency{font-size:14px;color:var(--color-highlight);margin-top:5px;text-align:center;}
+    /* Buttons */
+    .btn{
+      display:inline-flex;align-items:center;gap:10px;padding:18px 35px;
+      background:linear-gradient(135deg,var(--color-accent),var(--color-accent-dark));
+      color:#000;text-decoration:none;border-radius:12px;font-weight:700;font-size:18px;border:none;
+      cursor:pointer;transition:transform .2s ease,box-shadow .3s ease;
+      box-shadow:0 8px 20px rgba(251,191,36,0.35);
+    }
+    .btn:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(251,191,36,0.45);}
+    .btn:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none;}
+    .loading{display:none;width:20px;height:20px;border:3px solid #000;border-top:3px solid transparent;border-radius:50%;animation:spin 1s linear infinite;}
+    @keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+    /* Features Section */
+    .features{padding:80px 0;background:radial-gradient(800px 400px at 100% 0%,rgba(251,191,36,0.08),transparent 60%),linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0));}
+    .section-title{text-align:center;font-size:2.8rem;font-weight:bold;margin-bottom:20px;}
+    .section-subtitle{text-align:center;color:var(--color-muted);max-width:640px;margin:0 auto 60px;font-size:18px;}
+    .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:30px;}
+    .feature-card{
+      background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);
+      border-radius:16px;padding:32px;transition:transform .3s ease,box-shadow .3s ease;
+      box-shadow:0 6px 16px rgba(0,0,0,0.3);backdrop-filter:blur(6px);
+    }
+    .feature-card:hover{transform:translateY(-6px);box-shadow:0 12px 28px rgba(0,0,0,0.45);}
+    .feature-icon{width:60px;height:60px;background:rgba(251,191,36,0.18);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;font-size:28px;color:var(--color-accent);}
+    .feature-title{font-size:20px;font-weight:700;margin-bottom:10px;}
+    .feature-description{color:var(--color-muted);}
+    /* Benefits Section */
+    .benefits{padding:80px 0;background:radial-gradient(600px 300px at 0% 50%,rgba(251,191,36,0.08),transparent 70%),linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0));}
+    .benefits-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:40px;margin-top:40px;}
+    .benefit-item{display:flex;gap:15px;}
+    .benefit-icon{color:#10b981;font-size:24px;margin-top:5px;}
+    .benefit-content h3{font-weight:600;margin-bottom:8px;}
+    .benefit-content p{color:var(--color-muted);}
+    /* CTA Section */
+    .cta{padding:80px 0;text-align:center;}
+    .cta-box{
+      background:linear-gradient(135deg,rgba(251,191,36,0.1) 0%,rgba(245,158,11,0.1) 100%);
+      border:1px solid rgba(251,191,36,0.3);border-radius:24px;padding:40px;margin:40px auto;max-width:640px;
+      backdrop-filter:blur(6px);box-shadow:0 10px 24px rgba(0,0,0,0.35);transition:transform .3s ease;
+    }
+    .cta-box:hover{transform:translateY(-4px);}
+    .cta-title{color:var(--color-accent);font-weight:700;margin-bottom:20px;font-size:20px;}
+    .cta-list{list-style:none;text-align:left;margin:0 auto 30px;max-width:520px;}
+    .cta-list li{padding:8px 0;color:#d1d5db;}
+    /* Footer */
+    .footer{border-top:1px solid rgba(71,85,105,0.5);padding:40px 0;text-align:center;background:rgba(0,0,0,0.1);}
+    .footer-logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:20px;font-size:24px;font-weight:bold;color:var(--color-accent);}
+    .footer-text{color:var(--color-muted);}
+    /* Responsive */
+    @media (max-width:768px){
+      .header-content{flex-direction:column;gap:20px;}
+      .social-proof{flex-direction:column;gap:15px;}
+      .features-grid{grid-template-columns:1fr;}
+      .benefits-grid{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <div class="logo">
+          <span>♔</span>
+          <span>SCACCHI MENTALI</span>
+        </div>
+        <div class="badge">Offerta Limitata</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero-section">
+    <div class="container">
+      <div class="hero-badge">
+        🔥 Prodotto Digitale Esclusivo
+      </div>
+      <h1>Scacchiera del Tempo</h1>
+      <p class="hero-subtitle">
+        La Tua Strategia per una <span style="color: var(--color-accent); font-weight: bold;">Vita da Dio</span>
+      </p>
+      <p class="hero-description">
+        Trasforma ogni giornata in una mossa vincente. Il sistema di gestione del tempo
+        che combina la strategia degli scacchi con la crescita personale.
+      </p>
+      <div class="social-proof">
+        <div class="social-proof-item">
+          <span class="star">★</span>
+          <span style="font-weight: 600;">4.9/5</span>
+          <span style="color: var(--color-muted);">(2.021 utenti)</span>
+        </div>
+        <div class="social-proof-item" style="color: #10b981;">
+          <span>👥</span>
+          <span>Oltre 2.000 persone hanno già iniziato</span>
+        </div>
+      </div>
+      <div class="price-box">
+        <p class="price-label">⏰ Offerta Early Adopters</p>
+        <p class="price">
+          <span class="price-old">19,99€</span>
+          <span class="price-new">9,99€</span>
+        </p>
+        <p class="price-urgency">Scade tra pochi giorni!</p>
+      </div>
+      <button id="checkout-button" class="btn">
+        <span class="loading" id="loading"></span>
+        <span id="button-text">
+          <span>🏆</span>
+          <span>Ottieni la Tua Scacchiera del Tempo</span>
+          <span>→</span>
+        </span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="container">
+      <h2 class="section-title">
+        Cosa Include la <span style="color: var(--color-accent);">Scacchiera del Tempo</span>
+      </h2>
+      <p class="section-subtitle">
+        Un sistema completo per trasformare la tua gestione del tempo in una strategia vincente
+      </p>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <h3 class="feature-title">Sistema "Vita da Dio"</h3>
+          <p class="feature-description">
+            Pianifica i tuoi obiettivi più importanti con la strategia del Re.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📅</div>
+          <h3 class="feature-title">Calendario 12 Mesi</h3>
+          <p class="feature-description">
+            Visione strategica a lungo termine per i tuoi progetti.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">✅</div>
+          <h3 class="feature-title">Lista Strategica</h3>
+          <p class="feature-description">
+            Organizza le tue azioni quotidiane come mosse vincenti.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">♔</div>
+          <h3 class="feature-title">Sezioni C1-C12</h3>
+          <p class="feature-description">
+            12 aree di focus per una crescita completa e bilanciata.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">♕</div>
+          <h3 class="feature-title">Moduli H1-H12</h3>
+          <p class="feature-description">
+            Strategie avanzate per massimizzare la tua produttività.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3 class="feature-title">File Excel Pronto</h3>
+          <p class="feature-description">
+            Scarica e inizia subito, compatibile con Excel e Google Sheets.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Benefits Section -->
+  <section class="benefits">
+    <div class="container">
+      <h2 class="section-title">
+        Perché Scegliere la <span style="color: var(--color-accent);">Scacchiera del Tempo</span>
+      </h2>
+      <div class="benefits-grid">
+        <div>
+          <div class="benefit-item">
+            <div class="benefit-icon">✓</div>
+            <div class="benefit-content">
+              <h3>Strategia Comprovata</h3>
+              <p>Basata sui principi strategici degli scacchi applicati alla vita reale.</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-icon">✓</div>
+            <div class="benefit-content">
+              <h3>Facile da Usare</h3>
+              <p>Interfaccia intuitiva che puoi personalizzare secondo le tue esigenze.</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-icon">✓</div>
+            <div class="benefit-content">
+              <h3>Risultati Immediati</h3>
+              <p>Inizia a vedere miglioramenti nella tua produttività dal primo giorno.</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="benefit-item">
+            <div class="benefit-icon">✓</div>
+            <div class="benefit-content">
+              <h3>Supporto Completo</h3>
+              <p>Accesso alla community Scacchi Mentali e aggiornamenti gratuiti.</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-icon">✓</div>
+            <div class="benefit-content">
+              <h3>Garanzia 30 Giorni</h3>
+              <p>Se non sei soddisfatto, rimborso completo senza domande.</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-icon">✓</div>
+            <div class="benefit-content">
+              <h3>Aggiornamenti Gratuiti</h3>
+              <p>Ricevi tutte le future versioni e miglioramenti senza costi aggiuntivi.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta">
+    <div class="container">
+      <h2 class="section-title">
+        Pronto a Fare la Tua <span style="color: var(--color-accent);">Mossa Vincente</span>?
+      </h2>
+      <p style="font-size:18px;color:var(--color-muted);margin-bottom:40px;">
+        Unisciti a oltre 2.000 persone che hanno già trasformato la loro gestione del tempo
+        in una strategia vincente con la Scacchiera del Tempo.
+      </p>
+      <div class="cta-box">
+        <p class="cta-title">🎯 Cosa Otterrai Subito:</p>
+        <ul class="cta-list">
+          <li>✅ File Excel della Scacchiera del Tempo (download immediato)</li>
+          <li>✅ Guida completa all'utilizzo (PDF)</li>
+          <li>✅ Accesso alla community privata Scacchi Mentali</li>
+          <li>✅ Bonus: Template per obiettivi mensili</li>
+        </ul>
+      </div>
+      <button id="checkout-button-2" class="btn" style="font-size:20px;padding:20px 40px;margin-top:20px;">
+        <span class="loading" id="loading-2"></span>
+        <span id="button-text-2">
+          <span>🏆</span>
+          <span>Acquista Ora - Solo 9,99€</span>
+          <span>→</span>
+        </span>
+      </button>
+      <p style="font-size:14px;color:#6b7280;margin-top:20px;">
+        Pagamento sicuro tramite Stripe • Garanzia 30 giorni • Download immediato
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-logo">
+        <span>♔</span>
+        <span>SCACCHI MENTALI</span>
+      </div>
+      <p class="footer-text">
+        © 2025 Scacchi Mentali. Tutti i diritti riservati.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    // Inizializza Stripe con la tua chiave pubblica (sostituire pk_test_YourPublicKeyHere)
+    const stripe = Stripe('pk_test_51RyviuC8ycMPK5PJz6IDpZzCr2RGC0M4BTwJwRrNen3PTVJXfqpDgAeZ6xS2PunKjBTVbbnkcZEqToF1uMgdiX7O006dB6buFB');
+
+    // Associa i pulsanti alla stessa funzione
+    document.getElementById('checkout-button').addEventListener('click', handleCheckout);
+    document.getElementById('checkout-button-2').addEventListener('click', handleCheckout);
+
+    // Calcola i percorsi di successo e annullo nella directory attuale
+    function getReturnUrls() {
+      const { origin, pathname } = window.location;
+      const basePath = pathname.substring(0, pathname.lastIndexOf('/') + 1);
+      return {
+        successUrl: origin + basePath + 'success.html',
+        cancelUrl: origin + basePath + 'cancel.html'
+      };
+    }
+
+    async function handleCheckout() {
+      showLoading();
+      try {
+        const { successUrl, cancelUrl } = getReturnUrls();
+        const { error } = await stripe.redirectToCheckout({
+          lineItems: [{ price: 'price_1Ryvs8C8ycMPK5PJQHke95PR', quantity: 1 }], // sostituisci con il tuo Price ID
+          mode: 'payment',
+          successUrl: successUrl,
+          cancelUrl: cancelUrl
+        });
+        if (error) {
+          console.error('Errore Stripe:', error);
+          alert('Errore durante il pagamento. Riprova.');
+        }
+      } catch (err) {
+        console.error('Errore:', err);
+        alert('Errore di connessione. Riprova.');
+      } finally {
+        hideLoading();
+      }
+    }
+
+    function showLoading() {
+      ['checkout-button', 'checkout-button-2'].forEach(id => {
+        const btn = document.getElementById(id);
+        const loading = btn.querySelector('.loading');
+        const text = btn.querySelector('[id^="button-text"]');
+        btn.disabled = true;
+        loading.style.display = 'block';
+        text.style.display = 'none';
+      });
+    }
+
+    function hideLoading() {
+      ['checkout-button', 'checkout-button-2'].forEach(id => {
+        const btn = document.getElementById(id);
+        const loading = btn.querySelector('.loading');
+        const text = btn.querySelector('[id^="button-text"]');
+        btn.disabled = false;
+        loading.style.display = 'none';
+        text.style.display = 'flex';
+      });
+    }
+
+    // Effetto parallax per la hero: aggiorna i CSS custom properties mouseX/mouseY
+    const hero = document.getElementById('hero-section');
+    hero.addEventListener('mousemove', e => {
+      const rect = hero.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      hero.style.setProperty('--mouseX', (x / rect.width) * 100 + '%');
+      hero.style.setProperty('--mouseY', (y / rect.height) * 100 + '%');
+    });
+    hero.addEventListener('mouseleave', () => {
+      hero.style.removeProperty('--mouseX');
+      hero.style.removeProperty('--mouseY');
+    });
+
+    // Smooth scroll per anchor interne
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  </script>
+</body>
+</html>
