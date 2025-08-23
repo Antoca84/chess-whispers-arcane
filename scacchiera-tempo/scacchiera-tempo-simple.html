@@ -862,90 +862,66 @@
     </div>
   </footer>
 
-  <script>
-    // Inizializza Stripe con la chiave pubblica
-    const stripe = Stripe('pk_live_51RyvikCPGerjPt82LPcFpAgr3grN1xcuV9mjwuhpsdYnLJsUoeetYlJqeu8EzA2hrgUFc2wK6LfYwdOsoUPjpqSG00ac6dzhlj');
+  
+<script>
+  // === CONFIG ===
+  const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/28EeVc4cubz14KodFC1ZS00";
 
-    // Associa i pulsanti alla stessa funzione
-    document.getElementById('checkout-button').addEventListener('click', handleCheckout);
-    document.getElementById('checkout-button-2').addEventListener('click', handleCheckout);
+  // Collega i due pulsanti alla stessa azione
+  document.getElementById('checkout-button')?.addEventListener('click', goToStripe);
+  document.getElementById('checkout-button-2')?.addEventListener('click', goToStripe);
 
-    // Calcola i percorsi di successo e annullo
-    function getReturnUrls() {
-      const baseUrl = "https://antoca84.github.io/chess-whispers-arcane/scacchiera-tempo/";
-      return {
-        successUrl: baseUrl + "success.html",
-        cancelUrl: baseUrl + "cancel.html"
-      };
+  function goToStripe(e) {
+    e?.preventDefault?.();
+    showLoading();
+    // Disabilita i click multipli e vai al Payment Link
+    try {
+      window.location.assign(STRIPE_PAYMENT_LINK);
+      // Nota: non richiamiamo hideLoading perché l'utente lascia la pagina
+    } catch (err) {
+      console.error(err);
+      showError('Impossibile aprire la pagina di pagamento. Riprova.');
+      hideLoading();
     }
+  }
 
-    async function handleCheckout() {
-      showLoading();
-      try {
-        const { successUrl, cancelUrl } = getReturnUrls();
-        
-        // Creazione sessione Stripe con configurazione corretta
-        const { error } = await stripe.redirectToCheckout({
-          lineItems: [{ 
-            price: 'price_1RyxqqCPGerjPt821oCxVcmk', 
-            quantity: 1 
-          }],
-          mode: 'payment',
-          successUrl: successUrl,
-          cancelUrl: cancelUrl,
-          allowPromotionCodes: true,
-          billingAddressCollection: 'auto',
-          shippingAddressCollection: {
-            allowedCountries: ['IT', 'US', 'GB', 'DE', 'FR', 'ES']
-          }
-        });
-        
-        if (error) {
-          console.error('Errore Stripe:', error);
-          showError('Errore durante il pagamento: ' + error.message);
-        }
-      } catch (err) {
-        console.error('Errore:', err);
-        showError('Errore di connessione. Verifica la tua connessione internet e riprova.');
-      } finally {
-        hideLoading();
-      }
-    }
+  // --- UI helpers (riuso dei tuoi spinner/testi) ---
+  function showError(message) {
+    const errorDiv = document.createElement('div');
+    errorDiv.style.cssText = `
+      position: fixed; top: 20px; right: 20px; z-index: 1000;
+      background: rgba(239, 68, 68, 0.9); color: white; padding: 16px 20px;
+      border-radius: 8px; font-weight: 600; max-width: 400px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3); backdrop-filter: blur(10px);
+    `;
+    errorDiv.textContent = message;
+    document.body.appendChild(errorDiv);
+    setTimeout(() => errorDiv.remove(), 5000);
+  }
 
-    function showError(message) {
-      const errorDiv = document.createElement('div');
-      errorDiv.style.cssText = `
-        position: fixed; top: 20px; right: 20px; z-index: 1000;
-        background: rgba(239, 68, 68, 0.9); color: white; padding: 16px 20px;
-        border-radius: 8px; font-weight: 600; max-width: 400px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.3); backdrop-filter: blur(10px);
-      `;
-      errorDiv.textContent = message;
-      document.body.appendChild(errorDiv);
-      setTimeout(() => errorDiv.remove(), 5000);
-    }
+  function showLoading() {
+    ['checkout-button', 'checkout-button-2'].forEach(id => {
+      const btn = document.getElementById(id);
+      if (!btn) return;
+      const loading = btn.querySelector('.loading');
+      const text = btn.querySelector('[id^="button-text"]');
+      btn.disabled = true;
+      if (loading) loading.style.display = 'block';
+      if (text) text.style.display = 'none';
+    });
+  }
 
-    function showLoading() {
-      ['checkout-button', 'checkout-button-2'].forEach(id => {
-        const btn = document.getElementById(id);
-        const loading = btn.querySelector('.loading');
-        const text = btn.querySelector('[id^="button-text"]');
-        btn.disabled = true;
-        loading.style.display = 'block';
-        text.style.display = 'none';
-      });
-    }
-
-    function hideLoading() {
-      ['checkout-button', 'checkout-button-2'].forEach(id => {
-        const btn = document.getElementById(id);
-        const loading = btn.querySelector('.loading');
-        const text = btn.querySelector('[id^="button-text"]');
-        btn.disabled = false;
-        loading.style.display = 'none';
-        text.style.display = 'flex';
-      });
-    }
+  function hideLoading() {
+    ['checkout-button', 'checkout-button-2'].forEach(id => {
+      const btn = document.getElementById(id);
+      if (!btn) return;
+      const loading = btn.querySelector('.loading');
+      const text = btn.querySelector('[id^="button-text"]');
+      btn.disabled = false;
+      if (loading) loading.style.display = 'none';
+      if (text) text.style.display = 'flex';
+    });
+  }
 
     // Effetto parallax per la hero: aggiorna i CSS custom properties mouseX/mouseY
     const hero = document.getElementById('hero-section');
