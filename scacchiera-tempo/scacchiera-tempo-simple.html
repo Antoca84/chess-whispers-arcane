@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Scacchiera del Tempo - La Tua Strategia per una Vita da Dio | Scacchi Mentali</title>
+  <meta name="description" content="Trasforma ogni giornata in una mossa vincente. Il sistema di gestione del tempo che combina la strategia degli scacchi con la crescita personale." />
   <!-- Stripe.js -->
   <script src="https://js.stripe.com/v3/"></script>
   <style>
@@ -45,7 +46,6 @@
       position: relative;
     }
     
-    /* Animated background particles */
     body::before {
       content: "";
       position: fixed;
@@ -74,7 +74,7 @@
       padding: 0 20px;
     }
     
-    /* Header with glassmorphism */
+    /* Header */
     .header {
       padding: 20px 0;
       border-bottom: 1px solid rgba(255,255,255,0.1);
@@ -122,7 +122,7 @@
       50% { box-shadow: 0 6px 25px rgba(251,191,36,0.5); }
     }
     
-    /* Hero Section with advanced effects */
+    /* Hero Section */
     .hero {
       position: relative;
       text-align: center;
@@ -142,7 +142,6 @@
       transform: translateY(-2px);
     }
     
-    /* Advanced mouse tracking effect */
     .hero::before {
       content: "";
       position: absolute;
@@ -200,7 +199,8 @@
     .hero-subtitle {
       font-size: clamp(1.2rem, 4vw, 2rem);
       margin-bottom: 20px;
-      color: var(--color-muted);
+      color: var(--color-accent);
+      font-weight: 600;
     }
     
     .hero-description {
@@ -246,7 +246,7 @@
       50% { opacity: 0.7; }
     }
     
-    /* Enhanced price box */
+    /* Price Box */
     .price-box {
       background: rgba(239,68,68,0.15);
       border: 1px solid rgba(239,68,68,0.4);
@@ -289,6 +289,7 @@
       font-weight: 600;
       margin-bottom: 15px;
       font-size: clamp(14px, 3vw, 16px);
+      text-align: center;
     }
     
     .price {
@@ -330,7 +331,7 @@
       50% { opacity: 0.7; }
     }
     
-    /* Enhanced buttons */
+    /* Buttons */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -393,21 +394,11 @@
       100% { transform: rotate(360deg); }
     }
     
-    /* Enhanced sections */
-    .features, .benefits, .cta {
-      padding: clamp(60px, 10vw, 100px) 0;
-      position: relative;
-    }
-    
+    /* Features Section */
     .features {
+      padding: clamp(60px, 10vw, 100px) 0;
       background: 
         radial-gradient(800px 400px at 100% 0%, rgba(251,191,36,0.08), transparent 60%),
-        linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
-    }
-    
-    .benefits {
-      background: 
-        radial-gradient(600px 300px at 0% 50%, rgba(251,191,36,0.08), transparent 70%),
         linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
     }
     
@@ -428,7 +419,7 @@
       line-height: 1.6;
     }
     
-    .features-grid, .benefits-grid {
+    .features-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 30px;
@@ -496,151 +487,115 @@
       line-height: 1.6;
     }
     
-    .benefit-item {
-      display: flex;
-      gap: 15px;
-      margin-bottom: 20px;
+    /* Why Section */
+    .why-section {
+      padding: clamp(60px, 10vw, 100px) 0;
+      background: 
+        radial-gradient(600px 300px at 0% 50%, rgba(251,191,36,0.08), transparent 70%),
+        linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
     }
     
-    .benefit-icon {
-      color: #10b981;
-      font-size: 24px;
-      margin-top: 5px;
+    .problem-card {
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: 20px;
+      padding: clamp(24px, 5vw, 32px);
+      margin-bottom: 40px;
+      backdrop-filter: blur(10px);
+      transition: all 0.4s ease;
     }
     
-    .benefit-content h3 {
-      font-weight: 600;
-      margin-bottom: 8px;
-      font-size: clamp(16px, 3vw, 18px);
+    .problem-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 30px rgba(239,68,68,0.2);
     }
     
-    .benefit-content p {
+    .problem-list {
+      list-style: none;
+      margin: 20px 0;
+    }
+    
+    .problem-list li {
+      padding: 8px 0;
       color: var(--color-muted);
-      line-height: 1.6;
+      position: relative;
+      padding-left: 20px;
     }
     
-    /* Enhanced CTA section */
+    .problem-list li::before {
+      content: "•";
+      color: var(--color-highlight);
+      position: absolute;
+      left: 0;
+    }
+    
+    .arrow-list {
+      list-style: none;
+      margin: 20px 0;
+    }
+    
+    .arrow-list li {
+      padding: 4px 0;
+      color: var(--color-highlight);
+      position: relative;
+      padding-left: 20px;
+    }
+    
+    .arrow-list li::before {
+      content: "→";
+      position: absolute;
+      left: 0;
+    }
+    
+    /* CTA Section */
     .cta {
+      padding: clamp(60px, 10vw, 100px) 0;
       text-align: center;
+      background: 
+        radial-gradient(800px 400px at 50% 100%, rgba(251,191,36,0.08), transparent 60%);
     }
     
     .cta-box {
-      background: linear-gradient(135deg, rgba(251,191,36,0.12) 0%, rgba(245,158,11,0.12) 100%);
-      border: 1px solid rgba(251,191,36,0.3);
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
       border-radius: 24px;
-      padding: clamp(30px, 6vw, 40px);
-      margin: 40px auto;
-      max-width: 640px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+      padding: clamp(40px, 8vw, 60px);
+      backdrop-filter: blur(15px);
+      box-shadow: var(--glass-shadow);
+      max-width: 600px;
+      margin: 0 auto;
       transition: all 0.4s ease;
     }
     
     .cta-box:hover {
       transform: translateY(-4px);
-      box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+      box-shadow: var(--glass-shadow-hover);
     }
     
-    .cta-title {
-      color: var(--color-accent);
-      font-weight: 700;
-      margin-bottom: 20px;
-      font-size: clamp(18px, 4vw, 20px);
-    }
-    
-    .cta-list {
-      list-style: none;
-      text-align: left;
-      margin: 0 auto 30px;
-      max-width: 520px;
-    }
-    
-    .cta-list li {
-      padding: 8px 0;
-      color: #d1d5db;
-      font-size: clamp(14px, 3vw, 16px);
-      line-height: 1.5;
-    }
-    
-    /* Footer */
-    .footer {
-      border-top: 1px solid rgba(71,85,105,0.5);
-      padding: clamp(30px, 6vw, 40px) 0;
-      text-align: center;
-      background: rgba(0,0,0,0.2);
-      backdrop-filter: blur(5px);
-    }
-    
-    .footer-logo {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 20px;
-      font-size: clamp(20px, 4vw, 24px);
-      font-weight: bold;
-      color: var(--color-accent);
-    }
-    
-    .footer-text {
-      color: var(--color-muted);
-      font-size: clamp(14px, 3vw, 16px);
-    }
-    
-    /* Enhanced mobile responsiveness */
+    /* Responsive Design */
     @media (max-width: 768px) {
-      .header {
-        padding: 15px 0;
-      }
-      
-      .header-content {
-        flex-direction: column;
-        gap: 15px;
-      }
-      
-      .hero {
-        margin: 20px 0;
-        padding: 40px 15px;
-        border-radius: 20px;
-      }
-      
-      .social-proof {
-        flex-direction: column;
-        gap: 15px;
-        align-items: center;
-      }
-      
-      .features-grid, .benefits-grid {
+      .container { padding: 0 15px; }
+      .hero { margin: 20px 0; }
+      .features-grid { 
         grid-template-columns: 1fr;
         gap: 20px;
       }
-      
+      .social-proof {
+        flex-direction: column;
+        gap: 10px;
+      }
       .price {
         flex-direction: column;
-        gap: 5px;
-      }
-      
-      .btn {
-        width: 100%;
-        max-width: 300px;
+        gap: 10px;
       }
     }
     
     @media (max-width: 480px) {
-      .container {
-        padding: 0 15px;
-      }
-      
-      .hero {
-        padding: 30px 15px;
-      }
-      
-      .feature-card {
-        padding: 20px;
-      }
-      
-      .cta-box {
-        padding: 25px 20px;
+      .hero { padding: 40px 15px; }
+      .feature-card { padding: 20px; }
+      .header-content {
+        flex-direction: column;
+        gap: 15px;
       }
     }
   </style>
@@ -651,8 +606,7 @@
     <div class="container">
       <div class="header-content">
         <div class="logo">
-          <span>♔</span>
-          <span>SCACCHI MENTALI</span>
+          👑 SCACCHI MENTALI
         </div>
         <div class="badge">Offerta Limitata</div>
       </div>
@@ -660,45 +614,37 @@
   </header>
 
   <!-- Hero Section -->
-  <section class="hero" id="hero-section">
+  <section class="hero" id="hero">
     <div class="container">
-      <div class="hero-badge">
-        🔥 Prodotto Digitale Esclusivo
-      </div>
+      <div class="hero-badge">🔥 Prodotto Digitale Esclusivo</div>
       <h1>Scacchiera del Tempo</h1>
-      <p class="hero-subtitle">
-        La Tua Strategia per una <span style="color: var(--color-accent); font-weight: bold;">Vita da Dio</span>
-      </p>
+      <div class="hero-subtitle">La Tua Strategia per una <span style="color: var(--color-accent);">Vita da Dio</span></div>
       <p class="hero-description">
-        Trasforma ogni giornata in una mossa vincente. Il sistema di gestione del tempo
-        che combina la strategia degli scacchi con la crescita personale.
+        Trasforma ogni giornata in una mossa vincente. Il sistema di gestione del tempo che combina la strategia degli scacchi con la crescita personale.
       </p>
+      
       <div class="social-proof">
         <div class="social-proof-item">
-          <span class="star">★</span>
-          <span style="font-weight: 600;">4.9/5</span>
-          <span style="color: var(--color-muted);">(2.021 utenti)</span>
+          <span class="star">⭐</span>
+          <span>4.9/5 (2.021 utenti)</span>
         </div>
-        <div class="social-proof-item" style="color: #10b981;">
-          <span>👥</span>
-          <span>Oltre 2.000 persone hanno già iniziato</span>
+        <div class="social-proof-item">
+          <span>👥 Oltre 2.000 persone hanno già iniziato</span>
         </div>
       </div>
+
       <div class="price-box">
-        <p class="price-label">⏰ Offerta Early Adopters</p>
-        <p class="price">
+        <div class="price-label">⏰ Offerta Early Adopters</div>
+        <div class="price">
           <span class="price-old">19,99€</span>
           <span class="price-new">9,99€</span>
-        </p>
-        <p class="price-urgency">Scade tra pochi giorni!</p>
+        </div>
+        <div class="price-urgency">Scade tra pochi giorni!</div>
       </div>
-      <button id="checkout-button" class="btn">
+
+      <button class="btn" id="purchase-btn">
         <span class="loading" id="loading"></span>
-        <span id="button-text">
-          <span>🏆</span>
-          <span>Ottieni la Tua Scacchiera del Tempo</span>
-          <span>→</span>
-        </span>
+        <span id="btn-text">🏆 Ottieni la Tua Scacchiera del Tempo</span>
       </button>
     </div>
   </section>
@@ -706,243 +652,316 @@
   <!-- Features Section -->
   <section class="features">
     <div class="container">
-      <h2 class="section-title">
-        Cosa Include la <span style="color: var(--color-accent);">Scacchiera del Tempo</span>
-      </h2>
-      <p class="section-subtitle">
-        Un sistema completo per trasformare la tua gestione del tempo in una strategia vincente
-      </p>
       <div class="features-grid">
         <div class="feature-card">
-          <div class="feature-icon">🎯</div>
-          <h3 class="feature-title">Sistema "Vita da Dio"</h3>
-          <p class="feature-description">
-            Pianifica i tuoi obiettivi più importanti con la strategia del Re.
-          </p>
+          <div class="feature-icon">📱</div>
+          <div class="feature-title">Anteprima Mobile - Usa ovunque</div>
+          <div class="feature-description">
+            Accesso completo da smartphone, tablet e desktop. Il tuo sistema di produttività sempre con te.
+          </div>
         </div>
         <div class="feature-card">
-          <div class="feature-icon">📅</div>
-          <h3 class="feature-title">Calendario 12 Mesi</h3>
-          <p class="feature-description">
-            Visione strategica a lungo termine per i tuoi progetti.
-          </p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">✅</div>
-          <h3 class="feature-title">Lista Strategica</h3>
-          <p class="feature-description">
-            Organizza le tue azioni quotidiane come mosse vincenti.
-          </p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">♔</div>
-          <h3 class="feature-title">Sezioni C1-C12</h3>
-          <p class="feature-description">
-            12 aree di focus per una crescita completa e bilanciata.
-          </p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">♕</div>
-          <h3 class="feature-title">Moduli H1-H12</h3>
-          <p class="feature-description">
-            Strategie avanzate per massimizzare la tua produttività.
-          </p>
+          <div class="feature-icon">💻</div>
+          <div class="feature-title">Interfaccia Desktop - Completa</div>
+          <div class="feature-description">
+            Esperienza ottimizzata per desktop con tutte le funzionalità avanzate di gestione e planning.
+          </div>
         </div>
         <div class="feature-card">
           <div class="feature-icon">📊</div>
-          <h3 class="feature-title">File Excel Pronto</h3>
-          <p class="feature-description">
-            Scarica e inizia subito, compatibile con Excel e Google Sheets.
+          <div class="feature-title">Tracking Obiettivi - Automatico</div>
+          <div class="feature-description">
+            Sistema di monitoraggio automatico dei progressi con metriche chiare e grafici intuitivi.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Section -->
+  <section class="why-section">
+    <div class="container">
+      <h2 class="section-title">🤔 WHY?</h2>
+      <h3 class="section-subtitle">To-Do List & Routine Tracker - Perché Ti Servono?</h3>
+      
+      <div class="problem-card">
+        <h4 style="color: var(--color-accent); margin-bottom: 15px;">POINT 01 - Bassa Produttività e Gestione delle Priorità</h4>
+        <p style="margin-bottom: 20px;">
+          Hai provato molti metodi ma ti senti ancora sopraffatto? Senza un sistema chiaro, le tue energie si disperdono e finisci per procrastinare sui compiti più importanti. È ora di cambiare approccio.
+        </p>
+        
+        <h5 style="color: var(--color-highlight); margin-bottom: 15px;">Esempio: Sistema di Priorità Confuse che Usiamo Normalmente</h5>
+        <ul class="problem-list">
+          <li>Email urgenti (ma non importanti)</li>
+          <li>Meeting spontanei</li>
+          <li>Notifiche social</li>
+          <li>Compiti dell'ultimo minuto</li>
+        </ul>
+        
+        <ul class="arrow-list">
+          <li>Stress continuo</li>
+          <li>Obiettivi rimandati</li>
+          <li>Sensazione di fallimento</li>
+          <li>Giorni che si ripetono</li>
+        </ul>
+        
+        <p style="color: var(--color-accent); font-weight: 600; margin-top: 20px;">
+          Ma con il sistema giusto, puoi trasformare questa confusione in una strategia vincente.
+        </p>
+      </div>
+
+      <div class="problem-card">
+        <h4 style="color: var(--color-accent); margin-bottom: 15px;">POINT 02 - Obiettivi Vaghi & Tracking Inefficace</h4>
+        <p>
+          Sapere cosa vuoi fare è solo metà del lavoro. Il vero successo arriva quando misuri i progressi e adatti la strategia. Senza un sistema di tracking, anche gli obiettivi migliori rimangono solo buone intenzioni.
+        </p>
+      </div>
+
+      <div style="text-align: center; margin-top: 40px;">
+        <h3 style="color: var(--color-muted); margin-bottom: 20px;">👤 Studenti, Lavoratori, Imprenditori</h3>
+        <h4 style="color: var(--color-accent); margin-bottom: 30px;">#Gestire le Liste - È Davvero Così Semplice?</h4>
+        
+        <div style="display: grid; gap: 15px; max-width: 500px; margin: 0 auto;">
+          <div style="padding: 15px; background: rgba(255,255,255,0.05); border-radius: 15px;">
+            💭 "Oggi sono stato davvero produttivo?"
+          </div>
+          <div style="padding: 15px; background: rgba(255,255,255,0.05); border-radius: 15px;">
+            💭 "Perché ho fatto tutto quello che non era importante?"
+          </div>
+          <div style="padding: 15px; background: rgba(255,255,255,0.05); border-radius: 15px;">
+            💭 "La settimana scorsa... cosa ho fatto di concreto?"
+          </div>
+          <div style="padding: 15px; background: rgba(255,255,255,0.05); border-radius: 15px;">
+            💭 "Gestire tutto è davvero così difficile."
+          </div>
+        </div>
+
+        <div style="margin: 40px 0;">
+          <p style="color: var(--color-muted); margin-bottom: 20px;">👥 Ti suona familiare questa gestione del tempo?</p>
+          <p style="color: var(--color-accent); font-size: 1.2em; font-weight: 600;">
+            💡 È il momento di provare<br><strong>La Scacchiera del Tempo!</strong>
           </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What Section -->
+  <section class="features">
+    <div class="container">
+      <h2 class="section-title">👤 WHAT?</h2>
+      <h3 class="section-subtitle">La Scacchiera del Tempo - Cos'è Esattamente? 👀</h3>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <div class="feature-title">Google Spreadsheet Gratuito - Pronto, Dove, Quando Vuoi!</div>
+          <div class="feature-description">
+            Non servono app costose o abbonamenti mensili. Il nostro sistema funziona su Google Spreadsheet: accessibile ovunque, sempre sincronizzato. Basta avere Google e sei pronto!
+          </div>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">📅</div>
+          <div class="feature-title">Calendario 12 Mesi - Habit Tracker Automatico!</div>
+          <div class="feature-description">
+            La Scacchiera gestisce automaticamente i tuoi obiettivi mensili. Imposta le tue priorità e gli obiettivi desiderati, e il calendario di 12 mesi si aggiorna da solo.
+          </div>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <div class="feature-title">Oltre 15 Habit Tracker + Grafici</div>
+          <div class="feature-description">
+            Il Calendario e Habit Tracker hanno oltre 15 tracker automatici per la tua crescita oraria e controllo degli obiettivi. Creato per essere semplice da usare.
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 60px;">
+        <h3 style="color: var(--color-accent); margin-bottom: 30px;">La Gestione delle Priorità, la Mossa Perfetta È Quella Giusta per Te</h3>
+        <p style="color: var(--color-muted); margin-bottom: 40px;">Ma come si distingue dal sistema tradizionale? Scopri i risultati concreti e i moduli avanzati.</p>
+        
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <div class="feature-title">Sistema "Vita da Dio"</div>
+            <div class="feature-description">Pianifica i tuoi obiettivi più importanti con la strategia del Re.</div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📅</div>
+            <div class="feature-title">Calendario 12 Mesi</div>
+            <div class="feature-description">Visione strategica a lungo termine per i tuoi progetti.</div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">✅</div>
+            <div class="feature-title">Lista Strategica</div>
+            <div class="feature-description">Organizza le tue azioni quotidiane come mosse vincenti.</div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">♔</div>
+            <div class="feature-title">Sezioni C1-C12</div>
+            <div class="feature-description">12 aree di focus per una crescita completa e bilanciata.</div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <div class="feature-title">Moduli H1-H12</div>
+            <div class="feature-description">Strategie avanzate per massimizzare la tua produttività.</div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📥</div>
+            <div class="feature-title">File Excel Pronto</div>
+            <div class="feature-description">Scarica e inizia subito, compatibile con Excel e Google Sheets.</div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Benefits Section -->
-  <section class="benefits">
+  <section class="why-section">
     <div class="container">
-      <h2 class="section-title">
-        Perché Scegliere la <span style="color: var(--color-accent);">Scacchiera del Tempo</span>
-      </h2>
-      <div class="benefits-grid">
-        <div>
-          <div class="benefit-item">
-            <div class="benefit-icon">✓</div>
-            <div class="benefit-content">
-              <h3>Strategia Comprovata</h3>
-              <p>Basata sui principi strategici degli scacchi applicati alla vita reale.</p>
-            </div>
-          </div>
-          <div class="benefit-item">
-            <div class="benefit-icon">✓</div>
-            <div class="benefit-content">
-              <h3>Facile da Usare</h3>
-              <p>Interfaccia intuitiva che puoi personalizzare secondo le tue esigenze.</p>
-            </div>
-          </div>
-          <div class="benefit-item">
-            <div class="benefit-icon">✓</div>
-            <div class="benefit-content">
-              <h3>Risultati Immediati</h3>
-              <p>Inizia a vedere miglioramenti nella tua produttività dal primo giorno.</p>
-            </div>
+      <h2 class="section-title">Perché Scegliere la Scacchiera del Tempo</h2>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🔄</div>
+          <div class="feature-title">Strategia Comprovata</div>
+          <div class="feature-description">
+            Basata sui principi strategici degli scacchi applicati alla vita reale.
           </div>
         </div>
-        <div>
-          <div class="benefit-item">
-            <div class="benefit-icon">✓</div>
-            <div class="benefit-content">
-              <h3>Supporto Completo</h3>
-              <p>Accesso alla community Scacchi Mentali e aggiornamenti gratuiti.</p>
-            </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <div class="feature-title">Facile da Usare</div>
+          <div class="feature-description">
+            Interfaccia intuitiva che puoi personalizzare secondo le tue esigenze.
           </div>
-          <div class="benefit-item">
-            <div class="benefit-icon">✓</div>
-            <div class="benefit-content">
-              <h3>Garanzia 30 Giorni</h3>
-              <p>Se non sei soddisfatto, rimborso completo senza domande.</p>
-            </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <div class="feature-title">Risultati Immediati</div>
+          <div class="feature-description">
+            Inizia a vedere miglioramenti nella tua produttività dal primo giorno.
           </div>
-          <div class="benefit-item">
-            <div class="benefit-icon">✓</div>
-            <div class="benefit-content">
-              <h3>Aggiornamenti Gratuiti</h3>
-              <p>Ricevi tutte le future versioni e miglioramenti senza costi aggiuntivi.</p>
-            </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🤝</div>
+          <div class="feature-title">Supporto Completo</div>
+          <div class="feature-description">
+            Guida passo-passo e community di supporto per il tuo successo.
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CTA Section -->
+  <!-- Final CTA -->
   <section class="cta">
     <div class="container">
-      <h2 class="section-title">
-        Pronto a Fare la Tua <span style="color: var(--color-accent);">Mossa Vincente</span>?
-      </h2>
-      <p style="font-size:18px;color:var(--color-muted);margin-bottom:40px;">
-        Unisciti a oltre 2.000 persone che hanno già trasformato la loro gestione del tempo
-        in una strategia vincente con la Scacchiera del Tempo.
-      </p>
       <div class="cta-box">
-        <p class="cta-title">🎯 Cosa Otterrai Subito:</p>
-        <ul class="cta-list">
-          <li>✅ File Excel della Scacchiera del Tempo (download immediato)</li>
-          <li>✅ Guida completa all'utilizzo (PDF)</li>
-          <li>✅ Accesso alla community privata Scacchi Mentali</li>
-          <li>✅ Bonus: Template per obiettivi mensili</li>
-        </ul>
+        <h2 style="margin-bottom: 20px;">Trasforma la Tua Vita Oggi</h2>
+        <p style="color: var(--color-muted); margin-bottom: 30px;">
+          Non aspettare domani per iniziare a vivere strategicamente. La tua "Vita da Dio" inizia con la prima mossa.
+        </p>
+        
+        <button class="btn" id="purchase-btn-2" style="margin-bottom: 20px;">
+          🚀 Ottieni Accesso Immediato - Solo 9,99€
+        </button>
+        
+        <p style="color: var(--color-muted); font-size: 14px;">
+          ⏰ Offerta valida per pochi giorni • Accesso immediato • Garanzia 30 giorni
+        </p>
       </div>
-      <button id="checkout-button-2" class="btn" style="font-size:20px;padding:20px 40px;margin-top:20px;">
-        <span class="loading" id="loading-2"></span>
-        <span id="button-text-2">
-          <span>🏆</span>
-          <span>Acquista Ora - Solo 9,99€</span>
-          <span>→</span>
-        </span>
-      </button>
-      <p style="font-size:14px;color:#6b7280;margin-top:20px;">
-        Pagamento sicuro tramite Stripe • Garanzia 30 giorni • Download immediato
-      </p>
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-logo">
-        <span>♔</span>
-        <span>SCACCHI MENTALI</span>
-      </div>
-      <p class="footer-text">
-        © 2025 Scacchi Mentali. Tutti i diritti riservati.
-      </p>
-    </div>
-  </footer>
-
-  
-<script>
-  // === CONFIG ===
-  const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/28EeVc4cubz14KodFC1ZS00";
-
-  // Collega i due pulsanti alla stessa azione
-  document.getElementById('checkout-button')?.addEventListener('click', goToStripe);
-  document.getElementById('checkout-button-2')?.addEventListener('click', goToStripe);
-
-  function goToStripe(e) {
-    e?.preventDefault?.();
-    showLoading();
-    // Disabilita i click multipli e vai al Payment Link
-    try {
-      window.location.assign(STRIPE_PAYMENT_LINK);
-      // Nota: non richiamiamo hideLoading perché l'utente lascia la pagina
-    } catch (err) {
-      console.error(err);
-      showError('Impossibile aprire la pagina di pagamento. Riprova.');
-      hideLoading();
-    }
-  }
-
-  // --- UI helpers (riuso dei tuoi spinner/testi) ---
-  function showError(message) {
-    const errorDiv = document.createElement('div');
-    errorDiv.style.cssText = `
-      position: fixed; top: 20px; right: 20px; z-index: 1000;
-      background: rgba(239, 68, 68, 0.9); color: white; padding: 16px 20px;
-      border-radius: 8px; font-weight: 600; max-width: 400px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3); backdrop-filter: blur(10px);
-    `;
-    errorDiv.textContent = message;
-    document.body.appendChild(errorDiv);
-    setTimeout(() => errorDiv.remove(), 5000);
-  }
-
-  function showLoading() {
-    ['checkout-button', 'checkout-button-2'].forEach(id => {
-      const btn = document.getElementById(id);
-      if (!btn) return;
-      const loading = btn.querySelector('.loading');
-      const text = btn.querySelector('[id^="button-text"]');
-      btn.disabled = true;
-      if (loading) loading.style.display = 'block';
-      if (text) text.style.display = 'none';
-    });
-  }
-
-  function hideLoading() {
-    ['checkout-button', 'checkout-button-2'].forEach(id => {
-      const btn = document.getElementById(id);
-      if (!btn) return;
-      const loading = btn.querySelector('.loading');
-      const text = btn.querySelector('[id^="button-text"]');
-      btn.disabled = false;
-      if (loading) loading.style.display = 'none';
-      if (text) text.style.display = 'flex';
-    });
-  }
-
-    // Effetto parallax per la hero: aggiorna i CSS custom properties mouseX/mouseY
-    const hero = document.getElementById('hero-section');
-    hero.addEventListener('mousemove', e => {
-      const rect = hero.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      hero.style.setProperty('--mouseX', (x / rect.width) * 100 + '%');
-      hero.style.setProperty('--mouseY', (y / rect.height) * 100 + '%');
-    });
-    hero.addEventListener('mouseleave', () => {
-      hero.style.removeProperty('--mouseX');
-      hero.style.removeProperty('--mouseY');
-    });
-
-    // Smooth scroll per anchor interne
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+  <script>
+    // Mouse tracking effect for hero section
+    const hero = document.getElementById('hero');
+    if (hero) {
+      hero.addEventListener('mousemove', (e) => {
+        const rect = hero.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        hero.style.setProperty('--mouseX', x + '%');
+        hero.style.setProperty('--mouseY', y + '%');
       });
+    }
+
+    // Stripe integration
+    const stripe = Stripe('pk_live_51Q2ak3RpuRh4f1R5J3vG1D7u6CztkF1QCxlhNcCQQLJKBJE9jRkk7U5yV1DnFYMdXTzYrDTKFfh2ZfQSTNUZSFb000kcuVoY4f');
+
+    // Purchase button handlers
+    const purchaseButtons = [
+      document.getElementById('purchase-btn'),
+      document.getElementById('purchase-btn-2')
+    ];
+
+    purchaseButtons.forEach(button => {
+      if (button) {
+        button.addEventListener('click', async (e) => {
+          e.preventDefault();
+          
+          // Show loading state
+          const loading = button.querySelector('.loading');
+          const btnText = button.querySelector('#btn-text') || button;
+          
+          if (loading) loading.style.display = 'block';
+          button.disabled = true;
+          
+          try {
+            // Create Stripe checkout session
+            const { error } = await stripe.redirectToCheckout({
+              lineItems: [{
+                price: 'price_1Q2aojRpuRh4f1R5vQ8DDEqW',
+                quantity: 1,
+              }],
+              mode: 'payment',
+              successUrl: window.location.origin + '/chess-whispers-arcane/scacchiera-tempo/success.html',
+              cancelUrl: window.location.origin + '/chess-whispers-arcane/scacchiera-tempo/cancel.html',
+            });
+
+            if (error) {
+              console.error('Stripe error:', error);
+              alert('Si è verificato un errore. Riprova più tardi.');
+            }
+          } catch (error) {
+            console.error('Purchase error:', error);
+            alert('Si è verificato un errore. Riprova più tardi.');
+          } finally {
+            // Hide loading state
+            if (loading) loading.style.display = 'none';
+            button.disabled = false;
+          }
+        });
+      }
+    });
+
+    // Smooth scrolling for internal links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Add scroll effects
+    window.addEventListener('scroll', () => {
+      const scrolled = window.pageYOffset;
+      const header = document.querySelector('.header');
+      
+      if (scrolled > 100) {
+        header.style.background = 'rgba(30,41,59,0.95)';
+      } else {
+        header.style.background = 'rgba(30,41,59,0.8)';
+      }
     });
   </script>
 </body>
