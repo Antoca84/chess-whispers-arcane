@@ -1024,6 +1024,81 @@
       margin-top: var(--spacing-sm);
     }
     
+    /* ===== FAQ SECTION ===== */
+    .faq {
+      padding: var(--spacing-3xl) 0;
+      background: linear-gradient(135deg, rgba(30,41,59,0.95) 0%, rgba(15,23,42,0.95) 100%);
+    }
+    
+    .faq-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .faq-item {
+      background: linear-gradient(135deg, rgba(251,191,36,0.08) 0%, rgba(245,158,11,0.08) 100%);
+      border: 1px solid rgba(251,191,36,0.2);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--spacing-lg);
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .faq-item:hover {
+      border-color: rgba(251,191,36,0.4);
+      box-shadow: 0 8px 25px rgba(251,191,36,0.15);
+    }
+    
+    .faq-question {
+      padding: var(--spacing-xl);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      color: var(--text-primary);
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+    
+    .faq-question:hover {
+      background: rgba(251,191,36,0.1);
+    }
+    
+    .faq-icon {
+      font-size: var(--font-size-xl);
+      color: var(--color-primary);
+      transition: transform 0.3s ease;
+      font-weight: 300;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .faq-item.active .faq-icon {
+      transform: rotate(45deg);
+    }
+    
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+      background: rgba(251,191,36,0.05);
+    }
+    
+    .faq-item.active .faq-answer {
+      max-height: 200px;
+      padding: 0 var(--spacing-xl) var(--spacing-xl);
+    }
+    
+    .faq-answer p {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin: 0;
+    }
+    
     /* ===== CTA SECTION ===== */
     .cta {
       padding: var(--spacing-3xl) 0;
@@ -1714,7 +1789,7 @@
           </p>
           
           <div class="calendar-showcase">
-            <div class="calendar-header">2025년 1월 - 2025년 12월 캘린더</div>
+            <div class="calendar-header">1 / 2025 - 12 / 2025</div>
             <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-md); margin-bottom: var(--spacing-lg);">
               <div style="text-align: center; padding: var(--spacing-md); background: rgba(251,191,36,0.2); border-radius: var(--radius-md);">
                 <div style="font-weight: 700; margin-bottom: var(--spacing-xs);">Q1</div>
@@ -1801,6 +1876,100 @@
     </div>
   </section>
 
+  <!-- ===== FAQ SECTION ===== -->
+  <section class="faq">
+    <div class="container">
+      <h2 class="section-title">
+        Domande <span style="color: var(--color-primary);">Frequenti</span>
+      </h2>
+      <p style="font-size: var(--font-size-lg); color: var(--text-secondary); margin-bottom: var(--spacing-2xl); text-align: center;">
+        Risolvi ogni dubbio prima di iniziare la tua trasformazione
+      </p>
+      
+      <div class="faq-container">
+        <div class="faq-item fade-in">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>🤔 Come funziona esattamente la Scacchiera del Tempo?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>La Scacchiera del Tempo è un sistema completo in formato Google Spreadsheet che combina pianificazione strategica, habit tracking e gestione delle priorità. Ricevi un file Excel/Google Sheets pronto all'uso con 12 sezioni (C1-C12), moduli avanzati (H1-H12), calendario annuale automatico e oltre 15 tracker per monitorare i tuoi progressi in tempo reale.</p>
+          </div>
+        </div>
+
+        <div class="faq-item fade-in">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>💻 È compatibile con il mio dispositivo?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Assolutamente sì! Funziona su qualsiasi dispositivo: PC, Mac, smartphone, tablet. Puoi usarlo con Microsoft Excel, Google Sheets, LibreOffice o qualsiasi app che supporti i fogli di calcolo. È sempre sincronizzato e accessibile ovunque tu sia.</p>
+          </div>
+        </div>
+
+        <div class="faq-item fade-in">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>⏰ Quanto tempo devo dedicarci ogni giorno?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Solo 10-15 minuti al giorno! Il sistema è progettato per essere efficiente: 5 minuti al mattino per pianificare la giornata, 5 minuti alla sera per aggiornare i progressi. Una volta impostato, diventa automatico e ti fa risparmiare ore di tempo ogni settimana.</p>
+          </div>
+        </div>
+
+        <div class="faq-item fade-in">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>🎯 Funziona anche se non ho mai usato sistemi di produttività?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Perfetto per principianti! Include una guida completa step-by-step, esempi pratici e template precompilati. Non serve esperienza precedente. Il sistema ti guida dall'installazione ai primi risultati in meno di 30 minuti.</p>
+          </div>
+        </div>
+
+        <div class="faq-item fade-in">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>📱 Posso personalizzarlo per le mie esigenze specifiche?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Completamente personalizzabile! Puoi modificare categorie, obiettivi, tracker e template secondo le tue necessità. Include 10 template interni per diversi stili di vita: studenti, imprenditori, freelancer, genitori, atleti e altro ancora.</p>
+          </div>
+        </div>
+
+        <div class="faq-item fade-in">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>💰 Ci sono costi nascosti o abbonamenti?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Zero costi nascosti! Paghi una volta sola 9,99€ e ottieni tutto: file Excel, guida PDF, aggiornamenti di versione gratuiti a vita e sconti per altri prodotti. Nessun abbonamento mensile, nessuna sorpresa. È tuo per sempre.</p>
+          </div>
+        </div>
+
+        <div class="faq-item fade-in">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>🔄 Cosa succede se non sono soddisfatto?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Garanzia totale 30 giorni! Se per qualsiasi motivo non sei soddisfatto, ti rimborsiamo immediatamente ogni centesimo. Nessuna domanda, nessuna complicazione. Il rischio è tutto nostro.</p>
+          </div>
+        </div>
+
+        <div class="faq-item fade-in">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>🚀 Quando ricevo il prodotto dopo l'acquisto?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Download immediato! Appena completato il pagamento ricevi via email il link per scaricare tutto: file Excel e guida PDF. Puoi iniziare subito, anche alle 3 di notte!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ===== CTA SECTION ===== -->
   <section class="cta">
     <div class="container">
@@ -1826,15 +1995,15 @@
       <div class="cta-box">
         <p class="cta-title">🎯 Cosa Otterrai Subito:</p>
         <ul class="cta-list">
-          <li>✅ File Excel della Scacchiera del Tempo (download immediato)</li>
-          <li>✅ Sistema "Vita da Dio" completo con 12 sezioni C1-C12</li>
-          <li>✅ Moduli avanzati H1-H12 per ogni orizzonte temporale</li>
+          <li>✅ Link Spreadsheet della Scacchiera del Tempo (download immediato)</li>
+          <li>✅ Sistema di schede con: "Vita da Dio" completo con 12 sezioni C1-C12</li>
+          <li>✅ Schede con Moduli avanzati H1-H12 per ogni orizzonte temporale</li>
           <li>✅ Oltre 15 Habit Tracker automatici + grafici</li>
-          <li>✅ Calendario 12 mesi con tracking obiettivi</li>
-          <li>✅ 10 template interni personalizzabili</li>
+          <li>✅ Calendario 12 mesi aggiornabile all'infinito con tracking obiettivi</li>
           <li>✅ Guida completa all'utilizzo (PDF)</li>
           <li>✅ Accesso alla community privata Scacchi Mentali</li>
-          <li>✅ Aggiornamenti gratuiti a vita</li>
+          <li>✅ Aggiornamenti di versione gratuiti </li>
+          <li>✅ Sconto per prodotti successivi </li>
           <li>✅ Garanzia soddisfatti o rimborsati 30 giorni</li>
         </ul>
       </div>
@@ -1952,6 +2121,22 @@
         }
       });
     });
+
+    // ===== FAQ INTERATTIVE =====
+    function toggleFaq(element) {
+      const faqItem = element.parentElement;
+      const isActive = faqItem.classList.contains('active');
+      
+      // Chiudi tutte le FAQ aperte
+      document.querySelectorAll('.faq-item.active').forEach(item => {
+        item.classList.remove('active');
+      });
+      
+      // Se non era attiva, aprila
+      if (!isActive) {
+        faqItem.classList.add('active');
+      }
+    }
 
     // ===== PERFORMANCE OPTIMIZATIONS =====
     // Lazy load delle immagini
