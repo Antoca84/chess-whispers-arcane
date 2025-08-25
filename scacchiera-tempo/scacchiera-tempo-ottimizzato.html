@@ -627,6 +627,15 @@
       font-size: var(--font-size-4xl);
       margin-bottom: var(--spacing-md);
     }
+    .device-icon img{
+  width: 72px;     /* regola se vuoi più grande/piccolo */
+  height: auto;
+  display: block;
+  margin: 0 auto;  /* centratura */
+  object-fit: contain;
+  border-radius: 8px; /* opzionale */
+}
+
     
     .device-name {
       color: var(--text-primary);
@@ -1381,28 +1390,28 @@
           </p>
           
           <div class="device-showcase">
-            <div class="device-item">
-              <div class="device-icon">💻</div>
-              <div class="device-name">PC/DESKTOP</div>
-              <div class="device-description">Interfaccia Desktop Completa</div>
-            </div>
-            <div class="device-item">
-              <div class="device-icon">📱</div>
-              <div class="device-name">MOBILE</div>
-              <div class="device-description">Mobile</div>
-            </div>
-            <div class="device-item">
-              <div class="device-icon">📲</div>
-              <div class="device-name">TABLET</div>
-              <div class="device-description">Tablet</div>
-            </div>
-            <div class="device-item">
-              <div class="device-icon">📊</div>
-              <div class="device-name">GOOGLE SHEETS</div>
-              <div class="device-description">Per Modificare, Stampare, Salvare</div>
-            </div>
-          </div>
-        </div>
+  <div class="device-item">
+    <div class="device-icon"><img src="images/mac.png" alt="Mac / Desktop"></div>
+    <div class="device-name">PC/DESKTOP</div>
+    <div class="device-description">Interfaccia Desktop Completa</div>
+  </div>
+  <div class="device-item">
+    <div class="device-icon"><img src="images/iphone.png" alt="iPhone / Mobile"></div>
+    <div class="device-name">MOBILE</div>
+    <div class="device-description">Mobile</div>
+  </div>
+  <div class="device-item">
+    <div class="device-icon"><img src="images/ipad.png" alt="iPad / Tablet"></div>
+    <div class="device-name">TABLET</div>
+    <div class="device-description">Tablet</div>
+  </div>
+  <div class="device-item">
+    <div class="device-icon">📊</div>
+    <div class="device-name">GOOGLE SHEETS</div>
+    <div class="device-description">Per Modificare, Stampare, Salvare</div>
+  </div>
+</div>
+
 
         <div class="feature-point fade-in">
           <div class="point-badge">POINT 02</div>
