@@ -4,7 +4,7 @@
  */
 
 // CONFIGURAZIONE COUNTDOWN - MODIFICA SOLO QUESTA DATA
-const OFFER_END_DATE = new Date(2025, 7, 18, 23, 59, 59); // 18 Agosto 2025, 23:59:59
+const OFFER_END_DATE = new Date(2026, 3, 10, 23, 59, 59); // 10 Aprile 2026, 23:59:59
 
 /**
  * Inizializza il countdown su una pagina
