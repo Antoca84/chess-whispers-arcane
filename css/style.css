@@ -120,7 +120,7 @@ body {
     font-family: 'Cinzel', serif;
     color: var(--color-re);
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    letter-spacing: 0.5px;
+    letter-spacing: 2px;
 }
 
 /* Hero Section */
@@ -132,18 +132,18 @@ body {
     overflow: hidden;
 }
 
-/* Ambient gold glow — sottile, non distrae */
+/* Texture scacchiera SVG — 3-4% opacità, fades ai bordi via mask radiale */
 .hero::before {
     content: '';
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 70%;
-    height: 70%;
-    background: var(--gradient-glow);
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Crect width='24' height='24' fill='white'/%3E%3Crect x='24' y='24' width='24' height='24' fill='white'/%3E%3C/svg%3E");
+    background-size: 48px 48px;
+    opacity: 0.035;
     pointer-events: none;
     z-index: 0;
+    -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 20%, transparent 72%);
+    mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 20%, transparent 72%);
 }
 
 .hero-content {
@@ -164,7 +164,7 @@ body {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     line-height: 1.15;
-    letter-spacing: 0.3px;
+    letter-spacing: 1.5px;
 }
 
 .hero-description {
@@ -180,16 +180,22 @@ body {
 
 .cta-button {
     display: inline-block;
-    background: var(--gradient-cta);
-    color: var(--color-background);
+    /* Glass morphism — fondo semi-trasparente gold-tinted */
+    background: rgba(255, 155, 0, 0.10);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    color: var(--color-re);
     padding: 18px 40px;
     border-radius: 50px;
     text-decoration: none;
     font-weight: 600;
     font-size: 1.1rem;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: var(--shadow-deep);
-    border: none;
+    /* bordo luminoso 1px + micro-highlight zenitale + profondità */
+    border: 1px solid rgba(255, 215, 0, 0.40);
+    box-shadow:
+        var(--shadow-deep),
+        inset 0 1px 0 rgba(255, 255, 255, 0.10);
     cursor: pointer;
     text-transform: none;
     letter-spacing: 0.5px;
@@ -220,7 +226,12 @@ body {
 
 .cta-button:hover {
     transform: translateY(-3px);
-    box-shadow: var(--shadow-deep), 0 0 35px rgba(255, 215, 0, 0.5);
+    background: rgba(255, 155, 0, 0.18);
+    border-color: rgba(255, 215, 0, 0.70);
+    box-shadow:
+        var(--shadow-deep),
+        0 0 30px rgba(255, 215, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 
 /* Archetipi Section */
@@ -236,6 +247,7 @@ body {
     margin-bottom: 60px;
     color: var(--color-text-primary);
     position: relative;
+    letter-spacing: 1px;
 }
 
 .section-title::after {
@@ -298,12 +310,18 @@ body {
     padding: 40px 30px;
     border-radius: 20px;
     text-align: center;
-    transition: var(--transition-smooth);
+    /* Transizione precisa — non "all", ottimizzata per 3D */
+    transition:
+        transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+        box-shadow 0.35s ease,
+        border-color 0.3s ease;
     cursor: pointer;
     border-top: 4px solid transparent;
-    box-shadow: var(--shadow-card);
+    /* shadow-card + micro-highlight zenitale 1px */
+    box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.06);
     animation: fadeInUp 0.6s ease-out;
     animation-fill-mode: both;
+    will-change: transform;
 }
 
 /* Colori specifici per ogni archetipo */
@@ -332,28 +350,40 @@ body {
 }
 
 .archetipo-card:hover {
-    transform: translateY(-10px);
-    box-shadow: var(--shadow-deep), 0 0 25px rgba(255, 215, 0, 0.2);
+    transform: perspective(900px) rotateX(5deg) rotateY(-3deg) translateZ(14px) translateY(-8px);
+    box-shadow: var(--shadow-deep), 0 0 25px rgba(255, 215, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
-/* Hover glow specifico per archetipo */
+/* Hover glow specifico per archetipo — glow esterno + inset per "bordo come fonte di luce" */
 .archetipo-card[data-archetipo="re"]:hover {
-    box-shadow: var(--shadow-deep), 0 0 28px rgba(255, 215, 0, 0.35);
+    box-shadow: var(--shadow-deep),
+        0 0 28px rgba(255, 215, 0, 0.35),
+        inset 0 2px 14px rgba(255, 215, 0, 0.12);
 }
 .archetipo-card[data-archetipo="regina"]:hover {
-    box-shadow: var(--shadow-deep), 0 0 28px rgba(138, 43, 226, 0.35);
+    box-shadow: var(--shadow-deep),
+        0 0 28px rgba(138, 43, 226, 0.35),
+        inset 0 2px 14px rgba(138, 43, 226, 0.12);
 }
 .archetipo-card[data-archetipo="torre"]:hover {
-    box-shadow: var(--shadow-deep), 0 0 28px rgba(50, 205, 50, 0.35);
+    box-shadow: var(--shadow-deep),
+        0 0 28px rgba(50, 205, 50, 0.35),
+        inset 0 2px 14px rgba(50, 205, 50, 0.12);
 }
 .archetipo-card[data-archetipo="alfiere"]:hover {
-    box-shadow: var(--shadow-deep), 0 0 28px rgba(255, 69, 0, 0.35);
+    box-shadow: var(--shadow-deep),
+        0 0 28px rgba(255, 69, 0, 0.35),
+        inset 0 2px 14px rgba(255, 69, 0, 0.12);
 }
 .archetipo-card[data-archetipo="cavallo"]:hover {
-    box-shadow: var(--shadow-deep), 0 0 28px rgba(0, 206, 209, 0.35);
+    box-shadow: var(--shadow-deep),
+        0 0 28px rgba(0, 206, 209, 0.35),
+        inset 0 2px 14px rgba(0, 206, 209, 0.12);
 }
 .archetipo-card[data-archetipo="pedone"]:hover {
-    box-shadow: var(--shadow-deep), 0 0 28px rgba(220, 20, 60, 0.35);
+    box-shadow: var(--shadow-deep),
+        0 0 28px rgba(220, 20, 60, 0.35),
+        inset 0 2px 14px rgba(220, 20, 60, 0.12);
 }
 
 /* Stili per card cliccabili */
@@ -363,7 +393,7 @@ body {
 }
 
 .archetipo-card.clickable:hover {
-    transform: translateY(-15px) scale(1.02);
+    transform: perspective(900px) rotateX(5deg) rotateY(-3deg) translateZ(14px) translateY(-8px);
 }
 
 /* Stili per card bloccate */
@@ -816,6 +846,8 @@ body {
     transition: var(--transition-smooth);
     position: relative;
     overflow: hidden;
+    /* micro-highlight zenitale */
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 /* Sottile glow gold in alto alla card */
@@ -899,7 +931,10 @@ body {
     border: 1px solid rgba(255, 215, 0, 0.2);
     min-width: 120px;
     backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
     transition: all 0.3s ease;
+    /* micro-highlight zenitale */
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .stat-item:hover {
