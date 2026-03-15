@@ -551,10 +551,37 @@
       width: 200px;
       height: 320px;
       position: relative;
-      animation: mobilePieceSpin 10s linear infinite;
       transform-style: preserve-3d;
     }
-    .mp-spin span {
+    .mp-layer {
+      position: absolute;
+      inset: 0;
+      transform-style: preserve-3d;
+      animation-name: mobilePieceSpin;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+      animation-duration: 10s;
+    }
+    .mp-back {
+      opacity: 0.35;
+      transform: scale(0.88) translateZ(-8px);
+      animation-duration: 14s;
+    }
+    .mp-mid {
+      opacity: 1;
+      transform: scale(1) translateZ(0);
+      animation-duration: 10s;
+    }
+    .mp-front {
+      opacity: 0.5;
+      transform: scale(1.06) translateZ(8px);
+      animation-duration: 8.5s;
+    }
+    body.slow-device .mp-back,
+    body.slow-device .mp-front {
+      display: none;
+    }
+    .mp-layer span {
       position: absolute;
       border-radius: 50%;
       transform: translate3d(-50%, -50%, 0);
@@ -695,7 +722,15 @@
 <section id="journey">
 
 <!-- Mobile particle piece — sticky, visible only on mobile via CSS -->
-<div id="mobile-piece"><div class="mp-float"><div class="mp-spin"></div></div></div>
+<div id="mobile-piece">
+  <div class="mp-float">
+    <div class="mp-spin">
+      <div class="mp-layer mp-back"></div>
+      <div class="mp-layer mp-mid"></div>
+      <div class="mp-layer mp-front"></div>
+    </div>
+  </div>
+</div>
 
   <div class="arch-panel" data-arch="re" style="--arch-color: #FFD700">
     <div class="arch-bg-glyph">♔</div>
@@ -1535,6 +1570,9 @@
   function initMobilePiece() {
     var spin = document.querySelector('.mp-spin');
     if (!spin) return;
+    var layerBack = spin.querySelector('.mp-back');
+    var layerMid = spin.querySelector('.mp-mid');
+    var layerFront = spin.querySelector('.mp-front');
     var activeTrailClone = null;
     var trailCleanupTimeout = null;
     var activeGlowPanel = null;
@@ -1548,6 +1586,12 @@
     var JITTER_RANGE = 6;
     var MIN_INNER_POINTS = 30;
     var MAX_INNER_POINTS = 40;
+    var activeLayerKeys = mobilePerf.slow ? ['mid'] : ['back', 'mid', 'front'];
+    var layerMap = {
+      back: layerBack,
+      mid: layerMid,
+      front: layerFront
+    };
 
     function mapCoord(point, jitter) {
       return {
@@ -1565,6 +1609,21 @@
 
     function randomInRange(min, max) {
       return min + Math.random() * (max - min);
+    }
+
+    function clampChannel(v) {
+      return Math.max(0, Math.min(255, Math.round(v)));
+    }
+
+    function adjustHexBrightness(hex, factor) {
+      var normalized = hex.replace('#', '');
+      var r = parseInt(normalized.slice(0, 2), 16);
+      var g = parseInt(normalized.slice(2, 4), 16);
+      var b = parseInt(normalized.slice(4, 6), 16);
+      return '#' +
+        clampChannel(r * factor).toString(16).padStart(2, '0') +
+        clampChannel(g * factor).toString(16).padStart(2, '0') +
+        clampChannel(b * factor).toString(16).padStart(2, '0');
     }
 
     function createRandomInteriorPoint(fillPolygon) {
@@ -1681,16 +1740,19 @@
       maxBoundaryPoints = Math.max(maxBoundaryPoints, MOBILE_SILHOUETTES[key].boundary.length);
     });
     var totalSlots = maxBoundaryPoints + MAX_INNER_POINTS;
-    var spans = [];
-
-    for (var s = 0; s < totalSlots; s++) {
-      var span = document.createElement('span');
-      span.style.left = '100px';
-      span.style.top = '300px';
-      span.style.opacity = '0';
-      spin.appendChild(span);
-      spans.push(span);
-    }
+    var spansByLayer = { back: [], mid: [], front: [] };
+    activeLayerKeys.forEach(function (layerKey) {
+      var layer = layerMap[layerKey];
+      if (!layer) return;
+      for (var s = 0; s < totalSlots; s++) {
+        var span = document.createElement('span');
+        span.style.left = '100px';
+        span.style.top = '300px';
+        span.style.opacity = '0';
+        layer.appendChild(span);
+        spansByLayer[layerKey].push(span);
+      }
+    });
 
     function applyTargets(shapeId, colorHex, immediate) {
       if (!immediate) emitMorphTrail();
@@ -1698,39 +1760,50 @@
       var boundaryCount = targets.boundary.length;
       var interiorCount = targets.interior.length;
       var activeCount = boundaryCount + interiorCount;
+      var colorByLayer = {
+        back: adjustHexBrightness(colorHex, 0.6),
+        mid: colorHex,
+        front: adjustHexBrightness(colorHex, 1.3)
+      };
+      var glowByLayer = { back: 6, mid: 6, front: 8.4 };
 
-      for (var i = 0; i < spans.length; i++) {
-        var span = spans[i];
-        if (immediate) span.style.transition = 'none';
+      activeLayerKeys.forEach(function (layerKey) {
+        var spans = spansByLayer[layerKey];
+        var layerColor = colorByLayer[layerKey];
+        var layerGlow = glowByLayer[layerKey];
+        for (var i = 0; i < spans.length; i++) {
+          var span = spans[i];
+          if (immediate) span.style.transition = 'none';
 
-        span.style.backgroundColor = colorHex;
-        span.style.boxShadow = '0 0 6px ' + colorHex;
+          span.style.backgroundColor = layerColor;
+          span.style.boxShadow = '0 0 ' + layerGlow.toFixed(1) + 'px ' + layerColor;
 
-        if (i < activeCount) {
-          var isBoundary = i < boundaryCount;
-          var point = isBoundary ? targets.boundary[i] : targets.interior[i - boundaryCount];
-          var mapped = mapCoord(point, randomJitter());
-          var size = isBoundary
-            ? randomInRange(BASE_POINT_SIZE_MIN, BASE_POINT_SIZE_MAX)
-            : randomInRange(INNER_POINT_SIZE_MIN, INNER_POINT_SIZE_MAX);
-          var opacity = isBoundary
-            ? randomInRange(0.65, 1.0)
-            : randomInRange(0.3, 0.5);
+          if (i < activeCount) {
+            var isBoundary = i < boundaryCount;
+            var point = isBoundary ? targets.boundary[i] : targets.interior[i - boundaryCount];
+            var mapped = mapCoord(point, randomJitter());
+            var size = isBoundary
+              ? randomInRange(BASE_POINT_SIZE_MIN, BASE_POINT_SIZE_MAX)
+              : randomInRange(INNER_POINT_SIZE_MIN, INNER_POINT_SIZE_MAX);
+            var opacity = isBoundary
+              ? randomInRange(0.65, 1.0)
+              : randomInRange(0.3, 0.5);
 
-          span.style.left = mapped.left;
-          span.style.top = mapped.top;
-          span.style.width = size.toFixed(2) + 'px';
-          span.style.height = size.toFixed(2) + 'px';
-          span.style.opacity = opacity.toFixed(2);
-        } else {
-          span.style.opacity = '0';
+            span.style.left = mapped.left;
+            span.style.top = mapped.top;
+            span.style.width = size.toFixed(2) + 'px';
+            span.style.height = size.toFixed(2) + 'px';
+            span.style.opacity = opacity.toFixed(2);
+          } else {
+            span.style.opacity = '0';
+          }
+
+          if (immediate) {
+            span.offsetHeight;
+            span.style.transition = '';
+          }
         }
-
-        if (immediate) {
-          span.offsetHeight;
-          span.style.transition = '';
-        }
-      }
+      });
     }
 
     applyTargets('re', '#FFD700', true);
