@@ -535,10 +535,10 @@
       justify-content: center;
       width: 100%;
       position: sticky;
-      top: 56px;
+      top: 88px;
       z-index: 5;
       pointer-events: none;
-      padding: 12px 0 8px;
+      padding: 18px 0 10px;
     }
     .mp-float {
       perspective: 400px;
@@ -546,14 +546,21 @@
     }
     .mp-spin {
       width: 200px;
-      height: 260px;
+      height: 300px;
       position: relative;
       animation: mobilePieceSpin 10s linear infinite;
+      transform-style: preserve-3d;
     }
     .mp-spin span {
       position: absolute;
       border-radius: 50%;
-      transition: background-color 0.6s ease, box-shadow 0.6s ease;
+      transform: translate3d(-50%, -50%, 0);
+      transition:
+        left 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+        top 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+        background-color 0.6s ease,
+        box-shadow 0.6s ease,
+        opacity 0.6s ease;
     }
 
     .site-header { padding: 14px 20px; }
@@ -572,7 +579,7 @@
     .arch-panel {
       height: auto;
       min-height: 100vh;
-      padding: 340px 5% 50px;
+      padding: 320px 5% 50px;
       background: rgba(10,10,10,0.97);
       flex-direction: column;
       align-items: flex-start;
@@ -843,7 +850,7 @@
   ];
 
   /* ------------------------------------------
-     KING PROFILE (normalized: [radius, yNorm])
+     DESKTOP PROFILE
   ------------------------------------------ */
   var PROFILE = [
     [1.0, 0], [0.9, 0.05], [0.5, 0.15], [0.3, 0.25],
@@ -859,11 +866,120 @@
   function getRadiusAt(yNorm) {
     for (var i = 1; i < PROFILE.length; i++) {
       if (yNorm <= PROFILE[i][1]) {
-        var t = (yNorm - PROFILE[i-1][1]) / (PROFILE[i][1] - PROFILE[i-1][1]);
-        return PROFILE[i-1][0] + t * (PROFILE[i][0] - PROFILE[i-1][0]);
+        var t = (yNorm - PROFILE[i - 1][1]) / (PROFILE[i][1] - PROFILE[i - 1][1]);
+        return PROFILE[i - 1][0] + t * (PROFILE[i][0] - PROFILE[i - 1][0]);
       }
     }
     return 0;
+  }
+
+  /* ------------------------------------------
+     MOBILE PIECE SHAPES
+  ------------------------------------------ */
+  var MOBILE_SHAPES = {
+    re: [
+      { y: 0.00, left: -0.98, right: 0.98 },
+      { y: 0.09, left: -0.90, right: 0.90 },
+      { y: 0.18, left: -0.56, right: 0.56 },
+      { y: 0.28, left: -0.34, right: 0.34 },
+      { y: 0.40, left: -0.42, right: 0.42 },
+      { y: 0.56, left: -0.38, right: 0.38 },
+      { y: 0.70, left: -0.52, right: 0.52 },
+      { y: 0.80, left: -0.24, right: 0.24 },
+      { y: 0.90, left: -0.30, right: 0.30 },
+      { y: 1.00, left: -0.18, right: 0.18 },
+      { y: 1.07, left: -0.22, right: 0.22 },
+      { y: 1.14, left: -0.10, right: 0.10 },
+      { y: 1.22, left: -0.16, right: 0.16 },
+      { y: 1.30, left:  0.00, right: 0.00 }
+    ],
+    regina: [
+      { y: 0.00, left: -0.88, right: 0.88 },
+      { y: 0.10, left: -0.80, right: 0.80 },
+      { y: 0.18, left: -0.62, right: 0.62 },
+      { y: 0.30, left: -0.42, right: 0.42 },
+      { y: 0.44, left: -0.34, right: 0.34 },
+      { y: 0.58, left: -0.40, right: 0.40 },
+      { y: 0.72, left: -0.26, right: 0.26 },
+      { y: 0.86, left: -0.33, right: 0.33 },
+      { y: 0.98, left: -0.36, right: 0.36 },
+      { y: 1.08, left: -0.22, right: 0.22 },
+      { y: 1.16, left: -0.16, right: 0.16 },
+      { y: 1.26, left: -0.22, right: 0.22 },
+      { y: 1.34, left:  0.00, right: 0.00 }
+    ],
+    torre: [
+      { y: 0.00, left: -0.84, right: 0.84 },
+      { y: 0.10, left: -0.84, right: 0.84 },
+      { y: 0.18, left: -0.58, right: 0.58 },
+      { y: 0.30, left: -0.58, right: 0.58 },
+      { y: 0.44, left: -0.58, right: 0.58 },
+      { y: 0.58, left: -0.58, right: 0.58 },
+      { y: 0.72, left: -0.56, right: 0.56 },
+      { y: 0.86, left: -0.58, right: 0.58 },
+      { y: 1.00, left: -0.62, right: 0.62 },
+      { y: 1.10, left: -0.74, right: 0.74 },
+      { y: 1.18, left: -0.54, right: 0.54 },
+      { y: 1.28, left: -0.74, right: 0.74 },
+      { y: 1.36, left:  0.00, right: 0.00 }
+    ],
+    alfiere: [
+      { y: 0.00, left: -0.92, right: 0.92 },
+      { y: 0.10, left: -0.84, right: 0.84 },
+      { y: 0.20, left: -0.56, right: 0.56 },
+      { y: 0.32, left: -0.38, right: 0.38 },
+      { y: 0.46, left: -0.30, right: 0.30 },
+      { y: 0.62, left: -0.22, right: 0.22 },
+      { y: 0.78, left: -0.30, right: 0.30 },
+      { y: 0.94, left: -0.42, right: 0.42 },
+      { y: 1.08, left: -0.30, right: 0.30 },
+      { y: 1.18, left: -0.14, right: 0.14 },
+      { y: 1.28, left: -0.24, right: 0.24 },
+      { y: 1.38, left:  0.00, right: 0.00 }
+    ],
+    cavallo: [
+      { y: 0.00, left: -0.90, right: 0.64 },
+      { y: 0.10, left: -0.86, right: 0.68 },
+      { y: 0.22, left: -0.66, right: 0.52 },
+      { y: 0.36, left: -0.54, right: 0.44 },
+      { y: 0.50, left: -0.44, right: 0.34 },
+      { y: 0.66, left: -0.30, right: 0.28 },
+      { y: 0.82, left: -0.12, right: 0.22 },
+      { y: 0.96, left:  0.00, right: 0.36 },
+      { y: 1.08, left:  0.06, right: 0.52 },
+      { y: 1.18, left:  0.00, right: 0.34 },
+      { y: 1.28, left: -0.08, right: 0.18 },
+      { y: 1.36, left:  0.00, right: 0.00 }
+    ],
+    pedone: [
+      { y: 0.00, left: -0.82, right: 0.82 },
+      { y: 0.12, left: -0.70, right: 0.70 },
+      { y: 0.24, left: -0.44, right: 0.44 },
+      { y: 0.40, left: -0.30, right: 0.30 },
+      { y: 0.56, left: -0.24, right: 0.24 },
+      { y: 0.72, left: -0.30, right: 0.30 },
+      { y: 0.88, left: -0.24, right: 0.24 },
+      { y: 1.00, left: -0.18, right: 0.18 },
+      { y: 1.10, left: -0.28, right: 0.28 },
+      { y: 1.22, left: -0.34, right: 0.34 },
+      { y: 1.32, left: -0.18, right: 0.18 },
+      { y: 1.40, left:  0.00, right: 0.00 }
+    ]
+  };
+
+  function getShapeBoundsAt(shape, yNorm) {
+    for (var i = 1; i < shape.length; i++) {
+      if (yNorm <= shape[i].y) {
+        var prev = shape[i - 1];
+        var next = shape[i];
+        var t = (yNorm - prev.y) / (next.y - prev.y);
+        return {
+          left: prev.left + t * (next.left - prev.left),
+          right: prev.right + t * (next.right - prev.right)
+        };
+      }
+    }
+    return { left: 0, right: 0 };
   }
 
   /* ------------------------------------------
@@ -1199,51 +1315,85 @@
     var spin = document.querySelector('.mp-spin');
     if (!spin) return;
 
-    var CX    = 100; // center x of 200px container
-    var CSS_R = 80;  // max radius (px) — base spans x: 20–180
-    var CSS_H = 240; // usable height (px) — crown at top, base at bottom
-    var CY_TOP = 10; // top margin (px)
-
+    var WIDTH = 200;
+    var HEIGHT = 300;
+    var CENTER_X = WIDTH / 2;
+    var BASE_Y = HEIGHT - 22;
+    var SHAPE_HEIGHT = 234;
+    var MAX_HALF_WIDTH = 74;
+    var PARTICLE_COUNT_MOBILE = 180;
     var spans = [];
 
-    for (var i = 0; i < 180; i++) {
-      var yNorm = Math.random() * PROF_Y_MAX;
-      var r     = getRadiusAt(yNorm);
-      var side  = Math.random() < 0.5 ? 1 : -1; // left or right silhouette
-      var nx    = (Math.random() - 0.5) * 16;    // ±8px noise x
-      var ny    = (Math.random() - 0.5) * 16;    // ±8px noise y
+    function placeParticle(spanObj, shapeId, colorHex, immediate) {
+      var shape = MOBILE_SHAPES[shapeId] || MOBILE_SHAPES.re;
+      var bounds = getShapeBoundsAt(shape, spanObj.yNorm);
+      var usable = bounds.right - bounds.left;
+      var edgeMix = spanObj.edgeBias > 0.62;
+      var xNorm;
 
-      /* Crown (yNorm=1.25) → screen top; base (yNorm=0) → screen bottom */
-      var xPx = CX + side * r * CSS_R + nx;
-      var yPx = CY_TOP + (1 - yNorm / PROF_Y_MAX) * CSS_H + ny;
+      if (edgeMix) {
+        xNorm = spanObj.side > 0
+          ? bounds.right - usable * spanObj.innerBias * 0.30
+          : bounds.left + usable * spanObj.innerBias * 0.30;
+      } else {
+        xNorm = bounds.left + usable * spanObj.innerBias;
+      }
 
-      var sz  = 3 + Math.random() * 2; // 3–5px
-      var op  = (0.6 + Math.random() * 0.4).toFixed(2);
+      var xPx = CENTER_X + xNorm * MAX_HALF_WIDTH + spanObj.jitterX;
+      var yPx = BASE_Y - spanObj.yNorm * SHAPE_HEIGHT + spanObj.jitterY;
+      var opacity = 0.58 + 0.42 * (1 - spanObj.yNorm / 1.42) + spanObj.opacityJitter;
+      opacity = Math.max(0.42, Math.min(1, opacity));
 
-      var span = document.createElement('span');
-      span.style.width           = sz + 'px';
-      span.style.height          = sz + 'px';
-      span.style.left            = xPx.toFixed(1) + 'px';
-      span.style.top             = yPx.toFixed(1) + 'px';
-      span.style.backgroundColor = '#FFD700';
-      span.style.boxShadow       = '0 0 6px #FFD700';
-      span.style.opacity         = op;
-      spin.appendChild(span);
-      spans.push(span);
+      if (immediate) {
+        spanObj.el.style.transition = 'none';
+      }
+
+      spanObj.el.style.left = xPx.toFixed(1) + 'px';
+      spanObj.el.style.top = yPx.toFixed(1) + 'px';
+      spanObj.el.style.backgroundColor = colorHex;
+      spanObj.el.style.boxShadow = '0 0 6px ' + colorHex;
+      spanObj.el.style.opacity = opacity.toFixed(2);
+
+      if (immediate) {
+        spanObj.el.offsetHeight;
+        spanObj.el.style.transition = '';
+      }
     }
 
-    /* Color sync via IntersectionObserver */
+    for (var i = 0; i < PARTICLE_COUNT_MOBILE; i++) {
+      var span = document.createElement('span');
+      var sz = 3 + Math.random() * 2;
+      span.style.width = sz + 'px';
+      span.style.height = sz + 'px';
+      spin.appendChild(span);
+
+      var spanObj = {
+        el: span,
+        yNorm: Math.pow(Math.random(), 0.82) * 1.42,
+        innerBias: Math.random(),
+        edgeBias: Math.random(),
+        side: Math.random() < 0.5 ? -1 : 1,
+        jitterX: (Math.random() - 0.5) * 14,
+        jitterY: (Math.random() - 0.5) * 14,
+        opacityJitter: (Math.random() - 0.5) * 0.14
+      };
+
+      spans.push(spanObj);
+      placeParticle(spanObj, 're', '#FFD700', true);
+    }
+
+    function morphToArchetype(id) {
+      var found = ARCH.find(function (a) { return a.id === id; }) || ARCH[0];
+      spans.forEach(function (spanObj) {
+        placeParticle(spanObj, found.id, found.hex, false);
+      });
+    }
+
     var panels = document.querySelectorAll('.arch-panel');
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (!e.isIntersecting) return;
-        var found = ARCH.find(function (a) { return a.id === e.target.dataset.arch; });
-        if (found) {
-          spans.forEach(function (s) {
-            s.style.backgroundColor = found.hex;
-            s.style.boxShadow       = '0 0 6px ' + found.hex;
-          });
-        }
+        morphToArchetype(e.target.dataset.arch);
       });
     }, { threshold: 0.45 });
     panels.forEach(function (p) { observer.observe(p); });
