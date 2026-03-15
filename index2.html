@@ -633,6 +633,10 @@
       opacity: 0;
       transition: opacity 1.7s ease-out;
     }
+    .arch-panel.glow-resident::before {
+      opacity: 0.06;
+      transition: opacity 0.8s ease;
+    }
     .arch-panel > * {
       position: relative;
       z-index: 1;
@@ -1582,6 +1586,7 @@
     var activeGlowPanel = null;
     var glowRiseTimeout = null;
     var glowClearTimeout = null;
+    var visiblePanels = new Set();
 
     var BASE_POINT_SIZE_MIN = 3;
     var BASE_POINT_SIZE_MAX = 4;
@@ -1790,13 +1795,13 @@
     function pulsePanelGlow(panel, colorHex) {
       if (!panel) return;
       if (activeGlowPanel && activeGlowPanel !== panel) {
-        activeGlowPanel.classList.remove('glow-active', 'glow-fade');
+        activeGlowPanel.classList.remove('glow-active', 'glow-fade', 'glow-resident');
       }
       if (glowRiseTimeout) clearTimeout(glowRiseTimeout);
       if (glowClearTimeout) clearTimeout(glowClearTimeout);
 
       panel.style.setProperty('--panel-glow', colorHex);
-      panel.classList.remove('glow-active', 'glow-fade');
+      panel.classList.remove('glow-active', 'glow-fade', 'glow-resident');
       panel.offsetHeight;
       panel.classList.add('glow-active');
       activeGlowPanel = panel;
@@ -1808,6 +1813,9 @@
 
       glowClearTimeout = setTimeout(function () {
         panel.classList.remove('glow-fade');
+        if (visiblePanels.has(panel)) {
+          panel.classList.add('glow-resident');
+        }
       }, 2000);
     }
 
@@ -1949,7 +1957,12 @@
     var panels = document.querySelectorAll('.arch-panel');
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
-        if (!e.isIntersecting) return;
+        if (!e.isIntersecting) {
+          visiblePanels.delete(e.target);
+          e.target.classList.remove('glow-resident');
+          return;
+        }
+        visiblePanels.add(e.target);
         var found = ARCH.find(function (a) { return a.id === e.target.dataset.arch; });
         if (!found) return;
         emitAberrationClones();
