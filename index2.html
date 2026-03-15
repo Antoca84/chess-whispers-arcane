@@ -546,7 +546,7 @@
     }
     .mp-spin {
       width: 200px;
-      height: 300px;
+      height: 320px;
       position: relative;
       animation: mobilePieceSpin 10s linear infinite;
       transform-style: preserve-3d;
@@ -556,11 +556,13 @@
       border-radius: 50%;
       transform: translate3d(-50%, -50%, 0);
       transition:
-        left 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-        top 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+        left 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+        top 0.8s cubic-bezier(0.23, 1, 0.32, 1),
         background-color 0.6s ease,
         box-shadow 0.6s ease,
-        opacity 0.6s ease;
+        opacity 0.6s ease,
+        width 0.6s ease,
+        height 0.6s ease;
     }
 
     .site-header { padding: 14px 20px; }
@@ -876,110 +878,140 @@
   /* ------------------------------------------
      MOBILE PIECE SHAPES
   ------------------------------------------ */
-  var MOBILE_SHAPES = {
-    re: [
-      { y: 0.00, left: -0.98, right: 0.98 },
-      { y: 0.09, left: -0.90, right: 0.90 },
-      { y: 0.18, left: -0.56, right: 0.56 },
-      { y: 0.28, left: -0.34, right: 0.34 },
-      { y: 0.40, left: -0.42, right: 0.42 },
-      { y: 0.56, left: -0.38, right: 0.38 },
-      { y: 0.70, left: -0.52, right: 0.52 },
-      { y: 0.80, left: -0.24, right: 0.24 },
-      { y: 0.90, left: -0.30, right: 0.30 },
-      { y: 1.00, left: -0.18, right: 0.18 },
-      { y: 1.07, left: -0.22, right: 0.22 },
-      { y: 1.14, left: -0.10, right: 0.10 },
-      { y: 1.22, left: -0.16, right: 0.16 },
-      { y: 1.30, left:  0.00, right: 0.00 }
-    ],
-    regina: [
-      { y: 0.00, left: -0.88, right: 0.88 },
-      { y: 0.10, left: -0.80, right: 0.80 },
-      { y: 0.18, left: -0.62, right: 0.62 },
-      { y: 0.30, left: -0.42, right: 0.42 },
-      { y: 0.44, left: -0.34, right: 0.34 },
-      { y: 0.58, left: -0.40, right: 0.40 },
-      { y: 0.72, left: -0.26, right: 0.26 },
-      { y: 0.86, left: -0.33, right: 0.33 },
-      { y: 0.98, left: -0.36, right: 0.36 },
-      { y: 1.08, left: -0.22, right: 0.22 },
-      { y: 1.16, left: -0.16, right: 0.16 },
-      { y: 1.26, left: -0.22, right: 0.22 },
-      { y: 1.34, left:  0.00, right: 0.00 }
-    ],
-    torre: [
-      { y: 0.00, left: -0.84, right: 0.84 },
-      { y: 0.10, left: -0.84, right: 0.84 },
-      { y: 0.18, left: -0.58, right: 0.58 },
-      { y: 0.30, left: -0.58, right: 0.58 },
-      { y: 0.44, left: -0.58, right: 0.58 },
-      { y: 0.58, left: -0.58, right: 0.58 },
-      { y: 0.72, left: -0.56, right: 0.56 },
-      { y: 0.86, left: -0.58, right: 0.58 },
-      { y: 1.00, left: -0.62, right: 0.62 },
-      { y: 1.10, left: -0.74, right: 0.74 },
-      { y: 1.18, left: -0.54, right: 0.54 },
-      { y: 1.28, left: -0.74, right: 0.74 },
-      { y: 1.36, left:  0.00, right: 0.00 }
-    ],
-    alfiere: [
-      { y: 0.00, left: -0.92, right: 0.92 },
-      { y: 0.10, left: -0.84, right: 0.84 },
-      { y: 0.20, left: -0.56, right: 0.56 },
-      { y: 0.32, left: -0.38, right: 0.38 },
-      { y: 0.46, left: -0.30, right: 0.30 },
-      { y: 0.62, left: -0.22, right: 0.22 },
-      { y: 0.78, left: -0.30, right: 0.30 },
-      { y: 0.94, left: -0.42, right: 0.42 },
-      { y: 1.08, left: -0.30, right: 0.30 },
-      { y: 1.18, left: -0.14, right: 0.14 },
-      { y: 1.28, left: -0.24, right: 0.24 },
-      { y: 1.38, left:  0.00, right: 0.00 }
-    ],
-    cavallo: [
-      { y: 0.00, left: -0.90, right: 0.64 },
-      { y: 0.10, left: -0.86, right: 0.68 },
-      { y: 0.22, left: -0.66, right: 0.52 },
-      { y: 0.36, left: -0.54, right: 0.44 },
-      { y: 0.50, left: -0.44, right: 0.34 },
-      { y: 0.66, left: -0.30, right: 0.28 },
-      { y: 0.82, left: -0.12, right: 0.22 },
-      { y: 0.96, left:  0.00, right: 0.36 },
-      { y: 1.08, left:  0.06, right: 0.52 },
-      { y: 1.18, left:  0.00, right: 0.34 },
-      { y: 1.28, left: -0.08, right: 0.18 },
-      { y: 1.36, left:  0.00, right: 0.00 }
-    ],
-    pedone: [
-      { y: 0.00, left: -0.82, right: 0.82 },
-      { y: 0.12, left: -0.70, right: 0.70 },
-      { y: 0.24, left: -0.44, right: 0.44 },
-      { y: 0.40, left: -0.30, right: 0.30 },
-      { y: 0.56, left: -0.24, right: 0.24 },
-      { y: 0.72, left: -0.30, right: 0.30 },
-      { y: 0.88, left: -0.24, right: 0.24 },
-      { y: 1.00, left: -0.18, right: 0.18 },
-      { y: 1.10, left: -0.28, right: 0.28 },
-      { y: 1.22, left: -0.34, right: 0.34 },
-      { y: 1.32, left: -0.18, right: 0.18 },
-      { y: 1.40, left:  0.00, right: 0.00 }
-    ]
+  var MOBILE_SILHOUETTES = {
+    re: {
+      boundary: [
+        [-0.9,0],[-0.7,0.05],[-0.4,0.1],[-0.25,0.2],[-0.3,0.35],[-0.35,0.5],[-0.3,0.6],
+        [-0.45,0.65],[-0.5,0.7],[-0.3,0.72],[-0.2,0.75],[-0.18,0.82],[-0.2,0.9],
+        [-0.32,0.95],[-0.35,1.05],[-0.25,1.1],[-0.15,1.15],[-0.05,1.2],[0,1.25],
+        [0.05,1.2],[0.15,1.15],[0.25,1.1],[0.35,1.05],[0.32,0.95],[0.2,0.9],
+        [0.18,0.82],[0.2,0.75],[0.3,0.72],[0.45,0.65],[0.5,0.7],[0.3,0.72],
+        [0.35,0.5],[0.3,0.6],[0.25,0.2],[0.4,0.1],[0.7,0.05],[0.9,0],
+        [-0.15,1.3],[0.15,1.3],[0,1.28],[0,1.45],[0,1.35],[-0.1,1.38],[0.1,1.38]
+      ],
+      fill: [
+        [-0.9,0],[-0.7,0.05],[-0.4,0.1],[-0.25,0.2],[-0.3,0.35],[-0.35,0.5],[-0.3,0.6],
+        [-0.45,0.65],[-0.5,0.7],[-0.3,0.72],[-0.2,0.75],[-0.18,0.82],[-0.2,0.9],
+        [-0.32,0.95],[-0.35,1.05],[-0.25,1.1],[-0.15,1.15],[-0.05,1.2],[0,1.25],
+        [0.05,1.2],[0.15,1.15],[0.25,1.1],[0.35,1.05],[0.32,0.95],[0.2,0.9],
+        [0.18,0.82],[0.2,0.75],[0.3,0.72],[0.45,0.65],[0.5,0.7],[0.3,0.72],
+        [0.35,0.5],[0.3,0.6],[0.25,0.2],[0.4,0.1],[0.7,0.05],[0.9,0]
+      ]
+    },
+    regina: {
+      boundary: [
+        [-0.9,0],[-0.7,0.05],[-0.4,0.1],[-0.25,0.2],[-0.3,0.4],[-0.28,0.55],[-0.35,0.65],
+        [-0.55,0.7],[-0.6,0.75],[-0.45,0.72],[-0.3,0.75],[-0.22,0.82],[-0.25,0.92],
+        [-0.35,0.98],[-0.3,1.05],[-0.2,1.1],[-0.1,1.12],[0,1.15],
+        [0.1,1.12],[0.2,1.1],[0.3,1.05],[0.35,0.98],[0.25,0.92],[0.22,0.82],
+        [0.3,0.75],[0.45,0.72],[0.6,0.75],[0.55,0.7],[0.35,0.65],[0.28,0.55],
+        [0.3,0.4],[0.25,0.2],[0.4,0.1],[0.7,0.05],[0.9,0],
+        [-0.5,1.2],[-0.35,1.35],[-0.15,1.25],[0,1.38],[0.15,1.25],[0.35,1.35],[0.5,1.2]
+      ],
+      fill: [
+        [-0.9,0],[-0.7,0.05],[-0.4,0.1],[-0.25,0.2],[-0.3,0.4],[-0.28,0.55],[-0.35,0.65],
+        [-0.55,0.7],[-0.6,0.75],[-0.45,0.72],[-0.3,0.75],[-0.22,0.82],[-0.25,0.92],
+        [-0.35,0.98],[-0.3,1.05],[-0.2,1.1],[-0.1,1.12],[0,1.15],
+        [0.1,1.12],[0.2,1.1],[0.3,1.05],[0.35,0.98],[0.25,0.92],[0.22,0.82],
+        [0.3,0.75],[0.45,0.72],[0.6,0.75],[0.55,0.7],[0.35,0.65],[0.28,0.55],
+        [0.3,0.4],[0.25,0.2],[0.4,0.1],[0.7,0.05],[0.9,0]
+      ]
+    },
+    torre: {
+      boundary: [
+        [-0.8,0],[-0.6,0.05],[-0.4,0.1],[-0.35,0.2],[-0.32,0.8],[-0.45,0.82],
+        [-0.45,0.88],[-0.48,0.9],[-0.48,1.15],[-0.35,1.15],[-0.35,0.95],
+        [-0.15,0.95],[-0.15,1.15],[0.15,1.15],[0.15,0.95],[0.35,0.95],
+        [0.35,1.15],[0.48,1.15],[0.48,0.9],[0.45,0.88],[0.45,0.82],
+        [0.32,0.8],[0.35,0.2],[0.4,0.1],[0.6,0.05],[0.8,0],
+        [-0.3,0.35],[-0.3,0.5],[-0.3,0.65],[0.3,0.35],[0.3,0.5],[0.3,0.65]
+      ],
+      fill: [
+        [-0.8,0],[-0.6,0.05],[-0.4,0.1],[-0.35,0.2],[-0.32,0.8],[-0.45,0.82],
+        [-0.45,0.88],[-0.48,0.9],[-0.48,1.15],[-0.35,1.15],[-0.35,0.95],
+        [-0.15,0.95],[-0.15,1.15],[0.15,1.15],[0.15,0.95],[0.35,0.95],
+        [0.35,1.15],[0.48,1.15],[0.48,0.9],[0.45,0.88],[0.45,0.82],
+        [0.32,0.8],[0.35,0.2],[0.4,0.1],[0.6,0.05],[0.8,0]
+      ]
+    },
+    alfiere: {
+      boundary: [
+        [-0.7,0],[-0.5,0.05],[-0.35,0.12],[-0.25,0.22],[-0.28,0.4],[-0.3,0.55],
+        [-0.28,0.65],[-0.35,0.72],[-0.38,0.8],[-0.3,0.85],[-0.22,0.9],
+        [-0.18,0.98],[-0.2,1.05],[-0.25,1.12],[-0.2,1.18],[-0.1,1.22],
+        [0,1.25],[0.1,1.22],[0.2,1.18],[0.25,1.12],[0.2,1.05],
+        [0.18,0.98],[0.22,0.9],[0.3,0.85],[0.38,0.8],[0.35,0.72],[0.28,0.65],
+        [0.3,0.55],[0.28,0.4],[0.25,0.22],[0.35,0.12],[0.5,0.05],[0.7,0],
+        [0,1.38],[-0.05,1.32],[0.05,1.32],[0,1.45]
+      ],
+      fill: [
+        [-0.7,0],[-0.5,0.05],[-0.35,0.12],[-0.25,0.22],[-0.28,0.4],[-0.3,0.55],
+        [-0.28,0.65],[-0.35,0.72],[-0.38,0.8],[-0.3,0.85],[-0.22,0.9],
+        [-0.18,0.98],[-0.2,1.05],[-0.25,1.12],[-0.2,1.18],[-0.1,1.22],
+        [0,1.25],[0.1,1.22],[0.2,1.18],[0.25,1.12],[0.2,1.05],
+        [0.18,0.98],[0.22,0.9],[0.3,0.85],[0.38,0.8],[0.35,0.72],[0.28,0.65],
+        [0.3,0.55],[0.28,0.4],[0.25,0.22],[0.35,0.12],[0.5,0.05],[0.7,0]
+      ]
+    },
+    cavallo: {
+      boundary: [
+        [-0.7,0],[-0.5,0.05],[-0.35,0.1],[-0.3,0.2],[-0.32,0.4],[-0.28,0.55],
+        [-0.15,0.65],[-0.05,0.72],[-0.18,0.8],[-0.35,0.88],[-0.4,0.96],
+        [-0.38,1.05],[-0.25,1.12],[-0.15,1.18],[-0.05,1.22],
+        [0.05,1.25],[0.2,1.28],[0.35,1.25],[0.45,1.18],[0.5,1.08],
+        [0.48,0.98],[0.4,0.88],[0.3,0.82],[0.25,0.75],[0.35,0.7],
+        [0.45,0.65],[0.4,0.55],[0.25,0.45],[0.15,0.35],[0.2,0.2],
+        [0.3,0.1],[0.5,0.05],[0.7,0],
+        [0.2,1.35],[0.3,1.42],[0.4,1.38],[0.35,1.28],
+        [-0.1,1.28],[-0.05,1.38],[0.08,1.42],[0.12,1.32],
+        [0.3,0.95],[0.35,1.0],[0.28,1.02]
+      ],
+      fill: [
+        [-0.7,0],[-0.5,0.05],[-0.35,0.1],[-0.3,0.2],[-0.32,0.4],[-0.28,0.55],
+        [-0.15,0.65],[-0.05,0.72],[-0.18,0.8],[-0.35,0.88],[-0.4,0.96],
+        [-0.38,1.05],[-0.25,1.12],[-0.15,1.18],[-0.05,1.22],
+        [0.05,1.25],[0.2,1.28],[0.35,1.25],[0.45,1.18],[0.5,1.08],
+        [0.48,0.98],[0.4,0.88],[0.3,0.82],[0.25,0.75],[0.35,0.7],
+        [0.45,0.65],[0.4,0.55],[0.25,0.45],[0.15,0.35],[0.2,0.2],
+        [0.3,0.1],[0.5,0.05],[0.7,0]
+      ]
+    },
+    pedone: {
+      boundary: [
+        [-0.6,0],[-0.45,0.05],[-0.3,0.1],[-0.22,0.18],[-0.2,0.28],
+        [-0.18,0.38],[-0.2,0.48],[-0.22,0.55],[-0.28,0.6],[-0.32,0.68],
+        [-0.38,0.75],[-0.35,0.82],[-0.25,0.88],[-0.2,0.95],[-0.22,1.02],
+        [-0.3,1.08],[-0.32,1.15],[-0.25,1.2],[-0.15,1.25],
+        [0,1.28],[0.15,1.25],[0.25,1.2],[0.32,1.15],
+        [0.3,1.08],[0.22,1.02],[0.2,0.95],[0.25,0.88],[0.35,0.82],
+        [0.38,0.75],[0.32,0.68],[0.28,0.6],[0.22,0.55],[0.2,0.48],
+        [0.18,0.38],[0.2,0.28],[0.22,0.18],[0.3,0.1],[0.45,0.05],[0.6,0]
+      ],
+      fill: [
+        [-0.6,0],[-0.45,0.05],[-0.3,0.1],[-0.22,0.18],[-0.2,0.28],
+        [-0.18,0.38],[-0.2,0.48],[-0.22,0.55],[-0.28,0.6],[-0.32,0.68],
+        [-0.38,0.75],[-0.35,0.82],[-0.25,0.88],[-0.2,0.95],[-0.22,1.02],
+        [-0.3,1.08],[-0.32,1.15],[-0.25,1.2],[-0.15,1.25],
+        [0,1.28],[0.15,1.25],[0.25,1.2],[0.32,1.15],
+        [0.3,1.08],[0.22,1.02],[0.2,0.95],[0.25,0.88],[0.35,0.82],
+        [0.38,0.75],[0.32,0.68],[0.28,0.6],[0.22,0.55],[0.2,0.48],
+        [0.18,0.38],[0.2,0.28],[0.22,0.18],[0.3,0.1],[0.45,0.05],[0.6,0]
+      ]
+    }
   };
 
-  function getShapeBoundsAt(shape, yNorm) {
-    for (var i = 1; i < shape.length; i++) {
-      if (yNorm <= shape[i].y) {
-        var prev = shape[i - 1];
-        var next = shape[i];
-        var t = (yNorm - prev.y) / (next.y - prev.y);
-        return {
-          left: prev.left + t * (next.left - prev.left),
-          right: prev.right + t * (next.right - prev.right)
-        };
-      }
+  function pointInPolygon(point, polygon) {
+    var x = point[0];
+    var y = point[1];
+    var inside = false;
+    for (var i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+      var xi = polygon[i][0], yi = polygon[i][1];
+      var xj = polygon[j][0], yj = polygon[j][1];
+      var intersect = ((yi > y) !== (yj > y)) &&
+        (x < (xj - xi) * (y - yi) / (yj - yi + 0.000001) + xi);
+      if (intersect) inside = !inside;
     }
-    return { left: 0, right: 0 };
+    return inside;
   }
 
   /* ------------------------------------------
@@ -1315,85 +1347,136 @@
     var spin = document.querySelector('.mp-spin');
     if (!spin) return;
 
-    var WIDTH = 200;
-    var HEIGHT = 300;
-    var CENTER_X = WIDTH / 2;
-    var BASE_Y = HEIGHT - 22;
-    var SHAPE_HEIGHT = 234;
-    var MAX_HALF_WIDTH = 74;
-    var PARTICLE_COUNT_MOBILE = 180;
+    var BASE_POINT_SIZE_MIN = 3;
+    var BASE_POINT_SIZE_MAX = 4;
+    var INNER_POINT_SIZE_MIN = 2;
+    var INNER_POINT_SIZE_MAX = 3;
+    var JITTER_RANGE = 6;
+    var MIN_INNER_POINTS = 30;
+    var MAX_INNER_POINTS = 40;
+
+    function mapCoord(point, jitter) {
+      return {
+        left: (point[0] * 80 + 100 + jitter.x).toFixed(1) + 'px',
+        top: (300 - point[1] * 120 + jitter.y).toFixed(1) + 'px'
+      };
+    }
+
+    function randomJitter() {
+      return {
+        x: (Math.random() * 2 - 1) * JITTER_RANGE,
+        y: (Math.random() * 2 - 1) * JITTER_RANGE
+      };
+    }
+
+    function randomInRange(min, max) {
+      return min + Math.random() * (max - min);
+    }
+
+    function createRandomInteriorPoint(fillPolygon) {
+      var minX = Infinity;
+      var maxX = -Infinity;
+      var minY = Infinity;
+      var maxY = -Infinity;
+      for (var i = 0; i < fillPolygon.length; i++) {
+        minX = Math.min(minX, fillPolygon[i][0]);
+        maxX = Math.max(maxX, fillPolygon[i][0]);
+        minY = Math.min(minY, fillPolygon[i][1]);
+        maxY = Math.max(maxY, fillPolygon[i][1]);
+      }
+
+      for (var attempts = 0; attempts < 250; attempts++) {
+        var candidate = [
+          randomInRange(minX, maxX),
+          randomInRange(minY, maxY)
+        ];
+        if (pointInPolygon(candidate, fillPolygon)) return candidate;
+      }
+      return [0, 0.65];
+    }
+
+    function buildMorphTargets(shapeId) {
+      var model = MOBILE_SILHOUETTES[shapeId] || MOBILE_SILHOUETTES.re;
+      var boundary = model.boundary.slice();
+      var fillPolygon = model.fill;
+      var interiorCount = Math.floor(randomInRange(MIN_INNER_POINTS, MAX_INNER_POINTS + 1));
+      var interior = [];
+
+      for (var i = 0; i < interiorCount; i++) {
+        interior.push(createRandomInteriorPoint(fillPolygon));
+      }
+
+      return {
+        boundary: boundary,
+        interior: interior
+      };
+    }
+
+    var maxBoundaryPoints = 0;
+    Object.keys(MOBILE_SILHOUETTES).forEach(function (key) {
+      maxBoundaryPoints = Math.max(maxBoundaryPoints, MOBILE_SILHOUETTES[key].boundary.length);
+    });
+    var totalSlots = maxBoundaryPoints + MAX_INNER_POINTS;
     var spans = [];
 
-    function placeParticle(spanObj, shapeId, colorHex, immediate) {
-      var shape = MOBILE_SHAPES[shapeId] || MOBILE_SHAPES.re;
-      var bounds = getShapeBoundsAt(shape, spanObj.yNorm);
-      var usable = bounds.right - bounds.left;
-      var edgeMix = spanObj.edgeBias > 0.62;
-      var xNorm;
-
-      if (edgeMix) {
-        xNorm = spanObj.side > 0
-          ? bounds.right - usable * spanObj.innerBias * 0.30
-          : bounds.left + usable * spanObj.innerBias * 0.30;
-      } else {
-        xNorm = bounds.left + usable * spanObj.innerBias;
-      }
-
-      var xPx = CENTER_X + xNorm * MAX_HALF_WIDTH + spanObj.jitterX;
-      var yPx = BASE_Y - spanObj.yNorm * SHAPE_HEIGHT + spanObj.jitterY;
-      var opacity = 0.58 + 0.42 * (1 - spanObj.yNorm / 1.42) + spanObj.opacityJitter;
-      opacity = Math.max(0.42, Math.min(1, opacity));
-
-      if (immediate) {
-        spanObj.el.style.transition = 'none';
-      }
-
-      spanObj.el.style.left = xPx.toFixed(1) + 'px';
-      spanObj.el.style.top = yPx.toFixed(1) + 'px';
-      spanObj.el.style.backgroundColor = colorHex;
-      spanObj.el.style.boxShadow = '0 0 6px ' + colorHex;
-      spanObj.el.style.opacity = opacity.toFixed(2);
-
-      if (immediate) {
-        spanObj.el.offsetHeight;
-        spanObj.el.style.transition = '';
-      }
-    }
-
-    for (var i = 0; i < PARTICLE_COUNT_MOBILE; i++) {
+    for (var s = 0; s < totalSlots; s++) {
       var span = document.createElement('span');
-      var sz = 3 + Math.random() * 2;
-      span.style.width = sz + 'px';
-      span.style.height = sz + 'px';
+      span.style.left = '100px';
+      span.style.top = '300px';
+      span.style.opacity = '0';
       spin.appendChild(span);
-
-      var spanObj = {
-        el: span,
-        yNorm: Math.pow(Math.random(), 0.82) * 1.42,
-        innerBias: Math.random(),
-        edgeBias: Math.random(),
-        side: Math.random() < 0.5 ? -1 : 1,
-        jitterX: (Math.random() - 0.5) * 14,
-        jitterY: (Math.random() - 0.5) * 14,
-        opacityJitter: (Math.random() - 0.5) * 0.14
-      };
-
-      spans.push(spanObj);
-      placeParticle(spanObj, 're', '#FFD700', true);
+      spans.push(span);
     }
 
-    function morphToArchetype(id) {
-      var found = ARCH.find(function (a) { return a.id === id; }) || ARCH[0];
-      spans.forEach(function (spanObj) {
-        placeParticle(spanObj, found.id, found.hex, false);
-      });
+    function applyTargets(shapeId, colorHex, immediate) {
+      var targets = buildMorphTargets(shapeId);
+      var boundaryCount = targets.boundary.length;
+      var interiorCount = targets.interior.length;
+      var activeCount = boundaryCount + interiorCount;
+
+      for (var i = 0; i < spans.length; i++) {
+        var span = spans[i];
+        if (immediate) span.style.transition = 'none';
+
+        span.style.backgroundColor = colorHex;
+        span.style.boxShadow = '0 0 6px ' + colorHex;
+
+        if (i < activeCount) {
+          var isBoundary = i < boundaryCount;
+          var point = isBoundary ? targets.boundary[i] : targets.interior[i - boundaryCount];
+          var mapped = mapCoord(point, randomJitter());
+          var size = isBoundary
+            ? randomInRange(BASE_POINT_SIZE_MIN, BASE_POINT_SIZE_MAX)
+            : randomInRange(INNER_POINT_SIZE_MIN, INNER_POINT_SIZE_MAX);
+          var opacity = isBoundary
+            ? randomInRange(0.65, 1.0)
+            : randomInRange(0.3, 0.5);
+
+          span.style.left = mapped.left;
+          span.style.top = mapped.top;
+          span.style.width = size.toFixed(2) + 'px';
+          span.style.height = size.toFixed(2) + 'px';
+          span.style.opacity = opacity.toFixed(2);
+        } else {
+          span.style.opacity = '0';
+        }
+
+        if (immediate) {
+          span.offsetHeight;
+          span.style.transition = '';
+        }
+      }
     }
+
+    applyTargets('re', '#FFD700', true);
 
     var panels = document.querySelectorAll('.arch-panel');
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (!e.isIntersecting) return;
-        morphToArchetype(e.target.dataset.arch);
+        var found = ARCH.find(function (a) { return a.id === e.target.dataset.arch; });
+        if (!found) return;
+        applyTargets(found.id, found.hex, false);
       });
     }, { threshold: 0.45 });
     panels.forEach(function (p) { observer.observe(p); });
