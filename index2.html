@@ -1854,7 +1854,8 @@
 
       function setSpanWillChange(enabled) {
         activeLayerKeys.forEach(function (layerKey) {
-          spansByLayer[layerKey].forEach(function (span) {
+          spansByLayer[layerKey].forEach(function (span, i) {
+            if (enabled && i >= activeCount) return;
             span.style.willChange = enabled ? 'transform, opacity' : '';
           });
         });
@@ -1862,6 +1863,7 @@
 
       function runPhaseB() {
         if (!mobilePerf.reduced && !mobilePerf.slow) emitMorphTrail();
+        if (!mobilePerf.reduced && !mobilePerf.slow) emitAberrationClones();
         if (window.gsap) {
           gsap.to('.mp-float', {
             scale: 1,
@@ -1919,6 +1921,10 @@
         clearTimeout(phaseBTimeout);
         phaseBTimeout = null;
       }
+      if (willChangeTimeout) {
+        clearTimeout(willChangeTimeout);
+        willChangeTimeout = null;
+      }
 
       setSpanWillChange(true);
 
@@ -1965,7 +1971,6 @@
         visiblePanels.add(e.target);
         var found = ARCH.find(function (a) { return a.id === e.target.dataset.arch; });
         if (!found) return;
-        emitAberrationClones();
         pulsePanelGlow(e.target, found.hex);
         applyTargets(found.id, found.hex, false);
       });
