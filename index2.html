@@ -73,34 +73,8 @@
     pointer-events: none;
   }
 
-  /* Mobile CSS-3D piece (hidden on desktop, shown via JS) */
-  #css-piece-wrap {
-    display: none;
-    position: fixed;
-    top: 8vh; left: 50%;
-    transform: translateX(-50%);
-    z-index: 0;
-    pointer-events: none;
-    animation: cssFloat 3.5s ease-in-out infinite;
-  }
-  @keyframes cssFloat {
-    0%, 100% { transform: translateX(-50%) translateY(0px); }
-    50%       { transform: translateX(-50%) translateY(-18px); }
-  }
-  #css-piece-inner {
-    width: 0; height: 0;
-    transform-style: preserve-3d;
-    animation: cssRotatePiece 8s linear infinite;
-  }
-  @keyframes cssRotatePiece {
-    from { transform: rotateY(0deg); }
-    to   { transform: rotateY(360deg); }
-  }
-  .c-dot {
-    position: absolute;
-    border-radius: 50%;
-    transition: background-color 0.8s ease, box-shadow 0.8s ease;
-  }
+  /* Mobile piece — hidden on desktop */
+  #mobile-piece { display: none; }
 
   /* ================================================
      HEADER
@@ -554,7 +528,33 @@
      ================================================ */
   @media (max-width: 768px) {
     #chess-canvas { display: none; }
-    /* #css-piece-wrap shown via JS in initCSSPiece() */
+
+    /* Mobile piece — sticky above cards during journey scroll */
+    #mobile-piece {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      position: sticky;
+      top: 56px;
+      z-index: 5;
+      pointer-events: none;
+      padding: 12px 0 8px;
+    }
+    .mp-float {
+      perspective: 400px;
+      animation: mobilePieceFloat 3s ease-in-out infinite;
+    }
+    .mp-spin {
+      width: 200px;
+      height: 260px;
+      position: relative;
+      animation: mobilePieceSpin 10s linear infinite;
+    }
+    .mp-spin span {
+      position: absolute;
+      border-radius: 50%;
+      transition: background-color 0.6s ease, box-shadow 0.6s ease;
+    }
 
     .site-header { padding: 14px 20px; }
 
@@ -571,8 +571,8 @@
 
     .arch-panel {
       height: auto;
-      min-height: 90vh;
-      padding: 70px 5% 50px;
+      min-height: 100vh;
+      padding: 340px 5% 50px;
       background: rgba(10,10,10,0.97);
       flex-direction: column;
       align-items: flex-start;
@@ -592,6 +592,15 @@
     .site-footer { flex-direction: column; text-align: center; padding: 24px 20px; }
   }
 
+  @keyframes mobilePieceFloat {
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-8px); }
+  }
+  @keyframes mobilePieceSpin {
+    from { transform: rotateY(0deg); }
+    to   { transform: rotateY(360deg); }
+  }
+
   /* prefers-reduced-motion */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
@@ -605,9 +614,6 @@
 
 <!-- Three.js canvas (fixed behind all content) -->
 <canvas id="chess-canvas"></canvas>
-
-<!-- Mobile CSS-3D fallback -->
-<div id="css-piece-wrap"><div id="css-piece-inner"></div></div>
 
 <!-- ================================================
      HEADER
@@ -654,6 +660,9 @@
      JOURNEY — 6 archetype panels
      ================================================ -->
 <section id="journey">
+
+<!-- Mobile particle piece — sticky, visible only on mobile via CSS -->
+<div id="mobile-piece"><div class="mp-float"><div class="mp-spin"></div></div></div>
 
   <div class="arch-panel" data-arch="re" style="--arch-color: #FFD700">
     <div class="arch-bg-glyph">♔</div>
@@ -889,7 +898,7 @@
 
   if (isMobile || !hasWebGL) {
     document.getElementById('chess-canvas').style.display = 'none';
-    initCSSPiece();
+    initMobilePiece();
   } else {
     initParticleSystem();
     initScrollAnimations();
@@ -1184,58 +1193,55 @@
   }
 
   /* ------------------------------------------
-     MOBILE CSS-3D PIECE
+     MOBILE PARTICLE PIECE
   ------------------------------------------ */
-  function initCSSPiece() {
-    var wrap = document.getElementById('css-piece-wrap');
-    if (!wrap) return;
-    wrap.style.display = 'block';
-    var inner = document.getElementById('css-piece-inner');
+  function initMobilePiece() {
+    var spin = document.querySelector('.mp-spin');
+    if (!spin) return;
 
-    var CSS_R = 50;  // px — max radius
-    var CSS_H = 150; // px — total height
+    var CX    = 100; // center x of 200px container
+    var CSS_R = 80;  // max radius (px) — base spans x: 20–180
+    var CSS_H = 240; // usable height (px) — crown at top, base at bottom
+    var CY_TOP = 10; // top margin (px)
 
-    function spawnDot(yNorm, radFac) {
-      var r      = getRadiusAt(yNorm);
-      var angle  = Math.random() * Math.PI * 2;
-      var radius = r * radFac * CSS_R;
-      var xPx    = Math.cos(angle) * radius;
-      var yPx    = -(yNorm / PROF_Y_MAX) * CSS_H;
-      var zPx    = Math.sin(angle) * radius;
-      var sz     = 2 + Math.random() * 3;
-      var span   = document.createElement('span');
-      span.className = 'c-dot';
-      span.style.width  = sz + 'px';
-      span.style.height = sz + 'px';
+    var spans = [];
+
+    for (var i = 0; i < 180; i++) {
+      var yNorm = Math.random() * PROF_Y_MAX;
+      var r     = getRadiusAt(yNorm);
+      var side  = Math.random() < 0.5 ? 1 : -1; // left or right silhouette
+      var nx    = (Math.random() - 0.5) * 16;    // ±8px noise x
+      var ny    = (Math.random() - 0.5) * 16;    // ±8px noise y
+
+      /* Crown (yNorm=1.25) → screen top; base (yNorm=0) → screen bottom */
+      var xPx = CX + side * r * CSS_R + nx;
+      var yPx = CY_TOP + (1 - yNorm / PROF_Y_MAX) * CSS_H + ny;
+
+      var sz  = 3 + Math.random() * 2; // 3–5px
+      var op  = (0.6 + Math.random() * 0.4).toFixed(2);
+
+      var span = document.createElement('span');
+      span.style.width           = sz + 'px';
+      span.style.height          = sz + 'px';
+      span.style.left            = xPx.toFixed(1) + 'px';
+      span.style.top             = yPx.toFixed(1) + 'px';
       span.style.backgroundColor = '#FFD700';
-      span.style.boxShadow = '0 0 ' + (sz * 2) + 'px #FFD700';
-      span.style.transform = 'translate3d(' +
-        xPx.toFixed(1) + 'px,' +
-        yPx.toFixed(1) + 'px,' +
-        zPx.toFixed(1) + 'px)';
-      inner.appendChild(span);
-    }
-
-    /* 160 surface dots (82–100% of radius) */
-    for (var i = 0; i < 160; i++) {
-      spawnDot(Math.random() * PROF_Y_MAX, 0.82 + Math.random() * 0.18);
-    }
-    /* 40 interior fill */
-    for (var j = 0; j < 40; j++) {
-      spawnDot(Math.random() * PROF_Y_MAX, Math.random());
+      span.style.boxShadow       = '0 0 6px #FFD700';
+      span.style.opacity         = op;
+      spin.appendChild(span);
+      spans.push(span);
     }
 
     /* Color sync via IntersectionObserver */
-    var dots   = inner.querySelectorAll('.c-dot');
     var panels = document.querySelectorAll('.arch-panel');
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (!e.isIntersecting) return;
         var found = ARCH.find(function (a) { return a.id === e.target.dataset.arch; });
         if (found) {
-          dots.forEach(function (d) {
-            d.style.backgroundColor = found.hex;
-            d.style.boxShadow = '0 0 6px ' + found.hex;
+          spans.forEach(function (s) {
+            s.style.backgroundColor = found.hex;
+            s.style.boxShadow       = '0 0 6px ' + found.hex;
           });
         }
       });
