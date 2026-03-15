@@ -1211,10 +1211,10 @@
       '  float d = length(uv);',
       '  if (d > 0.5) discard;',
       '  float alpha = smoothstep(0.5, 0.1, d);',
-      '  float fogNear = 6.5;',
-      '  float fogFar = 12.5;',
+      '  float fogNear = 7.2;',
+      '  float fogFar = 13.6;',
       '  float fog = 1.0 - smoothstep(fogNear, fogFar, vDepth);',
-      '  fog = pow(fog, 1.45);',
+      '  fog = pow(fog, 1.18);',
       '  gl_FragColor = vec4(vColor * fog, alpha * 0.90 * fog);',
       '}'
     ].join('\n');
