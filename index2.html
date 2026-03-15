@@ -1211,9 +1211,10 @@
       '  float d = length(uv);',
       '  if (d > 0.5) discard;',
       '  float alpha = smoothstep(0.5, 0.1, d);',
-      '  float fogNear = 7.0;',
-      '  float fogFar = 15.0;',
+      '  float fogNear = 6.5;',
+      '  float fogFar = 12.5;',
       '  float fog = 1.0 - smoothstep(fogNear, fogFar, vDepth);',
+      '  fog = pow(fog, 1.45);',
       '  gl_FragColor = vec4(vColor * fog, alpha * 0.90 * fog);',
       '}'
     ].join('\n');
@@ -1252,18 +1253,15 @@
       var radius = radiusBase * particleSeedRadius[i] * PROF_SCALE;
       var angle = particleSeedAngle[i];
 
-      // Cavallo needs directional asymmetry, Pedone needs a cleaner neck/head read.
+      // Pedone needs a cleaner neck/head read.
       if (shapeId === 'cavallo') {
         var yHorse = yNorm / maxY;
-        if (yHorse > 0.55) {
-          var front = Math.max(0, Math.cos(angle));
-          var back = Math.max(0, -Math.cos(angle));
-          var horseHead = (yHorse - 0.55) / 0.45;
-          radius *= (1 + front * 0.30 * horseHead - back * 0.20 * horseHead);
-        }
-        if (yHorse > 0.88) {
-          var ear = Math.max(0, Math.sin(angle * 3.0)) * Math.max(0, Math.cos(angle));
-          radius *= (1 + ear * 0.10 * ((yHorse - 0.88) / 0.12));
+        // Symmetric refinement to avoid "vaso" effect.
+        if (yHorse > 0.60 && yHorse < 0.82) {
+          radius *= 0.90;
+        } else if (yHorse >= 0.82) {
+          var headBulge = (yHorse - 0.82) / 0.18;
+          radius *= (1.03 + headBulge * 0.07);
         }
       } else if (shapeId === 'pedone') {
         var yPawn = yNorm / maxY;
