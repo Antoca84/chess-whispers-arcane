@@ -904,18 +904,18 @@
       [0.1,1.28],[0.05,1.35],[0.08,1.42],[0.04,1.48],[0,1.52]
     ],
     cavallo: [
-      [0.7,0],[0.5,0.05],[0.32,0.1],[0.3,0.2],[0.28,0.38],
-      [0.15,0.55],[0.05,0.65],[0.18,0.75],[0.35,0.85],[0.42,0.95],
-      [0.4,1.05],[0.28,1.12],[0.15,1.18],[0.05,1.22],[0.08,1.28],
-      [0.22,1.32],[0.38,1.28],[0.48,1.18],[0.5,1.08],[0.45,0.98],
-      [0.38,0.88],[0.25,0.78],[0.35,0.68],[0.45,0.58],[0.4,0.45],
-      [0.2,0.3],[0.25,0.18],[0.4,0.08],[0.6,0.03],[0.7,0]
+      [0.74,0],[0.58,0.05],[0.34,0.1],[0.28,0.2],[0.26,0.36],
+      [0.18,0.5],[0.1,0.62],[0.16,0.72],[0.28,0.82],[0.36,0.92],
+      [0.34,1.02],[0.26,1.1],[0.18,1.16],[0.12,1.22],[0.14,1.28],
+      [0.24,1.33],[0.34,1.3],[0.44,1.22],[0.48,1.12],[0.46,1.02],
+      [0.4,0.92],[0.3,0.82],[0.38,0.72],[0.46,0.62],[0.44,0.5],
+      [0.28,0.36],[0.24,0.24],[0.36,0.12],[0.56,0.05],[0.74,0]
     ],
     pedone: [
-      [0.6,0],[0.45,0.05],[0.28,0.1],[0.2,0.18],[0.18,0.28],
-      [0.2,0.42],[0.22,0.52],[0.2,0.6],[0.25,0.68],[0.32,0.75],
-      [0.35,0.82],[0.3,0.9],[0.22,0.98],[0.2,1.05],[0.22,1.12],
-      [0.3,1.18],[0.32,1.22],[0.25,1.26],[0.15,1.28],[0,1.3]
+      [0.66,0],[0.5,0.05],[0.32,0.1],[0.24,0.18],[0.2,0.3],
+      [0.2,0.45],[0.22,0.56],[0.2,0.66],[0.18,0.76],[0.16,0.86],
+      [0.14,0.94],[0.16,1.0],[0.22,1.06],[0.3,1.12],[0.36,1.18],
+      [0.34,1.24],[0.26,1.28],[0.18,1.31],[0.1,1.33],[0,1.34]
     ]
   };
   var PROF_SCALE = 5.5;
@@ -1211,8 +1211,8 @@
       '  float d = length(uv);',
       '  if (d > 0.5) discard;',
       '  float alpha = smoothstep(0.5, 0.1, d);',
-      '  float fogNear = 8.0;',
-      '  float fogFar = 16.0;',
+      '  float fogNear = 7.0;',
+      '  float fogFar = 15.0;',
       '  float fog = 1.0 - smoothstep(fogNear, fogFar, vDepth);',
       '  gl_FragColor = vec4(vColor * fog, alpha * 0.90 * fog);',
       '}'
@@ -1251,6 +1251,30 @@
       var radiusBase = getRadiusAtProfile(profile, yNorm);
       var radius = radiusBase * particleSeedRadius[i] * PROF_SCALE;
       var angle = particleSeedAngle[i];
+
+      // Cavallo needs directional asymmetry, Pedone needs a cleaner neck/head read.
+      if (shapeId === 'cavallo') {
+        var yHorse = yNorm / maxY;
+        if (yHorse > 0.55) {
+          var front = Math.max(0, Math.cos(angle));
+          var back = Math.max(0, -Math.cos(angle));
+          var horseHead = (yHorse - 0.55) / 0.45;
+          radius *= (1 + front * 0.30 * horseHead - back * 0.20 * horseHead);
+        }
+        if (yHorse > 0.88) {
+          var ear = Math.max(0, Math.sin(angle * 3.0)) * Math.max(0, Math.cos(angle));
+          radius *= (1 + ear * 0.10 * ((yHorse - 0.88) / 0.12));
+        }
+      } else if (shapeId === 'pedone') {
+        var yPawn = yNorm / maxY;
+        if (yPawn > 0.76 && yPawn < 0.92) {
+          radius *= 0.78;
+        } else if (yPawn >= 0.92) {
+          radius *= 1.12;
+        }
+      }
+
+      if (radius < 0) radius = 0;
       var i3 = i * 3;
       out[i3] = Math.cos(angle) * radius;
       out[i3 + 1] = (yNorm / maxY) * PROF_SCALE - PROF_SCALE * 0.5;
@@ -1332,7 +1356,7 @@
     if (particleMat && particleMat.uniforms && particleMat.uniforms.uAberration) {
       gsap.timeline()
         .to(particleMat.uniforms.uAberration, {
-          value: 1.0,
+          value: 0.7,
           duration: 0.15,
           ease: 'power2.in'
         })
