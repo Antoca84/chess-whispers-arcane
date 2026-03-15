@@ -876,24 +876,63 @@
   ];
 
   /* ------------------------------------------
-     DESKTOP PROFILE
+     DESKTOP PROFILES (per-archetype silhouettes)
   ------------------------------------------ */
-  var PROFILE = [
-    [1.0, 0], [0.9, 0.05], [0.5, 0.15], [0.3, 0.25],
-    [0.35, 0.35], [0.4, 0.5], [0.35, 0.65],
-    [0.5, 0.7], [0.25, 0.75],
-    [0.2, 0.8], [0.22, 0.88],
-    [0.35, 0.92], [0.38, 1.0], [0.3, 1.08],
-    [0.35, 1.12], [0.15, 1.15], [0.2, 1.22], [0, 1.25]
-  ];
+  var DESKTOP_PROFILES = {
+    re: [
+      [1.0,0],[0.9,0.05],[0.5,0.15],[0.3,0.25],[0.35,0.35],
+      [0.4,0.5],[0.35,0.65],[0.5,0.7],[0.25,0.75],[0.2,0.8],
+      [0.22,0.88],[0.35,0.92],[0.38,1.0],[0.3,1.08],[0.35,1.12],
+      [0.15,1.15],[0.1,1.22],[0.05,1.28],[0.08,1.35],[0,1.38]
+    ],
+    regina: [
+      [1.0,0],[0.85,0.05],[0.45,0.12],[0.28,0.22],[0.32,0.4],
+      [0.28,0.55],[0.38,0.65],[0.58,0.72],[0.25,0.75],[0.2,0.82],
+      [0.25,0.92],[0.35,0.98],[0.3,1.05],[0.2,1.1],[0.1,1.12],
+      [0.35,1.18],[0.15,1.28],[0.38,1.35],[0.1,1.38],[0.3,1.42]
+    ],
+    torre: [
+      [0.8,0],[0.75,0.05],[0.35,0.1],[0.32,0.75],[0.45,0.78],
+      [0.45,0.85],[0.48,0.88],[0.48,1.05],[0.35,1.05],[0.35,0.92],
+      [0.15,0.92],[0.15,1.05],[0.48,1.05],[0.32,0.78],[0.32,0.2],
+      [0.3,0.35],[0.3,0.5],[0.3,0.65],[0.28,0.1],[0.75,0.05]
+    ],
+    alfiere: [
+      [0.7,0],[0.55,0.05],[0.32,0.12],[0.24,0.22],[0.26,0.4],
+      [0.28,0.55],[0.26,0.65],[0.32,0.72],[0.36,0.8],[0.28,0.86],
+      [0.2,0.92],[0.16,1.0],[0.18,1.08],[0.22,1.15],[0.18,1.22],
+      [0.1,1.28],[0.05,1.35],[0.08,1.42],[0.04,1.48],[0,1.52]
+    ],
+    cavallo: [
+      [0.7,0],[0.5,0.05],[0.32,0.1],[0.3,0.2],[0.28,0.38],
+      [0.15,0.55],[0.05,0.65],[0.18,0.75],[0.35,0.85],[0.42,0.95],
+      [0.4,1.05],[0.28,1.12],[0.15,1.18],[0.05,1.22],[0.08,1.28],
+      [0.22,1.32],[0.38,1.28],[0.48,1.18],[0.5,1.08],[0.45,0.98],
+      [0.38,0.88],[0.25,0.78],[0.35,0.68],[0.45,0.58],[0.4,0.45],
+      [0.2,0.3],[0.25,0.18],[0.4,0.08],[0.6,0.03],[0.7,0]
+    ],
+    pedone: [
+      [0.6,0],[0.45,0.05],[0.28,0.1],[0.2,0.18],[0.18,0.28],
+      [0.2,0.42],[0.22,0.52],[0.2,0.6],[0.25,0.68],[0.32,0.75],
+      [0.35,0.82],[0.3,0.9],[0.22,0.98],[0.2,1.05],[0.22,1.12],
+      [0.3,1.18],[0.32,1.22],[0.25,1.26],[0.15,1.28],[0,1.3]
+    ]
+  };
   var PROF_SCALE = 5.5;
-  var PROF_Y_MAX = 1.25;
 
-  function getRadiusAt(yNorm) {
-    for (var i = 1; i < PROFILE.length; i++) {
-      if (yNorm <= PROFILE[i][1]) {
-        var t = (yNorm - PROFILE[i - 1][1]) / (PROFILE[i][1] - PROFILE[i - 1][1]);
-        return PROFILE[i - 1][0] + t * (PROFILE[i][0] - PROFILE[i - 1][0]);
+  function getProfileMaxY(profile) {
+    var maxY = 0;
+    for (var i = 0; i < profile.length; i++) {
+      if (profile[i][1] > maxY) maxY = profile[i][1];
+    }
+    return maxY;
+  }
+
+  function getRadiusAtProfile(profile, yNorm) {
+    for (var i = 1; i < profile.length; i++) {
+      if (yNorm <= profile[i][1]) {
+        var t = (yNorm - profile[i - 1][1]) / (profile[i][1] - profile[i - 1][1]);
+        return profile[i - 1][0] + t * (profile[i][0] - profile[i - 1][0]);
       }
     }
     return 0;
@@ -1054,8 +1093,13 @@
   ------------------------------------------ */
   var renderer, scene, camera;
   var particleGroup, particleGeo, particleMat;
+  var particlePoints;
   var particleSizes, particleColors;
   var baseSizes, brightnessVariations;
+  var particlePositions;
+  var targetPositionsByArch = {};
+  var particleSeedYNorm, particleSeedRadius, particleSeedAngle;
+  var morphTween = null;
   var PARTICLE_COUNT = 8000;
   var baseRGB = { r: 1, g: 0.843, b: 0 }; // gold
   var mouse = { x: 0, y: 0, tx: 0, ty: 0 };
@@ -1097,24 +1141,35 @@
     camera.position.set(0, 0, 12);
     camera.lookAt(0, 0, 0);
 
+    particleSeedYNorm = new Float32Array(PARTICLE_COUNT);
+    particleSeedRadius = new Float32Array(PARTICLE_COUNT);
+    particleSeedAngle = new Float32Array(PARTICLE_COUNT);
+
+    for (var s = 0; s < PARTICLE_COUNT; s++) {
+      particleSeedYNorm[s] = Math.random();
+      particleSeedRadius[s] = Math.pow(Math.random(), 0.3);
+      particleSeedAngle[s] = Math.random() * Math.PI * 2;
+    }
+
     /* Build particle geometry */
     particleGeo = new THREE.BufferGeometry();
     var positions = new Float32Array(PARTICLE_COUNT * 3);
+    particlePositions = positions;
     particleSizes  = new Float32Array(PARTICLE_COUNT);
     particleColors = new Float32Array(PARTICLE_COUNT * 3);
     baseSizes           = new Float32Array(PARTICLE_COUNT);
     brightnessVariations = new Float32Array(PARTICLE_COUNT);
 
-    for (var i = 0; i < PARTICLE_COUNT; i++) {
-      var yNorm  = Math.random() * PROF_Y_MAX;
-      var r      = getRadiusAt(yNorm);
-      var radFac = Math.pow(Math.random(), 0.3); // surface-biased
-      var radius = r * radFac * PROF_SCALE;
-      var angle  = Math.random() * Math.PI * 2;
+    ARCH.forEach(function (a) {
+      targetPositionsByArch[a.id] = buildTargetPositions(a.id);
+    });
 
-      positions[i * 3]     = Math.cos(angle) * radius;
-      positions[i * 3 + 1] = (yNorm / PROF_Y_MAX) * PROF_SCALE - PROF_SCALE * 0.5;
-      positions[i * 3 + 2] = Math.sin(angle) * radius;
+    var initialTarget = targetPositionsByArch.re;
+    for (var p = 0; p < positions.length; p++) {
+      positions[p] = initialTarget[p];
+    }
+
+    for (var i = 0; i < PARTICLE_COUNT; i++) {
 
       var baseSize = 0.04 + Math.random() * 0.06;
       baseSizes[i]    = baseSize;
@@ -1132,29 +1187,41 @@
     particleGeo.setAttribute('aColor',   new THREE.BufferAttribute(particleColors, 3));
 
     var vertexShader = [
+      'uniform float uAberration;',
       'attribute float aSize;',
       'attribute vec3 aColor;',
       'varying vec3 vColor;',
+      'varying float vDepth;',
       'void main() {',
       '  vColor = aColor;',
       '  vec4 mv = modelViewMatrix * vec4(position, 1.0);',
+      '  vDepth = -mv.z;',
       '  gl_PointSize = aSize * (2400.0 / -mv.z);',
       '  gl_Position = projectionMatrix * mv;',
+      '  float chromaOffset = (aColor.r - aColor.b) * uAberration * 0.8;',
+      '  gl_Position.x += chromaOffset;',
       '}'
     ].join('\n');
 
     var fragmentShader = [
       'varying vec3 vColor;',
+      'varying float vDepth;',
       'void main() {',
       '  vec2 uv = gl_PointCoord - 0.5;',
       '  float d = length(uv);',
       '  if (d > 0.5) discard;',
       '  float alpha = smoothstep(0.5, 0.1, d);',
-      '  gl_FragColor = vec4(vColor, alpha * 0.90);',
+      '  float fogNear = 8.0;',
+      '  float fogFar = 16.0;',
+      '  float fog = 1.0 - smoothstep(fogNear, fogFar, vDepth);',
+      '  gl_FragColor = vec4(vColor * fog, alpha * 0.90 * fog);',
       '}'
     ].join('\n');
 
     particleMat = new THREE.ShaderMaterial({
+      uniforms: {
+        uAberration: { value: 0.0 }
+      },
       vertexShader: vertexShader,
       fragmentShader: fragmentShader,
       transparent: true,
@@ -1163,7 +1230,8 @@
     });
 
     particleGroup = new THREE.Group();
-    particleGroup.add(new THREE.Points(particleGeo, particleMat));
+    particlePoints = new THREE.Points(particleGeo, particleMat);
+    particleGroup.add(particlePoints);
     scene.add(particleGroup);
 
     window.addEventListener('resize', function () {
@@ -1171,6 +1239,24 @@
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
+  }
+
+  function buildTargetPositions(shapeId) {
+    var profile = DESKTOP_PROFILES[shapeId] || DESKTOP_PROFILES.re;
+    var maxY = getProfileMaxY(profile);
+    var out = new Float32Array(PARTICLE_COUNT * 3);
+
+    for (var i = 0; i < PARTICLE_COUNT; i++) {
+      var yNorm = particleSeedYNorm[i] * maxY;
+      var radiusBase = getRadiusAtProfile(profile, yNorm);
+      var radius = radiusBase * particleSeedRadius[i] * PROF_SCALE;
+      var angle = particleSeedAngle[i];
+      var i3 = i * 3;
+      out[i3] = Math.cos(angle) * radius;
+      out[i3 + 1] = (yNorm / maxY) * PROF_SCALE - PROF_SCALE * 0.5;
+      out[i3 + 2] = Math.sin(angle) * radius;
+    }
+    return out;
   }
 
   /* ------------------------------------------
@@ -1218,6 +1304,7 @@
     if (idx === currentArchIdx) return;
     currentArchIdx = idx;
     var target = ARCH[idx].rgb;
+    var targetId = ARCH[idx].id;
 
     gsap.to(baseRGB, {
       r: target.r, g: target.g, b: target.b,
@@ -1240,6 +1327,47 @@
       duration: 0.30,
       ease: 'power2.out',
       yoyo: true, repeat: 1,
+    });
+
+    if (particleMat && particleMat.uniforms && particleMat.uniforms.uAberration) {
+      gsap.timeline()
+        .to(particleMat.uniforms.uAberration, {
+          value: 1.0,
+          duration: 0.15,
+          ease: 'power2.in'
+        })
+        .to(particleMat.uniforms.uAberration, {
+          value: 0.0,
+          duration: 0.25,
+          ease: 'power2.out'
+        });
+    }
+
+    var targetPositions = targetPositionsByArch[targetId];
+    if (!targetPositions || !particlePositions) return;
+
+    if (morphTween) morphTween.kill();
+    var morphProgress = { value: 0.0 };
+    morphTween = gsap.to(morphProgress, {
+      value: 1.0,
+      duration: 1.0,
+      ease: 'power2.inOut',
+      onUpdate: function () {
+        for (var i = 0; i < PARTICLE_COUNT; i++) {
+          var i3 = i * 3;
+          particlePositions[i3] += (targetPositions[i3] - particlePositions[i3]) * morphProgress.value * 0.15;
+          particlePositions[i3 + 1] += (targetPositions[i3 + 1] - particlePositions[i3 + 1]) * morphProgress.value * 0.15;
+          particlePositions[i3 + 2] += (targetPositions[i3 + 2] - particlePositions[i3 + 2]) * morphProgress.value * 0.15;
+        }
+        particleGeo.attributes.position.needsUpdate = true;
+      },
+      onComplete: function () {
+        for (var p = 0; p < targetPositions.length; p++) {
+          particlePositions[p] = targetPositions[p];
+        }
+        particleGeo.attributes.position.needsUpdate = true;
+        morphTween = null;
+      }
     });
   }
 
