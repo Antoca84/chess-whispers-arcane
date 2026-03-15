@@ -1081,6 +1081,17 @@
      CAPABILITY DETECTION
   ------------------------------------------ */
   var isMobile = window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent);
+  var mobilePerf = (function () {
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var lowMem = navigator.deviceMemory !== undefined && navigator.deviceMemory < 4;
+    var oldDevice = /iPhone [5-9]|iPhone 1[0-2]/.test(navigator.userAgent);
+    var slow = lowMem || oldDevice;
+    return {
+      reduced: reduced,
+      slow: slow,
+      full: !reduced && !slow
+    };
+  }());
   var hasWebGL = (function () {
     try {
       var c = document.createElement('canvas');
@@ -1111,6 +1122,10 @@
      INIT ROUTER
   ------------------------------------------ */
   gsap.registerPlugin(ScrollTrigger);
+
+  if (mobilePerf.reduced) document.body.classList.add('reduced-motion');
+  if (mobilePerf.slow) document.body.classList.add('slow-device');
+  if (mobilePerf.full) document.body.classList.add('full-effects');
 
   if (isMobile || !hasWebGL) {
     document.getElementById('chess-canvas').style.display = 'none';
