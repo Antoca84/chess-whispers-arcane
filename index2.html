@@ -542,6 +542,9 @@
     }
     .mp-float {
       perspective: 400px;
+      position: relative;
+      width: 200px;
+      height: 320px;
       animation: mobilePieceFloat 3s ease-in-out infinite;
     }
     .mp-spin {
@@ -585,6 +588,27 @@
       background: rgba(10,10,10,0.97);
       flex-direction: column;
       align-items: flex-start;
+      position: relative;
+      overflow: hidden;
+    }
+    .arch-panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, var(--panel-glow, transparent) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .arch-panel.glow-active::before { opacity: 0.15; }
+    .arch-panel.glow-fade::before {
+      opacity: 0;
+      transition: opacity 1.7s ease-out;
+    }
+    .arch-panel > * {
+      position: relative;
+      z-index: 1;
     }
     .arch-bg-glyph { display: none; }
     .arch-card-wrap {
@@ -1346,6 +1370,11 @@
   function initMobilePiece() {
     var spin = document.querySelector('.mp-spin');
     if (!spin) return;
+    var activeTrailClone = null;
+    var trailCleanupTimeout = null;
+    var activeGlowPanel = null;
+    var glowRiseTimeout = null;
+    var glowClearTimeout = null;
 
     var BASE_POINT_SIZE_MIN = 3;
     var BASE_POINT_SIZE_MAX = 4;
@@ -1412,6 +1441,76 @@
       };
     }
 
+    function removeTrailClone() {
+      if (!activeTrailClone) return;
+      if (window.gsap && typeof window.gsap.killTweensOf === 'function') {
+        window.gsap.killTweensOf(activeTrailClone);
+      }
+      if (activeTrailClone.parentNode) {
+        activeTrailClone.parentNode.removeChild(activeTrailClone);
+      }
+      activeTrailClone = null;
+      if (trailCleanupTimeout) {
+        clearTimeout(trailCleanupTimeout);
+        trailCleanupTimeout = null;
+      }
+    }
+
+    function emitMorphTrail() {
+      removeTrailClone();
+      var parent = spin.parentNode;
+      if (!parent) return;
+
+      activeTrailClone = spin.cloneNode(true);
+      activeTrailClone.style.position = 'absolute';
+      activeTrailClone.style.top = '0';
+      activeTrailClone.style.left = '0';
+      activeTrailClone.style.pointerEvents = 'none';
+      activeTrailClone.style.opacity = '0.6';
+      activeTrailClone.style.zIndex = '1';
+      activeTrailClone.style.animation = 'none';
+      parent.appendChild(activeTrailClone);
+
+      if (window.gsap && typeof window.gsap.to === 'function') {
+        window.gsap.to(activeTrailClone, {
+          opacity: 0,
+          duration: 1.5,
+          ease: 'power2.out',
+          onComplete: removeTrailClone
+        });
+      } else {
+        activeTrailClone.style.transition = 'opacity 1.5s ease-out';
+        requestAnimationFrame(function () {
+          if (activeTrailClone) activeTrailClone.style.opacity = '0';
+        });
+        trailCleanupTimeout = setTimeout(removeTrailClone, 1600);
+      }
+    }
+
+    function pulsePanelGlow(panel, colorHex) {
+      if (!panel) return;
+      if (activeGlowPanel && activeGlowPanel !== panel) {
+        activeGlowPanel.classList.remove('glow-active', 'glow-fade');
+      }
+      if (glowRiseTimeout) clearTimeout(glowRiseTimeout);
+      if (glowClearTimeout) clearTimeout(glowClearTimeout);
+
+      panel.style.setProperty('--panel-glow', colorHex);
+      panel.classList.remove('glow-active', 'glow-fade');
+      panel.offsetHeight;
+      panel.classList.add('glow-active');
+      activeGlowPanel = panel;
+
+      glowRiseTimeout = setTimeout(function () {
+        panel.classList.remove('glow-active');
+        panel.classList.add('glow-fade');
+      }, 300);
+
+      glowClearTimeout = setTimeout(function () {
+        panel.classList.remove('glow-fade');
+      }, 2000);
+    }
+
     var maxBoundaryPoints = 0;
     Object.keys(MOBILE_SILHOUETTES).forEach(function (key) {
       maxBoundaryPoints = Math.max(maxBoundaryPoints, MOBILE_SILHOUETTES[key].boundary.length);
@@ -1429,6 +1528,7 @@
     }
 
     function applyTargets(shapeId, colorHex, immediate) {
+      if (!immediate) emitMorphTrail();
       var targets = buildMorphTargets(shapeId);
       var boundaryCount = targets.boundary.length;
       var interiorCount = targets.interior.length;
@@ -1476,6 +1576,7 @@
         if (!e.isIntersecting) return;
         var found = ARCH.find(function (a) { return a.id === e.target.dataset.arch; });
         if (!found) return;
+        pulsePanelGlow(e.target, found.hex);
         applyTargets(found.id, found.hex, false);
       });
     }, { threshold: 0.45 });
