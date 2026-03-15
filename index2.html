@@ -1575,6 +1575,8 @@
     var layerFront = spin.querySelector('.mp-front');
     var activeTrailClone = null;
     var trailCleanupTimeout = null;
+    var activeAberrationClones = [];
+    var aberrationCleanupTimeout = null;
     var phaseBTimeout = null;
     var willChangeTimeout = null;
     var activeGlowPanel = null;
@@ -1679,6 +1681,78 @@
       if (trailCleanupTimeout) {
         clearTimeout(trailCleanupTimeout);
         trailCleanupTimeout = null;
+      }
+    }
+
+    function clearAberrationClones() {
+      if (aberrationCleanupTimeout) {
+        clearTimeout(aberrationCleanupTimeout);
+        aberrationCleanupTimeout = null;
+      }
+      activeAberrationClones.forEach(function (clone) {
+        if (window.gsap && typeof window.gsap.killTweensOf === 'function') {
+          window.gsap.killTweensOf(clone);
+        }
+        if (clone.parentNode) clone.parentNode.removeChild(clone);
+      });
+      activeAberrationClones = [];
+    }
+
+    function emitAberrationClones() {
+      if (!mobilePerf.full) return;
+      clearAberrationClones();
+      var parent = spin.parentNode;
+      if (!parent) return;
+
+      function makeClone(config) {
+        var clone = spin.cloneNode(true);
+        clone.style.position = 'absolute';
+        clone.style.top = '0';
+        clone.style.left = '0';
+        clone.style.pointerEvents = 'none';
+        clone.style.opacity = config.opacity;
+        clone.style.zIndex = config.zIndex;
+        clone.style.animation = 'none';
+        clone.style.filter = config.filter;
+        clone.style.transform = config.transform;
+        clone.style.mixBlendMode = 'screen';
+        parent.appendChild(clone);
+        activeAberrationClones.push(clone);
+      }
+
+      makeClone({
+        opacity: '0.35',
+        zIndex: '3',
+        filter: 'hue-rotate(30deg) brightness(1.2)',
+        transform: 'translateX(4px) translateY(-2px)'
+      });
+      makeClone({
+        opacity: '0.25',
+        zIndex: '2',
+        filter: 'hue-rotate(-30deg) brightness(0.8)',
+        transform: 'translateX(-4px) translateY(2px)'
+      });
+
+      if (window.gsap && typeof window.gsap.to === 'function') {
+        activeAberrationClones.forEach(function (clone) {
+          window.gsap.to(clone, {
+            opacity: 0,
+            duration: 0.38,
+            ease: 'power2.out',
+            onComplete: function () {
+              if (clone.parentNode) clone.parentNode.removeChild(clone);
+              activeAberrationClones = activeAberrationClones.filter(function (c) { return c !== clone; });
+            }
+          });
+        });
+      } else {
+        activeAberrationClones.forEach(function (clone) {
+          clone.style.transition = 'opacity 380ms ease-out';
+          requestAnimationFrame(function () {
+            clone.style.opacity = '0';
+          });
+        });
+        aberrationCleanupTimeout = setTimeout(clearAberrationClones, 420);
       }
     }
 
@@ -1878,6 +1952,7 @@
         if (!e.isIntersecting) return;
         var found = ARCH.find(function (a) { return a.id === e.target.dataset.arch; });
         if (!found) return;
+        emitAberrationClones();
         pulsePanelGlow(e.target, found.hex);
         applyTargets(found.id, found.hex, false);
       });
