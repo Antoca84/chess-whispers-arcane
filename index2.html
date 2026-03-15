@@ -1575,6 +1575,8 @@
     var layerFront = spin.querySelector('.mp-front');
     var activeTrailClone = null;
     var trailCleanupTimeout = null;
+    var phaseBTimeout = null;
+    var willChangeTimeout = null;
     var activeGlowPanel = null;
     var glowRiseTimeout = null;
     var glowClearTimeout = null;
@@ -1755,7 +1757,6 @@
     });
 
     function applyTargets(shapeId, colorHex, immediate) {
-      if (!immediate) emitMorphTrail();
       var targets = buildMorphTargets(shapeId);
       var boundaryCount = targets.boundary.length;
       var interiorCount = targets.interior.length;
@@ -1766,44 +1767,107 @@
         front: adjustHexBrightness(colorHex, 1.3)
       };
       var glowByLayer = { back: 6, mid: 6, front: 8.4 };
+      var phaseATransition = 'opacity 120ms ease-in, background-color 150ms ease';
+      var phaseBTransition = 'left 650ms cubic-bezier(0.23, 1, 0.32, 1), top 650ms cubic-bezier(0.23, 1, 0.32, 1), opacity 400ms ease-out, background-color 150ms ease, box-shadow 150ms ease, width 250ms ease, height 250ms ease';
 
-      activeLayerKeys.forEach(function (layerKey) {
-        var spans = spansByLayer[layerKey];
-        var layerColor = colorByLayer[layerKey];
-        var layerGlow = glowByLayer[layerKey];
-        for (var i = 0; i < spans.length; i++) {
-          var span = spans[i];
-          if (immediate) span.style.transition = 'none';
+      function setSpanWillChange(enabled) {
+        activeLayerKeys.forEach(function (layerKey) {
+          spansByLayer[layerKey].forEach(function (span) {
+            span.style.willChange = enabled ? 'transform, opacity' : '';
+          });
+        });
+      }
 
-          span.style.backgroundColor = layerColor;
-          span.style.boxShadow = '0 0 ' + layerGlow.toFixed(1) + 'px ' + layerColor;
-
-          if (i < activeCount) {
-            var isBoundary = i < boundaryCount;
-            var point = isBoundary ? targets.boundary[i] : targets.interior[i - boundaryCount];
-            var mapped = mapCoord(point, randomJitter());
-            var size = isBoundary
-              ? randomInRange(BASE_POINT_SIZE_MIN, BASE_POINT_SIZE_MAX)
-              : randomInRange(INNER_POINT_SIZE_MIN, INNER_POINT_SIZE_MAX);
-            var opacity = isBoundary
-              ? randomInRange(0.65, 1.0)
-              : randomInRange(0.3, 0.5);
-
-            span.style.left = mapped.left;
-            span.style.top = mapped.top;
-            span.style.width = size.toFixed(2) + 'px';
-            span.style.height = size.toFixed(2) + 'px';
-            span.style.opacity = opacity.toFixed(2);
-          } else {
-            span.style.opacity = '0';
-          }
-
-          if (immediate) {
-            span.offsetHeight;
-            span.style.transition = '';
-          }
+      function runPhaseB() {
+        if (!mobilePerf.reduced && !mobilePerf.slow) emitMorphTrail();
+        if (window.gsap) {
+          gsap.to('.mp-float', {
+            scale: 1,
+            duration: 0.4,
+            ease: 'power2.out'
+          });
         }
-      });
+
+        activeLayerKeys.forEach(function (layerKey) {
+          var spans = spansByLayer[layerKey];
+          var layerColor = colorByLayer[layerKey];
+          var layerGlow = glowByLayer[layerKey];
+          for (var i = 0; i < spans.length; i++) {
+            var span = spans[i];
+            if (immediate) span.style.transition = 'none';
+            else span.style.transition = phaseBTransition;
+
+            span.style.backgroundColor = layerColor;
+            span.style.boxShadow = '0 0 ' + layerGlow.toFixed(1) + 'px ' + layerColor;
+
+            if (i < activeCount) {
+              var isBoundary = i < boundaryCount;
+              var point = isBoundary ? targets.boundary[i] : targets.interior[i - boundaryCount];
+              var mapped = mapCoord(point, randomJitter());
+              var size = isBoundary
+                ? randomInRange(BASE_POINT_SIZE_MIN, BASE_POINT_SIZE_MAX)
+                : randomInRange(INNER_POINT_SIZE_MIN, INNER_POINT_SIZE_MAX);
+              var opacity = isBoundary
+                ? randomInRange(0.65, 1.0)
+                : randomInRange(0.3, 0.5);
+
+              span.style.left = mapped.left;
+              span.style.top = mapped.top;
+              span.style.width = size.toFixed(2) + 'px';
+              span.style.height = size.toFixed(2) + 'px';
+              span.style.opacity = opacity.toFixed(2);
+            } else {
+              span.style.opacity = '0';
+            }
+
+            if (immediate) {
+              span.offsetHeight;
+              span.style.transition = '';
+            }
+          }
+        });
+
+        if (willChangeTimeout) clearTimeout(willChangeTimeout);
+        willChangeTimeout = setTimeout(function () {
+          setSpanWillChange(false);
+        }, immediate ? 0 : 720);
+      }
+
+      if (phaseBTimeout) {
+        clearTimeout(phaseBTimeout);
+        phaseBTimeout = null;
+      }
+
+      setSpanWillChange(true);
+
+      if (immediate) {
+        runPhaseB();
+        return;
+      }
+
+      if (!mobilePerf.reduced) {
+        if (window.gsap) {
+          gsap.to('.mp-float', {
+            scale: 0.92,
+            duration: 0.12,
+            ease: 'power2.in'
+          });
+        }
+        activeLayerKeys.forEach(function (layerKey) {
+          var spans = spansByLayer[layerKey];
+          var layerColor = colorByLayer[layerKey];
+          var layerGlow = glowByLayer[layerKey];
+          spans.forEach(function (span) {
+            span.style.transition = phaseATransition;
+            span.style.backgroundColor = layerColor;
+            span.style.boxShadow = '0 0 ' + layerGlow.toFixed(1) + 'px ' + layerColor;
+            span.style.opacity = '0.4';
+          });
+        });
+        phaseBTimeout = setTimeout(runPhaseB, 250);
+      } else {
+        runPhaseB();
+      }
     }
 
     applyTargets('re', '#FFD700', true);
