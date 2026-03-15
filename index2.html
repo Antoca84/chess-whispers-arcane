@@ -73,25 +73,33 @@
     pointer-events: none;
   }
 
-  /* Mobile CSS-3D fallback (hidden on desktop) */
-  #css-fallback {
+  /* Mobile CSS-3D piece (hidden on desktop, shown via JS) */
+  #css-piece-wrap {
     display: none;
     position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 45vh;
-    align-items: center;
-    justify-content: center;
-    font-size: min(22vw, 10rem);
+    top: 8vh; left: 50%;
+    transform: translateX(-50%);
     z-index: 0;
     pointer-events: none;
-    color: var(--gold);
-    transition: color 0.8s ease;
-    animation: cssFloat 4s ease-in-out infinite;
-    opacity: 0.6;
+    animation: cssFloat 3.5s ease-in-out infinite;
   }
   @keyframes cssFloat {
-    0%, 100% { transform: translateY(0) perspective(400px) rotateY(0deg); }
-    50%       { transform: translateY(-10px) perspective(400px) rotateY(20deg); }
+    0%, 100% { transform: translateX(-50%) translateY(0px); }
+    50%       { transform: translateX(-50%) translateY(-18px); }
+  }
+  #css-piece-inner {
+    width: 0; height: 0;
+    transform-style: preserve-3d;
+    animation: cssRotatePiece 8s linear infinite;
+  }
+  @keyframes cssRotatePiece {
+    from { transform: rotateY(0deg); }
+    to   { transform: rotateY(360deg); }
+  }
+  .c-dot {
+    position: absolute;
+    border-radius: 50%;
+    transition: background-color 0.8s ease, box-shadow 0.8s ease;
   }
 
   /* ================================================
@@ -546,7 +554,7 @@
      ================================================ */
   @media (max-width: 768px) {
     #chess-canvas { display: none; }
-    #css-fallback { display: flex; }
+    /* #css-piece-wrap shown via JS in initCSSPiece() */
 
     .site-header { padding: 14px 20px; }
 
@@ -599,7 +607,7 @@
 <canvas id="chess-canvas"></canvas>
 
 <!-- Mobile CSS-3D fallback -->
-<div id="css-fallback">♚</div>
+<div id="css-piece-wrap"><div id="css-piece-inner"></div></div>
 
 <!-- ================================================
      HEADER
@@ -826,6 +834,30 @@
   ];
 
   /* ------------------------------------------
+     KING PROFILE (normalized: [radius, yNorm])
+  ------------------------------------------ */
+  var PROFILE = [
+    [1.0, 0], [0.9, 0.05], [0.5, 0.15], [0.3, 0.25],
+    [0.35, 0.35], [0.4, 0.5], [0.35, 0.65],
+    [0.5, 0.7], [0.25, 0.75],
+    [0.2, 0.8], [0.22, 0.88],
+    [0.35, 0.92], [0.38, 1.0], [0.3, 1.08],
+    [0.35, 1.12], [0.15, 1.15], [0.2, 1.22], [0, 1.25]
+  ];
+  var PROF_SCALE = 5.5;
+  var PROF_Y_MAX = 1.25;
+
+  function getRadiusAt(yNorm) {
+    for (var i = 1; i < PROFILE.length; i++) {
+      if (yNorm <= PROFILE[i][1]) {
+        var t = (yNorm - PROFILE[i-1][1]) / (PROFILE[i][1] - PROFILE[i-1][1]);
+        return PROFILE[i-1][0] + t * (PROFILE[i][0] - PROFILE[i-1][0]);
+      }
+    }
+    return 0;
+  }
+
+  /* ------------------------------------------
      CAPABILITY DETECTION
   ------------------------------------------ */
   var isMobile = window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent);
@@ -837,13 +869,14 @@
   }());
 
   /* ------------------------------------------
-     THREE.JS SCENE VARIABLES (module-scope)
+     THREE.JS SCENE VARIABLES
   ------------------------------------------ */
   var renderer, scene, camera;
-  var piece, pieceMat, archLight, particleMat, particlePos;
-  var PARTICLE_COUNT = 110;
-  var pAngles = [], pRadii = [], pHeights = [], pSpeeds = [];
-  var colorProxy = { r: 1, g: 0.843, b: 0 }; // gold
+  var particleGroup, particleGeo, particleMat;
+  var particleSizes, particleColors;
+  var baseSizes, brightnessVariations;
+  var PARTICLE_COUNT = 8000;
+  var baseRGB = { r: 1, g: 0.843, b: 0 }; // gold
   var mouse = { x: 0, y: 0, tx: 0, ty: 0 };
   var scrollRot = 0;
   var animTime = 0;
@@ -856,9 +889,9 @@
 
   if (isMobile || !hasWebGL) {
     document.getElementById('chess-canvas').style.display = 'none';
-    initMobileFallback();
+    initCSSPiece();
   } else {
-    initThreeJS();
+    initParticleSystem();
     initScrollAnimations();
     initMouseTracking();
     startRenderLoop();
@@ -868,127 +901,90 @@
   initCountdown();
 
   /* ------------------------------------------
-     THREE.JS SETUP
+     PARTICLE SYSTEM
   ------------------------------------------ */
-  function initThreeJS() {
+  function initParticleSystem() {
     var canvas = document.getElementById('chess-canvas');
 
-    renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+    renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: false, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.outputEncoding = THREE.sRGBEncoding;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.15;
 
     scene = new THREE.Scene();
 
     camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 100);
-    camera.position.set(0, 1.8, 15);
-    camera.lookAt(0, 2.5, 0);
+    camera.position.set(0, 0, 12);
+    camera.lookAt(0, 0, 0);
 
-    /* King silhouette via LatheGeometry */
-    var profile = [
-      new THREE.Vector2(0.00, 0.00),
-      new THREE.Vector2(2.15, 0.00),
-      new THREE.Vector2(2.38, 0.28),
-      new THREE.Vector2(2.05, 0.60),
-      new THREE.Vector2(1.25, 0.90),
-      new THREE.Vector2(0.78, 1.15),
-      new THREE.Vector2(0.60, 2.30),
-      new THREE.Vector2(0.56, 3.10),
-      new THREE.Vector2(0.64, 3.50),
-      new THREE.Vector2(1.52, 3.82),
-      new THREE.Vector2(1.88, 4.18),
-      new THREE.Vector2(1.82, 4.62),
-      new THREE.Vector2(1.42, 5.05),
-      new THREE.Vector2(0.70, 5.48),
-      new THREE.Vector2(0.48, 5.82),
-      new THREE.Vector2(0.28, 6.25),
-    ];
-    var bodyGeo = new THREE.LatheGeometry(profile, 64);
+    /* Build particle geometry */
+    particleGeo = new THREE.BufferGeometry();
+    var positions = new Float32Array(PARTICLE_COUNT * 3);
+    particleSizes  = new Float32Array(PARTICLE_COUNT);
+    particleColors = new Float32Array(PARTICLE_COUNT * 3);
+    baseSizes           = new Float32Array(PARTICLE_COUNT);
+    brightnessVariations = new Float32Array(PARTICLE_COUNT);
 
-    /* Crown ring */
-    var ringGeo = new THREE.TorusGeometry(0.58, 0.11, 10, 40);
-
-    /* Cross */
-    var cvGeo = new THREE.CylinderGeometry(0.07, 0.07, 0.85, 10);
-    var chGeo = new THREE.CylinderGeometry(0.07, 0.07, 0.52, 10);
-
-    pieceMat = new THREE.MeshStandardMaterial({
-      color: new THREE.Color(0xFFD700),
-      metalness: 0.84,
-      roughness: 0.16,
-      emissive: new THREE.Color(0xFFD700),
-      emissiveIntensity: 0.08,
-    });
-
-    piece = new THREE.Group();
-    piece.add(new THREE.Mesh(bodyGeo, pieceMat));
-
-    var ring = new THREE.Mesh(ringGeo, pieceMat);
-    ring.position.set(0, 5.94, 0);
-    piece.add(ring);
-
-    var cv = new THREE.Mesh(cvGeo, pieceMat);
-    cv.position.set(0, 6.50, 0);
-    piece.add(cv);
-
-    var ch = new THREE.Mesh(chGeo, pieceMat);
-    ch.rotation.z = Math.PI / 2;
-    ch.position.set(0, 6.30, 0);
-    piece.add(ch);
-
-    /* Center piece around y=3 */
-    piece.position.set(0, -3.0, 0);
-    scene.add(piece);
-
-    /* Particle system */
-    var pGeo = new THREE.BufferGeometry();
-    var pPos = new Float32Array(PARTICLE_COUNT * 3);
     for (var i = 0; i < PARTICLE_COUNT; i++) {
-      var r = 3.2 + Math.random() * 4.5;
-      var a = Math.random() * Math.PI * 2;
-      var h = -2.5 + Math.random() * 8.5;
-      pPos[i*3]   = Math.cos(a) * r;
-      pPos[i*3+1] = h;
-      pPos[i*3+2] = Math.sin(a) * r;
-      pAngles[i]  = a;
-      pRadii[i]   = r;
-      pHeights[i] = h;
-      pSpeeds[i]  = 0.003 + Math.random() * 0.006;
+      var yNorm  = Math.random() * PROF_Y_MAX;
+      var r      = getRadiusAt(yNorm);
+      var radFac = Math.pow(Math.random(), 0.3); // surface-biased
+      var radius = r * radFac * PROF_SCALE;
+      var angle  = Math.random() * Math.PI * 2;
+
+      positions[i * 3]     = Math.cos(angle) * radius;
+      positions[i * 3 + 1] = (yNorm / PROF_Y_MAX) * PROF_SCALE - PROF_SCALE * 0.5;
+      positions[i * 3 + 2] = Math.sin(angle) * radius;
+
+      var baseSize = 0.04 + Math.random() * 0.06;
+      baseSizes[i]    = baseSize;
+      particleSizes[i] = baseSize;
+
+      brightnessVariations[i] = -0.15 + Math.random() * 0.30;
+      var bv = 1.0 + brightnessVariations[i];
+      particleColors[i * 3]     = Math.min(1, baseRGB.r * bv);
+      particleColors[i * 3 + 1] = Math.min(1, baseRGB.g * bv);
+      particleColors[i * 3 + 2] = Math.min(1, baseRGB.b * bv);
     }
-    pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-    particlePos = pGeo.attributes.position;
 
-    particleMat = new THREE.PointsMaterial({
-      color: new THREE.Color(0xFFD700),
-      size: 0.055,
+    particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    particleGeo.setAttribute('aSize',    new THREE.BufferAttribute(particleSizes, 1));
+    particleGeo.setAttribute('aColor',   new THREE.BufferAttribute(particleColors, 3));
+
+    var vertexShader = [
+      'attribute float aSize;',
+      'attribute vec3 aColor;',
+      'varying vec3 vColor;',
+      'void main() {',
+      '  vColor = aColor;',
+      '  vec4 mv = modelViewMatrix * vec4(position, 1.0);',
+      '  gl_PointSize = aSize * (2400.0 / -mv.z);',
+      '  gl_Position = projectionMatrix * mv;',
+      '}'
+    ].join('\n');
+
+    var fragmentShader = [
+      'varying vec3 vColor;',
+      'void main() {',
+      '  vec2 uv = gl_PointCoord - 0.5;',
+      '  float d = length(uv);',
+      '  if (d > 0.5) discard;',
+      '  float alpha = smoothstep(0.5, 0.1, d);',
+      '  gl_FragColor = vec4(vColor, alpha * 0.90);',
+      '}'
+    ].join('\n');
+
+    particleMat = new THREE.ShaderMaterial({
+      vertexShader: vertexShader,
+      fragmentShader: fragmentShader,
       transparent: true,
-      opacity: 0.55,
-      sizeAttenuation: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
     });
-    scene.add(new THREE.Points(pGeo, particleMat));
 
-    /* Lighting */
-    scene.add(new THREE.AmbientLight(0xffffff, 0.28));
+    particleGroup = new THREE.Group();
+    particleGroup.add(new THREE.Points(particleGeo, particleMat));
+    scene.add(particleGroup);
 
-    var keyL = new THREE.DirectionalLight(0xffd580, 1.25);
-    keyL.position.set(5, 10, 8);
-    scene.add(keyL);
-
-    var fillL = new THREE.DirectionalLight(0x8899ff, 0.38);
-    fillL.position.set(-8, 3, 2);
-    scene.add(fillL);
-
-    var rimL = new THREE.DirectionalLight(0xffffff, 0.28);
-    rimL.position.set(0, 7, -10);
-    scene.add(rimL);
-
-    archLight = new THREE.PointLight(0xFFD700, 1.6, 20);
-    archLight.position.set(4, 5, 4);
-    scene.add(archLight);
-
-    /* Resize */
     window.addEventListener('resize', function () {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
@@ -1008,25 +1004,17 @@
       mouse.x += (mouse.tx - mouse.x) * 0.045;
       mouse.y += (mouse.ty - mouse.y) * 0.045;
 
-      /* Piece animation */
-      piece.rotation.y = scrollRot + animTime * 0.10 + mouse.x * 0.22;
-      piece.rotation.x = mouse.y * 0.10;
-      piece.position.y = -3.0 + Math.sin(animTime * 0.65) * 0.14;
+      /* Piece rotation + Z float */
+      particleGroup.rotation.y = scrollRot + animTime * 0.10 + mouse.x * 0.22;
+      particleGroup.rotation.x = mouse.y * 0.10;
+      particleGroup.position.z = Math.sin(animTime * 0.65) * 0.35;
 
-      /* Orbit archLight */
-      archLight.position.x = Math.cos(animTime * 0.45) * 6;
-      archLight.position.z = Math.sin(animTime * 0.45) * 6;
-
-      /* Particle drift */
+      /* Size pulse */
       for (var i = 0; i < PARTICLE_COUNT; i++) {
-        pAngles[i] += pSpeeds[i];
-        particlePos.setX(i, Math.cos(pAngles[i]) * pRadii[i]);
-        particlePos.setZ(i, Math.sin(pAngles[i]) * pRadii[i]);
-        pHeights[i] += 0.003;
-        if (pHeights[i] > 6.5) pHeights[i] = -2.5;
-        particlePos.setY(i, pHeights[i]);
+        var phase = animTime * 1.8 + i * 0.04;
+        particleSizes[i] = baseSizes[i] * (0.72 + 0.56 * (0.5 + 0.5 * Math.sin(phase)));
       }
-      particlePos.needsUpdate = true;
+      particleGeo.attributes.aSize.needsUpdate = true;
 
       renderer.render(scene, camera);
     }());
@@ -1050,29 +1038,32 @@
     currentArchIdx = idx;
     var target = ARCH[idx].rgb;
 
-    gsap.to(colorProxy, {
+    gsap.to(baseRGB, {
       r: target.r, g: target.g, b: target.b,
       duration: 0.85,
       ease: 'power2.inOut',
       onUpdate: function () {
-        pieceMat.color.setRGB(colorProxy.r, colorProxy.g, colorProxy.b);
-        pieceMat.emissive.setRGB(colorProxy.r * 0.11, colorProxy.g * 0.11, colorProxy.b * 0.11);
-        archLight.color.setRGB(colorProxy.r, colorProxy.g, colorProxy.b);
-        particleMat.color.setRGB(colorProxy.r, colorProxy.g, colorProxy.b);
+        for (var i = 0; i < PARTICLE_COUNT; i++) {
+          var bv = 1.0 + brightnessVariations[i];
+          particleColors[i * 3]     = Math.min(1, baseRGB.r * bv);
+          particleColors[i * 3 + 1] = Math.min(1, baseRGB.g * bv);
+          particleColors[i * 3 + 2] = Math.min(1, baseRGB.b * bv);
+        }
+        particleGeo.attributes.aColor.needsUpdate = true;
       },
     });
 
-    /* Brief emissive flash on transition */
-    gsap.to(pieceMat, {
-      emissiveIntensity: 0.32,
-      duration: 0.25,
-      yoyo: true, repeat: 1,
+    /* Explosion scale pulse */
+    gsap.to(particleGroup.scale, {
+      x: 1.15, y: 1.15, z: 1.15,
+      duration: 0.30,
       ease: 'power2.out',
+      yoyo: true, repeat: 1,
     });
   }
 
   /* ------------------------------------------
-     SCROLL ANIMATIONS (Three.js + GSAP)
+     SCROLL ANIMATIONS
   ------------------------------------------ */
   function initScrollAnimations() {
 
@@ -1093,12 +1084,12 @@
       trigger: '#journey',
       start: 'top 85%',
       onEnter: function () {
-        gsap.to(piece.position, { x: -2.8, duration: 1.1, ease: 'power3.inOut' });
-        gsap.to(camera.position, { x: -0.8, duration: 1.1, ease: 'power3.inOut' });
+        gsap.to(particleGroup.position, { x: -2.8, duration: 1.1, ease: 'power3.inOut' });
+        gsap.to(camera.position,        { x: -0.8, duration: 1.1, ease: 'power3.inOut' });
       },
       onLeaveBack: function () {
-        gsap.to(piece.position, { x: 0, duration: 1.0, ease: 'power3.inOut' });
-        gsap.to(camera.position, { x: 0, duration: 1.0, ease: 'power3.inOut' });
+        gsap.to(particleGroup.position, { x: 0, duration: 1.0, ease: 'power3.inOut' });
+        gsap.to(camera.position,        { x: 0, duration: 1.0, ease: 'power3.inOut' });
       },
     });
 
@@ -1120,8 +1111,8 @@
       trigger: '#come-funziona',
       start: 'top 70%',
       onEnter: function () {
-        gsap.to(piece.position, { x: 0, duration: 1.2, ease: 'power3.inOut' });
-        gsap.to(camera.position, { x: 0, duration: 1.2, ease: 'power3.inOut' });
+        gsap.to(particleGroup.position, { x: 0, duration: 1.2, ease: 'power3.inOut' });
+        gsap.to(camera.position,        { x: 0, duration: 1.2, ease: 'power3.inOut' });
       },
     });
   }
@@ -1134,7 +1125,6 @@
     /* Archetype card entrances */
     document.querySelectorAll('.arch-card-wrap').forEach(function (card) {
       if (noWebGL) {
-        /* Mobile: instant reveal */
         card.style.opacity = '1';
         card.style.transform = 'none';
         return;
@@ -1194,20 +1184,59 @@
   }
 
   /* ------------------------------------------
-     MOBILE CSS-3D FALLBACK
+     MOBILE CSS-3D PIECE
   ------------------------------------------ */
-  function initMobileFallback() {
-    var fallback = document.getElementById('css-fallback');
-    if (!fallback) return;
+  function initCSSPiece() {
+    var wrap = document.getElementById('css-piece-wrap');
+    if (!wrap) return;
+    wrap.style.display = 'block';
+    var inner = document.getElementById('css-piece-inner');
+
+    var CSS_R = 50;  // px — max radius
+    var CSS_H = 150; // px — total height
+
+    function spawnDot(yNorm, radFac) {
+      var r      = getRadiusAt(yNorm);
+      var angle  = Math.random() * Math.PI * 2;
+      var radius = r * radFac * CSS_R;
+      var xPx    = Math.cos(angle) * radius;
+      var yPx    = -(yNorm / PROF_Y_MAX) * CSS_H;
+      var zPx    = Math.sin(angle) * radius;
+      var sz     = 2 + Math.random() * 3;
+      var span   = document.createElement('span');
+      span.className = 'c-dot';
+      span.style.width  = sz + 'px';
+      span.style.height = sz + 'px';
+      span.style.backgroundColor = '#FFD700';
+      span.style.boxShadow = '0 0 ' + (sz * 2) + 'px #FFD700';
+      span.style.transform = 'translate3d(' +
+        xPx.toFixed(1) + 'px,' +
+        yPx.toFixed(1) + 'px,' +
+        zPx.toFixed(1) + 'px)';
+      inner.appendChild(span);
+    }
+
+    /* 160 surface dots (82–100% of radius) */
+    for (var i = 0; i < 160; i++) {
+      spawnDot(Math.random() * PROF_Y_MAX, 0.82 + Math.random() * 0.18);
+    }
+    /* 40 interior fill */
+    for (var j = 0; j < 40; j++) {
+      spawnDot(Math.random() * PROF_Y_MAX, Math.random());
+    }
+
+    /* Color sync via IntersectionObserver */
+    var dots   = inner.querySelectorAll('.c-dot');
     var panels = document.querySelectorAll('.arch-panel');
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (!e.isIntersecting) return;
-        var archId = e.target.dataset.arch;
-        var found = ARCH.find(function (a) { return a.id === archId; });
+        var found = ARCH.find(function (a) { return a.id === e.target.dataset.arch; });
         if (found) {
-          fallback.style.color = found.hex;
-          fallback.textContent = found.sym;
+          dots.forEach(function (d) {
+            d.style.backgroundColor = found.hex;
+            d.style.boxShadow = '0 0 6px ' + found.hex;
+          });
         }
       });
     }, { threshold: 0.45 });
