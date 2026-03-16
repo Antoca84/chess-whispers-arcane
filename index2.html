@@ -1150,7 +1150,12 @@
   var targetPositionsByArch = {};
   var particleSeedYNorm, particleSeedRadius, particleSeedAngle;
   var morphTween = null;
-  var PARTICLE_COUNT = 8000;
+  var splashGeo, splashMat, splashPoints;
+  var splashPositionsArr, splashColorsArr;
+  var splashVelocities = [];
+  var isMidGPU = !window.chrome || navigator.hardwareConcurrency < 8;
+  var PARTICLE_COUNT = isMidGPU ? 18000 : 30000;
+  var SPLASH_COUNT   = isMidGPU ? 1500  : 3000;
   var baseRGB = { r: 1, g: 0.843, b: 0 }; // gold
   var mouse = { x: 0, y: 0, tx: 0, ty: 0 };
   var scrollRot = 0;
@@ -1225,7 +1230,7 @@
 
     for (var i = 0; i < PARTICLE_COUNT; i++) {
 
-      var baseSize = 0.04 + Math.random() * 0.06;
+      var baseSize = 0.008 + Math.random() * 0.018;
       baseSizes[i]    = baseSize;
       particleSizes[i] = baseSize;
 
@@ -1246,11 +1251,17 @@
       'attribute vec3 aColor;',
       'varying vec3 vColor;',
       'varying float vDepth;',
+      'varying float vDistCenter;',
+      'varying float vFocalDist;',
       'void main() {',
       '  vColor = aColor;',
+      '  vDistCenter = length(position.xz) / 2.5;',
       '  vec4 mv = modelViewMatrix * vec4(position, 1.0);',
       '  vDepth = -mv.z;',
-      '  gl_PointSize = aSize * (2400.0 / -mv.z);',
+      '  float focalDist = abs(mv.z - 11.5);',
+      '  vFocalDist = focalDist;',
+      '  float dof = 1.0 + focalDist * 0.08;',
+      '  gl_PointSize = aSize * (1200.0 / -mv.z) * dof;',
       '  gl_Position = projectionMatrix * mv;',
       '  float chromaOffset = (aColor.r - aColor.b) * uAberration * 0.8;',
       '  gl_Position.x += chromaOffset;',
@@ -1260,6 +1271,8 @@
     var fragmentShader = [
       'varying vec3 vColor;',
       'varying float vDepth;',
+      'varying float vDistCenter;',
+      'varying float vFocalDist;',
       'void main() {',
       '  vec2 uv = gl_PointCoord - 0.5;',
       '  float d = length(uv);',
@@ -1269,7 +1282,11 @@
       '  float fogFar = 13.6;',
       '  float fog = 1.0 - smoothstep(fogNear, fogFar, vDepth);',
       '  fog = pow(fog, 1.18);',
-      '  gl_FragColor = vec4(vColor * fog, alpha * 0.90 * fog);',
+      '  float volumetric = 1.0 - smoothstep(0.0, 0.85, vDistCenter);',
+      '  float brightness = 0.55 + 0.65 * volumetric;',
+      '  vec3 litColor = vColor * brightness;',
+      '  float dofAlpha = 1.0 / (1.0 + vFocalDist * 0.05);',
+      '  gl_FragColor = vec4(litColor * fog, alpha * 0.85 * fog * dofAlpha);',
       '}'
     ].join('\n');
 
@@ -1289,11 +1306,91 @@
     particleGroup.add(particlePoints);
     scene.add(particleGroup);
 
+    initSplashSystem();
+
     window.addEventListener('resize', function () {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
+  }
+
+  function initSplashSystem() {
+    var positions = new Float32Array(SPLASH_COUNT * 3);
+    var sizes     = new Float32Array(SPLASH_COUNT);
+    var colors    = new Float32Array(SPLASH_COUNT * 3);
+    splashVelocities = [];
+
+    for (var i = 0; i < SPLASH_COUNT; i++) {
+      var angle  = Math.random() * Math.PI * 2;
+      var radFac = 1.0 + Math.random() * 0.8;
+      var radius = radFac * PROF_SCALE * 0.5;
+      var yPos   = (Math.random() - 0.5) * PROF_SCALE;
+      var i3 = i * 3;
+      positions[i3]     = Math.cos(angle) * radius;
+      positions[i3 + 1] = yPos;
+      positions[i3 + 2] = Math.sin(angle) * radius;
+
+      sizes[i] = 0.004 + Math.random() * 0.006;
+
+      var dim = 0.4 * (0.3 + Math.random() * 0.3);
+      colors[i3]     = Math.min(1, baseRGB.r * dim);
+      colors[i3 + 1] = Math.min(1, baseRGB.g * dim);
+      colors[i3 + 2] = Math.min(1, baseRGB.b * dim);
+
+      splashVelocities.push({
+        r: 0.002 + Math.random() * 0.004,
+        theta: angle,
+        y: (Math.random() - 0.5) * 0.003,
+        dim: dim
+      });
+    }
+
+    splashGeo = new THREE.BufferGeometry();
+    splashGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    splashGeo.setAttribute('aSize',    new THREE.BufferAttribute(sizes, 1));
+    splashGeo.setAttribute('aColor',   new THREE.BufferAttribute(colors, 3));
+    splashPositionsArr = positions;
+    splashColorsArr    = colors;
+
+    var splashVS = [
+      'attribute float aSize;',
+      'attribute vec3 aColor;',
+      'varying vec3 vColor;',
+      'varying float vDepth;',
+      'void main() {',
+      '  vColor = aColor;',
+      '  vec4 mv = modelViewMatrix * vec4(position, 1.0);',
+      '  vDepth = -mv.z;',
+      '  gl_PointSize = aSize * (1200.0 / -mv.z);',
+      '  gl_Position = projectionMatrix * mv;',
+      '}'
+    ].join('\n');
+
+    var splashFS = [
+      'varying vec3 vColor;',
+      'varying float vDepth;',
+      'void main() {',
+      '  vec2 uv = gl_PointCoord - 0.5;',
+      '  float d = length(uv);',
+      '  if (d > 0.5) discard;',
+      '  float alpha = smoothstep(0.5, 0.15, d);',
+      '  float fogNear = 7.2; float fogFar = 14.5;',
+      '  float fog = 1.0 - smoothstep(fogNear, fogFar, vDepth);',
+      '  gl_FragColor = vec4(vColor * fog, alpha * 0.55 * fog);',
+      '}'
+    ].join('\n');
+
+    splashMat = new THREE.ShaderMaterial({
+      vertexShader: splashVS,
+      fragmentShader: splashFS,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+
+    splashPoints = new THREE.Points(splashGeo, splashMat);
+    particleGroup.add(splashPoints);
   }
 
   function buildTargetPositions(shapeId) {
@@ -1355,9 +1452,32 @@
       /* Size pulse */
       for (var i = 0; i < PARTICLE_COUNT; i++) {
         var phase = animTime * 1.8 + i * 0.04;
-        particleSizes[i] = baseSizes[i] * (0.72 + 0.56 * (0.5 + 0.5 * Math.sin(phase)));
+        particleSizes[i] = baseSizes[i] * (0.85 + 0.30 * (0.5 + 0.5 * Math.sin(phase)));
       }
       particleGeo.attributes.aSize.needsUpdate = true;
+
+      /* Splash drift */
+      if (splashPositionsArr) {
+        for (var si = 0; si < SPLASH_COUNT; si++) {
+          var sv = splashVelocities[si];
+          var si3 = si * 3;
+          splashPositionsArr[si3]     += Math.cos(sv.theta) * sv.r * 0.01;
+          splashPositionsArr[si3 + 2] += Math.sin(sv.theta) * sv.r * 0.01;
+          splashPositionsArr[si3 + 1] += sv.y;
+          var ddx = splashPositionsArr[si3], ddz = splashPositionsArr[si3 + 2];
+          if (ddx * ddx + ddz * ddz > PROF_SCALE * PROF_SCALE * 3.24) {
+            var na = Math.random() * Math.PI * 2;
+            var nr = (1.0 + Math.random() * 0.4) * PROF_SCALE * 0.5;
+            splashPositionsArr[si3]     = Math.cos(na) * nr;
+            splashPositionsArr[si3 + 2] = Math.sin(na) * nr;
+            sv.theta = na;
+          }
+          if (Math.abs(splashPositionsArr[si3 + 1]) > PROF_SCALE * 0.6) {
+            splashPositionsArr[si3 + 1] = (Math.random() - 0.5) * PROF_SCALE * 0.8;
+          }
+        }
+        splashGeo.attributes.position.needsUpdate = true;
+      }
 
       renderer.render(scene, camera);
     }());
@@ -1394,6 +1514,15 @@
           particleColors[i * 3 + 2] = Math.min(1, baseRGB.b * bv);
         }
         particleGeo.attributes.aColor.needsUpdate = true;
+        if (splashColorsArr) {
+          for (var si = 0; si < SPLASH_COUNT; si++) {
+            var sd = splashVelocities[si].dim;
+            splashColorsArr[si * 3]     = Math.min(1, baseRGB.r * sd);
+            splashColorsArr[si * 3 + 1] = Math.min(1, baseRGB.g * sd);
+            splashColorsArr[si * 3 + 2] = Math.min(1, baseRGB.b * sd);
+          }
+          splashGeo.attributes.aColor.needsUpdate = true;
+        }
       },
     });
 
