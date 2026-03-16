@@ -19,42 +19,11 @@
   <meta name="twitter:description" content="Messaggio quotidiano personalizzato per l'archetipo dell'Alfiere: visione strategica e creatività.">
   <meta name="twitter:image" content="https://scacchimentali.it/images/logo.png">
 
-  <!-- Favicon "♗" -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><text y='18' font-size='18'>♗</text></svg>">
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-  <!-- Stili globali -->
-  <link rel="stylesheet" href="../../css/style.css">
-
-  <!-- Stili specifici "Alfiere" -->
-  <style>
-    :root{--archetipo-color:var(--color-alfiere);}
-    .archetipo-hero{background:radial-gradient(circle at center,#331c09 0%,var(--color-background) 100%);}
-    .archetipo-icon{color:var(--color-alfiere);text-shadow:0 0 20px rgba(255,69,0,.5);}
-    .message-card{border-top:4px solid var(--color-alfiere);}
-    .action-button.primary{background:linear-gradient(135deg,var(--color-alfiere),#FF6347);}
-
-    /* banner auth */
-    .access-notice{position:fixed;top:0;left:0;right:0;z-index:10000;padding:15px;text-align:center;font-weight:700;font-size:16px;}
-    .access-notice.private{background:linear-gradient(45deg,#FF4500,#FF6347);color:#fff;border-bottom:3px solid #FF4500;}
-    .access-notice.public {background:linear-gradient(45deg,#666,#888);color:#fff;border-bottom:3px solid #666;}
-
-    /* messaggio limitato */
-    .message-content.limited{opacity:.6;font-style:italic;background:rgba(255,255,255,.05);padding:20px;border-radius:10px;border:2px dashed rgba(255,255,255,.2);text-align:center;}
-
-    /* CTA quiz */
-    .quiz-cta{background:linear-gradient(135deg,#1a1a1a,#2a2a2a);border:2px solid #FF4500;border-radius:15px;padding:30px;margin:30px auto;max-width:700px;text-align:center;}
-    .quiz-cta h3{color:#FF4500;margin-bottom:15px;}
-    .quiz-cta p {color:#ccc;margin-bottom:20px;}
-    .quiz-cta a {display:inline-block;background:linear-gradient(45deg,#FF4500,#FF6347);color:#fff;padding:12px 24px;border-radius:25px;font-weight:700;text-decoration:none;}
-
-    /* di default i contenuti privati non sono visibili */
-    .private-content{display:none;}
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-XE6BJT3222"></script>
@@ -64,175 +33,623 @@
     gtag('js', new Date());
     gtag('config', 'G-XE6BJT3222');
   </script>
+
+  <style>
+    /* ============================================
+       CSS VARIABLES — ALFIERE
+       ============================================ */
+    :root {
+      --arch-color:     #FF4500;
+      --arch-color-dim: rgba(255,69,0,0.2);
+      --arch-color-glow: rgba(255,69,0,0.4);
+      --bg:      #0d0d0d;
+      --surface: rgba(28,28,28,0.85);
+      --text-1:  #f8f9fa;
+      --text-2:  #b8bcc0;
+      --text-3:  #6b7280;
+    }
+
+    /* ============================================
+       RESET & BASE
+       ============================================ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--bg);
+      background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><path d='M-10 10 L10 -10 M0 40 L40 0 M30 50 L50 30' stroke='%23FF4500' stroke-width='0.5' stroke-opacity='0.03' fill='none'/></svg>");
+      background-repeat: repeat;
+      color: var(--text-1);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ============================================
+       PARTICLES (generati via JS)
+       ============================================ */
+    .particle {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes particleFloat {
+      0%, 100% { transform: translateY(0);   opacity: var(--p-opacity); }
+      50%       { transform: translateY(-30px); opacity: calc(var(--p-opacity) * 0.5); }
+    }
+
+    /* ============================================
+       ACCESS NOTICE BANNER (iniettato da JS)
+       ============================================ */
+    .access-notice {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 12px 20px;
+      text-align: center;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .access-notice.private {
+      background: rgba(255,69,0,0.15);
+      color: var(--arch-color);
+      border-bottom: 1px solid rgba(255,69,0,0.3);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .access-notice.public {
+      background: rgba(30,30,30,0.9);
+      color: var(--text-3);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    /* ============================================
+       HEADER
+       ============================================ */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(13,13,13,0.9);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,69,0,0.08);
+    }
+    .site-header img {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+    }
+    .site-header-name {
+      font-family: 'Cinzel', serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--arch-color);
+      letter-spacing: 2.5px;
+    }
+
+    /* ============================================
+       HERO
+       ============================================ */
+    .hero {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 60px 20px 40px;
+    }
+
+    .hero-symbol {
+      font-size: 5rem;
+      color: var(--arch-color);
+      text-shadow: 0 0 30px rgba(255,69,0,0.6);
+      animation: pulseGlow 3s ease-in-out infinite;
+      line-height: 1;
+      margin-bottom: 20px;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { text-shadow: 0 0 20px rgba(255,69,0,0.4), 0 0 40px rgba(255,69,0,0.2); }
+      50%       { text-shadow: 0 0 40px rgba(255,69,0,0.8), 0 0 80px rgba(255,69,0,0.35); }
+    }
+
+    .hero-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2rem, 6vw, 2.8rem);
+      font-weight: 700;
+      color: var(--text-1);
+      letter-spacing: 3px;
+      margin-bottom: 10px;
+    }
+
+    .hero-subtitle {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 300;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-2);
+      margin-bottom: 24px;
+    }
+
+    .date-pill {
+      display: inline-block;
+      background: rgba(255,69,0,0.1);
+      border: 1px solid rgba(255,69,0,0.3);
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: 0.8rem;
+      color: var(--text-2);
+      font-weight: 400;
+      margin-bottom: 24px;
+    }
+
+    .hero-separator {
+      width: 60px;
+      height: 1px;
+      margin: 0 auto;
+      background: linear-gradient(to right, transparent, var(--arch-color), transparent);
+    }
+
+    /* ============================================
+       QUIZ CTA PUBBLICA (iniettata da JS)
+       ============================================ */
+    .quiz-cta {
+      position: relative;
+      z-index: 1;
+      margin: 32px auto;
+      max-width: 640px;
+      padding: 0 20px;
+    }
+    .quiz-cta-inner {
+      background: rgba(28,28,28,0.8);
+      border: 1px solid rgba(255,69,0,0.2);
+      border-radius: 16px;
+      padding: 32px 28px;
+      text-align: center;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .quiz-cta h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      color: var(--arch-color);
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+    .quiz-cta p {
+      font-size: 0.9rem;
+      color: var(--text-2);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+    .quiz-cta a {
+      display: inline-block;
+      background: linear-gradient(135deg, #FF4500, #FF8C00);
+      color: #fff;
+      padding: 13px 32px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .quiz-cta a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255,69,0,0.35);
+    }
+
+    /* ============================================
+       SEZIONE MESSAGGIO
+       ============================================ */
+    .section-message {
+      position: relative;
+      z-index: 1;
+      padding: 32px 0 16px;
+    }
+
+    .message-card {
+      background: rgba(28,28,28,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,69,0,0.2);
+      border-left: 3px solid var(--arch-color);
+      border-radius: 16px;
+      padding: 32px 28px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 40px rgba(255,69,0,0.05);
+    }
+
+    .message-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      gap: 16px;
+    }
+
+    .message-card-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--arch-color);
+    }
+
+    .arch-image {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 768px) {
+      .arch-image { display: none; }
+    }
+
+    .message-body {
+      position: relative;
+    }
+
+    .message-body::before {
+      content: '\201C';
+      font-family: 'Cinzel', serif;
+      font-size: 4rem;
+      line-height: 0.8;
+      color: rgba(255,69,0,0.25);
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    #daily-message {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 300;
+      line-height: 1.8;
+      color: #e8e8e8;
+    }
+
+    /* ============================================
+       AZIONI CONDIVIDI / SALVA
+       ============================================ */
+    .message-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 32px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      flex: 1;
+      min-width: 130px;
+      padding: 14px 24px;
+      background: linear-gradient(135deg, #FF4500, #FF8C00);
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255,69,0,0.35);
+    }
+    .btn-primary:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      flex: 1;
+      min-width: 130px;
+      padding: 14px 24px;
+      background: transparent;
+      color: var(--arch-color);
+      border: 1px solid rgba(255,69,0,0.4);
+      border-radius: 30px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+    .btn-secondary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      border-color: var(--arch-color);
+      box-shadow: 0 4px 16px rgba(255,69,0,0.15);
+    }
+    .btn-secondary:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    /* ============================================
+       SEZIONE SUBSCRIPTION
+       ============================================ */
+    .section-sub {
+      position: relative;
+      z-index: 1;
+      padding: 16px 0 48px;
+    }
+    .section-sub .container {
+      text-align: center;
+    }
+    .btn-sub {
+      display: inline-block;
+      padding: 16px 40px;
+      background: linear-gradient(135deg, #FF4500, #FF8C00);
+      color: #fff;
+      border-radius: 30px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn-sub:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(255,69,0,0.4);
+    }
+
+    /* ============================================
+       PRIVATE CONTENT — nascosto di default
+       ============================================ */
+    .private-content { display: none; }
+
+    /* ============================================
+       FOOTER
+       ============================================ */
+    .site-footer {
+      position: relative;
+      z-index: 1;
+      padding: 32px 20px;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .site-footer p {
+      font-size: 0.78rem;
+      color: var(--text-3);
+      margin-bottom: 10px;
+    }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    .footer-links a {
+      font-size: 0.78rem;
+      color: var(--text-3);
+      transition: color 0.2s ease;
+    }
+    .footer-links a:hover { color: var(--arch-color); }
+
+  </style>
 </head>
 <body>
 
   <!-- HEADER -->
-  <header class="header">
-    <div class="container" style="padding:15px 0;text-align:center;">
-      <a href="../../index.html"><img src="../../images/logo.png" alt="Scacchi Mentali" style="height:40px;"></a>
-      <h1 style="margin-top:10px;font-weight:600;">Scacchi Mentali</h1>
-    </div>
+  <header class="site-header">
+    <a href="../../index.html" style="display:flex;align-items:center;gap:10px;">
+      <img src="../../images/logo.png" alt="Scacchi Mentali">
+      <span class="site-header-name">Scacchi Mentali</span>
+    </a>
   </header>
 
   <!-- HERO -->
-  <section class="archetipo-hero hero">
-    <div class="container">
-      <div class="hero-content">
-        <div class="archetipo-icon" style="font-size: 4rem; margin-bottom: 20px;">♗</div>
-        <h1 class="hero-title">L'Alfiere</h1>
-        <p class="archetipo-subtitle">Visionario • Creativo • Strategico</p>
-        <div class="current-date">
-          <span id="current-date">Caricamento…</span>
-        </div>
-      </div>
+  <section class="hero">
+    <div class="hero-symbol">♗</div>
+    <h1 class="hero-title">L'Alfiere</h1>
+    <p class="hero-subtitle">Visionario &bull; Creativo &bull; Strategico</p>
+    <div class="date-pill">
+      <span id="current-date">Caricamento…</span>
     </div>
+    <div class="hero-separator"></div>
   </section>
 
-  <!-- CTA PUBBLICA -->
+  <!-- CTA PUBBLICA (iniettata da JS) -->
   <div id="public-cta-container"></div>
 
   <!-- MESSAGGIO QUOTIDIANO (privato) -->
-  <section class="messaggio-quotidiano private-content">
+  <section class="section-message private-content">
     <div class="container">
       <div class="message-card">
-        <div class="message-header">
-          <h2>Il Tuo Messaggio di Oggi</h2>
-          <img src="../../images/archetipi/alfiere.png" alt="L'Alfiere" class="archetipo-image">
+        <div class="message-card-header">
+          <span class="message-card-title">Il Tuo Messaggio di Oggi</span>
+          <img src="../../images/archetipi/alfiere.png" alt="L'Alfiere" class="arch-image">
         </div>
-        <div class="message-content">
-          <p id="daily-message" class="daily-message">Caricamento del messaggio…</p>
+        <div class="message-body">
+          <p id="daily-message">Caricamento del messaggio…</p>
         </div>
         <div class="message-actions">
-          <button id="share-button" class="action-button primary" disabled>📤 Condividi Messaggio</button>
-          <button id="save-button"  class="action-button secondary" disabled>💾 Salva Messaggio</button>
+          <button id="share-button" class="btn-primary" disabled>Condividi</button>
+          <button id="save-button"  class="btn-secondary" disabled>Salva</button>
         </div>
       </div>
     </div>
   </section>
 
   <!-- SUBSCRIPTION CTA (privata) -->
-  <section class="subscription-cta private-content">
-    <div class="container" style="text-align:center;padding:30px 0;">
-      <a href="../../subscribe/?archetipo=alfiere" class="cta-button" style="background:linear-gradient(45deg,#FF4500,#FF6347);color:#fff;padding:12px 24px;border-radius:20px;font-weight:bold;text-decoration:none;">
-        🔥 Vai alla pagina Subscription per L'Alfiere
+  <section class="section-sub private-content">
+    <div class="container">
+      <a href="../../subscribe/?archetipo=alfiere" class="btn-sub">
+        Accedi alla Subscription per L'Alfiere
       </a>
     </div>
   </section>
 
   <!-- FOOTER -->
-  <footer class="footer">
-    <div class="container" style="padding:20px 0;text-align:center;color:#777;">
+  <footer class="site-footer">
+    <div class="container">
       <p>&copy; 2026 Scacchi Mentali. Tutti i diritti riservati.</p>
-      <div style="margin-top:10px;">
-        <a href="../../index.html" style="margin:0 8px;">Home</a>
-        <a href="#privacy"          style="margin:0 8px;">Privacy</a>
-        <a href="#termini"          style="margin:0 8px;">Termini</a>
+      <div class="footer-links">
+        <a href="../../index.html">Home</a>
+        <a href="#privacy">Privacy</a>
+        <a href="#termini">Termini</a>
       </div>
     </div>
   </footer>
 
-  <!-- SCRIPT AUTENTICAZIONE + LOGICA UI -->
+  <!-- PARTICELLE SFONDO -->
+  <script>
+  (function() {
+    var count = 80;
+    for (var i = 0; i < count; i++) {
+      var el = document.createElement('span');
+      el.className = 'particle';
+      var size    = 2 + Math.random() * 3;               // 2–5px
+      var opacity = (0.15 + Math.random() * 0.30).toFixed(2); // 0.15–0.45
+      var dur     = (8  + Math.random() * 8).toFixed(1);  // 8–16s
+      var delay   = (Math.random() * 8).toFixed(1);       // 0–8s
+      var left    = (Math.random() * 100).toFixed(1);
+      var top     = (Math.random() * 100).toFixed(1);
+      el.style.cssText = [
+        'width:'       + size + 'px',
+        'height:'      + size + 'px',
+        'left:'        + left + 'vw',
+        'top:'         + top  + 'vh',
+        '--p-opacity:' + opacity,
+        'background:rgba(255,69,0,' + opacity + ')',
+        'box-shadow:0 0 6px rgba(255,69,0,' + opacity + ')',
+        'animation:particleFloat ' + dur + 's ease-in-out ' + delay + 's infinite',
+      ].join(';');
+      document.body.appendChild(el);
+    }
+  }());
+  </script>
+
+  <!-- AUTENTICAZIONE + LOGICA UI -->
   <script>
   /* -------------------- CONFIG -------------------- */
-  const WEB_APP_URL   = 'https://script.google.com/macros/s/AKfycbweYcCMsWIaHb6TpZzY4-Tk5NcwzM4WNAZBsEKd92mxY6inWuq9h1Bm3r3szdEqL9nthg/exec';
-  const ERROR_PAGE    = 'https://antoca84.github.io/chess-whispers-arcane/accesso-negato.html';
-  const ARCHETIPO     = 'alfiere';
+  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbweYcCMsWIaHb6TpZzY4-Tk5NcwzM4WNAZBsEKd92mxY6inWuq9h1Bm3r3szdEqL9nthg/exec';
+  const ERROR_PAGE  = 'https://antoca84.github.io/chess-whispers-arcane/accesso-negato.html';
+  const ARCHETIPO   = 'alfiere';
 
   /* -------------------- UTILITY UI -------------------- */
-  function addBanner(type,msg){
-    const b=document.createElement('div');
-    b.className=`access-notice ${type}`; b.textContent=msg;
-    document.body.prepend(b); document.body.style.paddingTop='60px';
+  function addBanner(type, msg) {
+    const b = document.createElement('div');
+    b.className = 'access-notice ' + type;
+    b.textContent = msg;
+    document.body.prepend(b);
+    document.body.style.paddingTop = '48px';
   }
-  function showQuizCTA(){
-    document.getElementById('public-cta-container').innerHTML=
-      `<div class="quiz-cta">
-         <h3>🧠 Vuoi accedere ai messaggi completi?</h3>
-         <p>Se non l'hai già fatto completa il quiz gratuito per scoprire il tuo archetipo e sbloccare contenuti personalizzati.</p>
-         <a href="../../index.html">🎯 Inizia il Quiz Gratuito</a>
-       </div>`;
+
+  function showQuizCTA() {
+    document.getElementById('public-cta-container').innerHTML =
+      '<div class="quiz-cta">' +
+        '<div class="quiz-cta-inner">' +
+          '<h3>Accedi ai Messaggi Completi</h3>' +
+          '<p>Completa il quiz gratuito per scoprire il tuo archetipo e sbloccare i messaggi quotidiani personalizzati.</p>' +
+          '<a href="../../index.html">Inizia il Quiz Gratuito</a>' +
+        '</div>' +
+      '</div>';
   }
-  function showPrivateSections(){
-    document.querySelectorAll('.private-content').forEach(el=>el.style.display='block');
-    document.getElementById('share-button').disabled=false;
-    document.getElementById('save-button').disabled=false;
+
+  function showPrivateSections() {
+    document.querySelectorAll('.private-content').forEach(function(el) { el.style.display = 'block'; });
+    document.getElementById('share-button').disabled = false;
+    document.getElementById('save-button').disabled  = false;
   }
-  function hidePrivateSections(){
-    document.querySelectorAll('.private-content').forEach(el=>el.style.display='none');
+
+  function hidePrivateSections() {
+    document.querySelectorAll('.private-content').forEach(function(el) { el.style.display = 'none'; });
   }
 
   /* -------------------- TOKEN FLOW -------------------- */
-  async function verifyToken(token){
-    try{
-      const r = await fetch(`${WEB_APP_URL}?action=verify&token=${encodeURIComponent(token)}&archetipo=${ARCHETIPO}`);
-      if(!r.ok) return {valid:false};
+  async function verifyToken(token) {
+    try {
+      const r = await fetch(WEB_APP_URL + '?action=verify&token=' + encodeURIComponent(token) + '&archetipo=' + ARCHETIPO);
+      if (!r.ok) return { valid: false };
       return await r.json();
-    }catch(e){
-      console.error(e); return {valid:false};
+    } catch(e) {
+      console.error(e); return { valid: false };
     }
   }
 
-  async function handleAuth(){
-    // data corrente
+  async function handleAuth() {
     document.getElementById('current-date').textContent =
-      new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+      new Date().toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
     const params = new URLSearchParams(window.location.search);
     const token  = params.get('token');
 
-    if(!token){
-      addBanner('public','👁️ Contenuto Limitato – nessun token presente');
+    if (!token) {
+      addBanner('public', 'Contenuto Limitato – nessun token presente');
       hidePrivateSections(); showQuizCTA(); return;
     }
 
-    addBanner('public','⏳ Verifica token in corso…');
+    addBanner('public', 'Verifica token in corso…');
     const res = await verifyToken(token);
-    document.querySelector('.access-notice').remove();   // remove loading
+    document.querySelector('.access-notice').remove();
 
-    if(res && res.valid){
-      addBanner('private',`🔒 Accesso Privato Autorizzato – ${ARCHETIPO.toUpperCase()}`);
+    if (res && res.valid) {
+      addBanner('private', 'Accesso Autorizzato — Alfiere');
       showPrivateSections(); loadDailyMessage(); enableActions();
-    }else{
-      window.location.href = `${ERROR_PAGE}?error=${encodeURIComponent(res.error || 'Token non valido')}`;
+    } else {
+      window.location.href = ERROR_PAGE + '?error=' + encodeURIComponent(res.error || 'Token non valido');
     }
   }
 
   /* -------------------- MESSAGGI -------------------- */
-  async function loadDailyMessage(){
-    try{
-      const r = await fetch('../../messages/alfiere-messages.json');
+  async function loadDailyMessage() {
+    try {
+      const r    = await fetch('../../messages/alfiere-messages.json');
       const data = await r.json();
       const today = new Date().toISOString().split('T')[0];
-      const msg = data[today] || 'Messaggio non disponibile per oggi.';
+      const msg   = data[today] || 'Messaggio non disponibile per oggi.';
       document.getElementById('daily-message').textContent = msg;
-      window._currentMsg = msg; // per share/save
-    }catch(e){
+      window._currentMsg = msg;
+    } catch(e) {
       document.getElementById('daily-message').textContent = 'Errore nel caricamento del messaggio.';
     }
   }
 
   /* -------------------- AZIONI SHARE / SAVE -------------------- */
-  function enableActions(){
-    const shareBtn=document.getElementById('share-button');
-    const saveBtn =document.getElementById('save-button');
+  function enableActions() {
+    const shareBtn = document.getElementById('share-button');
+    const saveBtn  = document.getElementById('save-button');
 
-    shareBtn.onclick=async()=>{
-      const text=window._currentMsg+'\n\nScacchi Mentali';
-      if(navigator.share){ try{await navigator.share({title:'Messaggio dell\'Alfiere',text, url:location.href});}catch{} }
-      else{ try{await navigator.clipboard.writeText(text); alert('Messaggio copiato negli appunti!');}catch{} }
+    shareBtn.onclick = async function() {
+      const text = window._currentMsg + '\n\nScacchi Mentali';
+      if (navigator.share) {
+        try { await navigator.share({ title: 'Messaggio dell\'Alfiere', text: text, url: location.href }); } catch(e) {}
+      } else {
+        try { await navigator.clipboard.writeText(text); alert('Messaggio copiato negli appunti!'); } catch(e) {}
+      }
     };
 
-    saveBtn.onclick=()=>{
-      const blob=new Blob([window._currentMsg],{type:'text/plain'});
-      const url=URL.createObjectURL(blob);
-      const a=document.createElement('a');
-      a.href=url; a.download=`messaggio-alfiere-${new Date().toISOString().split('T')[0]}.txt`;
+    saveBtn.onclick = function() {
+      const blob = new Blob([window._currentMsg], { type: 'text/plain' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href = url;
+      a.download = 'messaggio-alfiere-' + new Date().toISOString().split('T')[0] + '.txt';
       document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
     };
   }
 
-  document.addEventListener('DOMContentLoaded',handleAuth);
+  document.addEventListener('DOMContentLoaded', handleAuth);
   </script>
 </body>
 </html>
