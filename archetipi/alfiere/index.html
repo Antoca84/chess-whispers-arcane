@@ -86,6 +86,26 @@
       transition: opacity 0.35s ease;
     }
 
+    /* Mobile fallback: restore old full-cover loading experience */
+    @media (max-width: 768px) {
+      body.loading-active #page-content {
+        opacity: 0;
+        transition: opacity 0.4s ease;
+      }
+      body.loading-active .section-message,
+      body.loading-active .section-sub {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      #loading-canvas-wrapper {
+        z-index: 9999 !important;
+        background: #0d0d0d !important;
+      }
+      #loading-canvas {
+        opacity: 1 !important;
+      }
+    }
+
     /* ============================================
        PARTICLES (generati via JS)
        ============================================ */
