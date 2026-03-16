@@ -1849,9 +1849,9 @@
         front: adjustHexBrightness(colorHex, 1.3)
       };
       var glowByLayer = { back: 6, mid: 6, front: 8.4 };
-      var MORPH_DUR = 1100;
-      var MORPH_COLOR_DUR = 600;
-      var MORPH_DELAY_MAX = 150; // ms — stagger casuale per span
+      var MORPH_DUR = 1300;
+      var MORPH_COLOR_DUR = 700;
+      var MORPH_DELAY_MAX = 260;
 
       function setSpanWillChange(enabled) {
         activeLayerKeys.forEach(function (layerKey) {
@@ -1862,14 +1862,8 @@
         });
       }
 
-      if (phaseBTimeout) {
-        clearTimeout(phaseBTimeout);
-        phaseBTimeout = null;
-      }
-      if (willChangeTimeout) {
-        clearTimeout(willChangeTimeout);
-        willChangeTimeout = null;
-      }
+      if (phaseBTimeout) { clearTimeout(phaseBTimeout); phaseBTimeout = null; }
+      if (willChangeTimeout) { clearTimeout(willChangeTimeout); willChangeTimeout = null; }
 
       setSpanWillChange(true);
 
@@ -1878,12 +1872,76 @@
         if (!mobilePerf.slow) emitAberrationClones();
       }
 
+      /* ---------------------------------------------------
+         Nearest-neighbor matching:
+         ogni span va al target più vicino alla sua posizione
+         corrente — minimizza le distanze di viaggio.
+         Pass 1: span attivi → target attivi.
+         Pass 2: span rimanenti → slot rimasti.
+      --------------------------------------------------- */
+      var repLayer = spansByLayer['mid'] || spansByLayer[activeLayerKeys[0]];
+      var totalSlots = repLayer.length;
+
+      // Pre-calcola tutti i target slot
+      var slotData = [];
+      for (var t = 0; t < totalSlots; t++) {
+        if (t < activeCount) {
+          var isBnd = t < boundaryCount;
+          var pt = isBnd ? targets.boundary[t] : targets.interior[t - boundaryCount];
+          var mp = mapCoord(pt, randomJitter());
+          slotData.push({
+            left: mp.left, top: mp.top,
+            lv: parseFloat(mp.left), tv: parseFloat(mp.top),
+            size: isBnd ? randomInRange(BASE_POINT_SIZE_MIN, BASE_POINT_SIZE_MAX)
+                        : randomInRange(INNER_POINT_SIZE_MIN, INNER_POINT_SIZE_MAX),
+            opacity: isBnd ? randomInRange(0.65, 1.0) : randomInRange(0.3, 0.5),
+            active: true
+          });
+        } else {
+          slotData.push({ active: false });
+        }
+      }
+
+      // Greedy nearest-neighbor (O(n²), n≈84 — trascurabile)
+      var usedSlot = new Array(totalSlots).fill(false);
+      var assignment = new Array(totalSlots);
+
+      // Pass 1: span visibili (opacity > 0.05) → slot attivi
+      // Pass 2: span rimanenti → slot rimanenti
+      for (var pass = 0; pass < 2; pass++) {
+        for (var s = 0; s < totalSlots; s++) {
+          if (assignment[s] !== undefined) continue;
+          var curSpan = repLayer[s];
+          var curVisible = parseFloat(curSpan.style.opacity || '0') > 0.05;
+          if (pass === 0 && !curVisible) continue; // rimanda al pass 2
+          var cx = parseFloat(curSpan.style.left) || 100;
+          var cy = parseFloat(curSpan.style.top)  || 150;
+          var bestDist = Infinity;
+          var bestIdx  = 0;
+          for (var t2 = 0; t2 < totalSlots; t2++) {
+            if (usedSlot[t2]) continue;
+            var slot = slotData[t2];
+            // pass 1: solo slot attivi; pass 2: tutto
+            if (pass === 0 && !slot.active) continue;
+            var dist = slot.active
+              ? (cx - slot.lv) * (cx - slot.lv) + (cy - slot.tv) * (cy - slot.tv)
+              : 0; // inattivo → costo zero in pass 2
+            if (dist < bestDist) { bestDist = dist; bestIdx = t2; }
+          }
+          usedSlot[bestIdx] = true;
+          assignment[s] = bestIdx;
+        }
+      }
+
+      // Applica a tutti i layer
       activeLayerKeys.forEach(function (layerKey) {
         var spans = spansByLayer[layerKey];
         var layerColor = colorByLayer[layerKey];
         var layerGlow = glowByLayer[layerKey];
         for (var i = 0; i < spans.length; i++) {
           var span = spans[i];
+          var slot = slotData[assignment[i]];
+
           if (immediate) {
             span.style.transition = 'none';
             span.style.transitionDelay = '';
@@ -1891,33 +1949,23 @@
             var delay = Math.round(Math.random() * MORPH_DELAY_MAX);
             span.style.transitionDelay = delay + 'ms';
             span.style.transition =
-              'left ' + MORPH_DUR + 'ms cubic-bezier(0.16, 1, 0.3, 1),' +
-              'top ' + MORPH_DUR + 'ms cubic-bezier(0.16, 1, 0.3, 1),' +
-              'opacity 300ms ease,' +
-              'background-color ' + MORPH_COLOR_DUR + 'ms ease,' +
-              'box-shadow ' + MORPH_COLOR_DUR + 'ms ease,' +
-              'width 300ms ease, height 300ms ease';
+              'left '             + MORPH_DUR       + 'ms cubic-bezier(0.42, 0, 0.58, 1),' +
+              'top '              + MORPH_DUR       + 'ms cubic-bezier(0.42, 0, 0.58, 1),' +
+              'opacity 380ms ease-out,'                                                      +
+              'background-color ' + MORPH_COLOR_DUR + 'ms ease,'                            +
+              'box-shadow '       + MORPH_COLOR_DUR + 'ms ease,'                            +
+              'width 350ms ease, height 350ms ease';
           }
 
           span.style.backgroundColor = layerColor;
           span.style.boxShadow = '0 0 ' + layerGlow.toFixed(1) + 'px ' + layerColor;
 
-          if (i < activeCount) {
-            var isBoundary = i < boundaryCount;
-            var point = isBoundary ? targets.boundary[i] : targets.interior[i - boundaryCount];
-            var mapped = mapCoord(point, randomJitter());
-            var size = isBoundary
-              ? randomInRange(BASE_POINT_SIZE_MIN, BASE_POINT_SIZE_MAX)
-              : randomInRange(INNER_POINT_SIZE_MIN, INNER_POINT_SIZE_MAX);
-            var opacity = isBoundary
-              ? randomInRange(0.65, 1.0)
-              : randomInRange(0.3, 0.5);
-
-            span.style.left = mapped.left;
-            span.style.top = mapped.top;
-            span.style.width = size.toFixed(2) + 'px';
-            span.style.height = size.toFixed(2) + 'px';
-            span.style.opacity = opacity.toFixed(2);
+          if (slot.active) {
+            span.style.left    = slot.left;
+            span.style.top     = slot.top;
+            span.style.width   = slot.size.toFixed(2) + 'px';
+            span.style.height  = slot.size.toFixed(2) + 'px';
+            span.style.opacity = slot.opacity.toFixed(2);
           } else {
             span.style.opacity = '0';
           }
