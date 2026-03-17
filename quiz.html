@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#07070f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Scacchi Mentali — Scopri il tuo Archetipo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#07070f;
+  --surface:#0d0d1a;
+  --surface-hover:#131324;
+  --gold:#c9a84c;
+  --gold-dim:rgba(201,168,76,0.12);
+  --gold-glow:rgba(201,168,76,0.22);
+  --text-primary:#e8e4d9;
+  --text-secondary:#7a7468;
+  --text-muted:#3e3a34;
+  --border:rgba(201,168,76,0.15);
+  --border-hover:rgba(201,168,76,0.5);
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+  --safe-top:env(safe-area-inset-top,0px);
+}
+
+html{height:100%;-webkit-text-size-adjust:100%}
+body{min-height:100%;min-height:-webkit-fill-available;background:var(--bg);color:var(--text-primary);font-family:'Lato',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");pointer-events:none;z-index:999;opacity:0.35}
+
+/* PROGRESS */
+.pbar{position:fixed;top:0;left:0;right:0;height:3px;background:rgba(255,255,255,0.04);z-index:100;top:var(--safe-top)}
+.pfill{height:100%;background:var(--gold);transition:width 0.5s cubic-bezier(.4,0,.2,1);width:0%}
+
+/* SCREENS */
+.screen{
+  position:relative;z-index:1;
+  min-height:100vh;min-height:-webkit-fill-available;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:calc(3rem + var(--safe-top)) 1.25rem calc(2rem + var(--safe-bottom));
+  opacity:0;transition:opacity 0.4s ease
+}
+.screen.active{opacity:1}
+.screen.gone{display:none}
+
+/* ── INTRO ── */
+.brand-badge{font-size:10px;font-weight:700;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:2rem;opacity:0;animation:fadeUp .7s .2s forwards}
+.intro-title{font-family:'Playfair Display',serif;font-size:clamp(1.65rem,6vw,3rem);font-weight:700;text-align:center;line-height:1.25;color:var(--text-primary);max-width:600px;margin-bottom:1.2rem;opacity:0;animation:fadeUp .7s .4s forwards}
+.intro-sub{font-size:.95rem;color:var(--text-secondary);text-align:center;line-height:1.8;font-weight:300;margin-bottom:2.5rem;opacity:0;animation:fadeUp .7s .6s forwards}
+.chess-divider{display:flex;align-items:center;gap:16px;margin-bottom:2.5rem;width:100%;max-width:320px;opacity:0;animation:fadeUp .7s .5s forwards}
+.chess-divider span{font-size:1.4rem;color:var(--gold);opacity:0.4}
+.chess-divider::before,.chess-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* Touch-friendly CTA */
+.btn-start{
+  display:inline-flex;align-items:center;gap:12px;
+  background:transparent;color:var(--gold);border:1px solid var(--gold);
+  padding:18px 42px;
+  font-family:'Lato',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+  cursor:pointer;transition:all .3s ease;
+  min-height:56px;
+  -webkit-appearance:none;border-radius:0;
+  opacity:0;animation:fadeUp .7s .8s forwards
+}
+.btn-start:hover,.btn-start:active{background:var(--gold-dim)}
+.btn-start .arr{transition:transform .3s}
+.btn-start:hover .arr{transform:translateX(5px)}
+.intro-note{margin-top:1.8rem;font-size:.73rem;color:var(--text-muted);letter-spacing:1px;opacity:0;animation:fadeUp .7s 1s forwards}
+
+/* ── QUIZ SCREEN ── */
+#s-quiz{justify-content:flex-start;padding-top:calc(4rem + var(--safe-top))}
+
+.quiz-header{
+  display:flex;align-items:center;justify-content:space-between;
+  width:100%;max-width:700px;
+  margin-bottom:2rem
+}
+.q-counter{font-size:.68rem;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted)}
+.q-block{font-size:.68rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);opacity:.6}
+
+.q-wrap{width:100%;max-width:700px;margin-bottom:2rem}
+.q-text{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.15rem,4.5vw,1.5rem);
+  font-weight:400;line-height:1.5;
+  color:var(--text-primary)
+}
+
+/* Options — single column on mobile, 2-col only on wide screens */
+.opts{width:100%;max-width:700px;display:flex;flex-direction:column;gap:8px}
+@media(min-width:680px){
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+}
+
+.opt{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:16px 15px;
+  cursor:pointer;
+  display:flex;align-items:flex-start;gap:12px;
+  transition:border-color .15s ease, background .15s ease;
+  position:relative;overflow:hidden;
+  /* big touch target */
+  min-height:52px;
+  -webkit-user-select:none;user-select:none;
+}
+.opt:active{border-color:var(--border-hover);background:var(--surface-hover)}
+@media(hover:hover){
+  .opt:hover{border-color:var(--border-hover);background:var(--surface-hover)}
+}
+.opt.sel{border-color:var(--gold);background:var(--gold-dim)}
+.opt.sel::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,var(--gold-glow) 0%,transparent 65%);pointer-events:none}
+
+.opt-k{
+  width:22px;height:22px;min-width:22px;
+  border:1px solid var(--border);border-radius:2px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.62rem;font-weight:700;color:var(--text-muted);
+  transition:all .15s;margin-top:2px;flex-shrink:0
+}
+.opt.sel .opt-k{border-color:var(--gold);color:var(--gold)}
+.opt-t{font-size:.9rem;line-height:1.55;color:var(--text-secondary);transition:color .15s}
+.opt:active .opt-t,.opt.sel .opt-t{color:var(--text-primary)}
+@media(hover:hover){.opt:hover .opt-t{color:var(--text-primary)}}
+
+/* ── CALCULATING ── */
+.calc-icon{font-size:3rem;color:var(--gold);animation:pulse 1.6s ease-in-out infinite;margin-bottom:1.5rem}
+.calc-msg{font-family:'Playfair Display',serif;font-style:italic;font-size:1.15rem;color:var(--text-secondary);animation:pulse 1.6s .3s ease-in-out infinite;text-align:center;max-width:280px;line-height:1.6}
+
+/* ── RESULT ── */
+#s-res{justify-content:flex-start;padding-top:calc(3.5rem + var(--safe-top))}
+
+.res-symbol{font-size:4rem;margin-bottom:.6rem;opacity:0;animation:scaleIn .9s cubic-bezier(.34,1.56,.64,1) .1s forwards}
+.res-label{font-size:.65rem;letter-spacing:5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:1rem;opacity:0;animation:fadeUp .6s .5s forwards}
+.res-name{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,7vw,2.8rem);font-weight:700;text-align:center;margin-bottom:1.2rem;opacity:0;animation:fadeUp .6s .7s forwards}
+.res-rule{height:1px;background:var(--gold);width:44px;margin:0 auto 1.4rem;opacity:0;animation:fadeUp .6s .8s forwards}
+.res-desc{font-size:.92rem;line-height:1.8;color:var(--text-secondary);text-align:center;max-width:500px;width:100%;margin-bottom:1.5rem;opacity:0;animation:fadeUp .6s .9s forwards}
+
+.res-tags{display:flex;flex-direction:column;align-items:center;gap:.4rem;margin-bottom:1.6rem;width:100%;max-width:500px}
+.res-ferita{font-size:.82rem;color:var(--text-muted);text-align:center;opacity:0;animation:fadeUp .6s 1.1s forwards}
+.res-desiderio{font-size:.88rem;font-weight:700;text-align:center;opacity:0;animation:fadeUp .6s 1.3s forwards}
+
+.res-quote{
+  background:var(--surface);border-left:2px solid var(--gold);
+  padding:16px 20px;
+  max-width:500px;width:100%;
+  margin-bottom:2rem;
+  opacity:0;animation:fadeUp .6s 1.5s forwards
+}
+.res-quote-label{font-size:.62rem;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-bottom:.5rem}
+.res-quote-text{font-family:'Playfair Display',serif;font-style:italic;font-size:.95rem;line-height:1.65;color:var(--text-primary)}
+
+.capture-privacy{font-size:.7rem;color:var(--text-muted);text-align:center;margin-top:.7rem}
+
+.btn-restart{
+  background:transparent;color:var(--text-muted);border:1px solid var(--text-muted);
+  padding:14px 28px;min-height:50px;
+  font-family:'Lato',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+  cursor:pointer;transition:all .3s ease;
+  -webkit-appearance:none;border-radius:0;
+  margin-bottom:calc(1.5rem + var(--safe-bottom));
+  display:none
+}
+.btn-restart.visible{display:inline-block;opacity:0;animation:fadeUp .5s forwards}
+.btn-restart:hover,.btn-restart:active{color:var(--gold);border-color:var(--gold)}
+
+/* TRANSITIONS */
+.slide-in{animation:slideIn .38s cubic-bezier(.4,0,.2,1) both}
+.slide-out{animation:slideOut .26s cubic-bezier(.4,0,.2,1) both}
+
+/* FOOTER */
+.sig{position:fixed;bottom:calc(1rem + var(--safe-bottom));left:50%;transform:translateX(-50%);font-size:.6rem;letter-spacing:3.5px;text-transform:uppercase;color:var(--text-muted);z-index:10;pointer-events:none;opacity:.4;white-space:nowrap}
+
+/* ── EMAIL CAPTURE ── */
+.capture-box{
+  width:100%;max-width:500px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:22px 20px;
+  margin-bottom:1.2rem;
+  opacity:0;animation:fadeUp .6s 1.9s forwards
+}
+.capture-title{font-size:.95rem;font-weight:700;color:var(--text-primary);margin-bottom:.3rem;text-align:center}
+.capture-sub{font-size:.75rem;color:var(--text-muted);text-align:center;margin-bottom:1.1rem;letter-spacing:.3px}
+.capture-row{display:flex;gap:8px;flex-wrap:wrap}
+#email-input{
+  flex:1;min-width:0;
+  background:#0a0a14;border:1px solid var(--border);border-radius:3px;
+  color:var(--text-primary);font-family:'Lato',sans-serif;font-size:.88rem;
+  padding:13px 14px;min-height:48px;
+  outline:none;transition:border-color .2s;
+  -webkit-appearance:none
+}
+#email-input:focus{border-color:var(--gold)}
+#email-input::placeholder{color:var(--text-muted)}
+.btn-qr{
+  background:var(--gold);color:#07070f;
+  border:none;border-radius:3px;
+  padding:13px 20px;min-height:48px;
+  font-family:'Lato',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  cursor:pointer;white-space:nowrap;transition:opacity .2s;
+  -webkit-appearance:none
+}
+.btn-qr:disabled{opacity:.5;cursor:not-allowed}
+.btn-qr:active:not(:disabled){opacity:.75}
+.capture-error{font-size:.75rem;color:#e05555;margin-top:.6rem;min-height:1rem;text-align:center}
+
+/* ── QR BOX ── */
+.qr-box{
+  width:100%;max-width:500px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:24px 20px;
+  margin-bottom:1.2rem;
+  text-align:center
+}
+.qr-label{font-size:.65rem;letter-spacing:4px;text-transform:uppercase;color:var(--text-muted);margin-bottom:1rem}
+.qr-img-wrap{
+  display:inline-flex;
+  background:#fff;
+  border-radius:4px;
+  padding:10px;
+  margin-bottom:1rem
+}
+.qr-img-wrap img{display:block;border-radius:2px}
+.qr-note{font-size:.82rem;color:var(--text-secondary);line-height:1.6;margin-bottom:.5rem}
+.qr-email-note{font-size:.72rem;color:var(--text-muted)}
+
+/* KEYFRAMES */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes scaleIn{from{opacity:0;transform:scale(.72)}to{opacity:1;transform:scale(1)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(32px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideOut{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(-32px)}}
+@keyframes pulse{0%,100%{opacity:.45}50%{opacity:1}}
+</style>
+</head>
+<body>
+
+<div class="pbar"><div class="pfill" id="pf"></div></div>
+
+<!-- INTRO -->
+<div class="screen active" id="s-intro">
+  <div class="brand-badge">Scacchi Mentali</div>
+  <div class="intro-title">Qual è il tuo pezzo sulla scacchiera della vita?</div>
+  <div class="chess-divider"><span>♟</span></div>
+  <div class="intro-sub">Non esiste risposta giusta.<br>Esistono solo la tua mossa e ciò che rivela.</div>
+  <button class="btn-start" onclick="startQuiz()">Inizia la partita <span class="arr">→</span></button>
+  <div class="intro-note">12 domande · ~4 minuti</div>
+</div>
+
+<!-- QUIZ -->
+<div class="screen gone" id="s-quiz">
+  <div class="quiz-header">
+    <span class="q-counter" id="qc">Domanda 1 di 12</span>
+    <span class="q-block" id="qb">Decisioni</span>
+  </div>
+  <div class="q-wrap" id="qw"><div class="q-text" id="qt"></div></div>
+  <div class="opts" id="og"></div>
+</div>
+
+<!-- CALCULATING -->
+<div class="screen gone" id="s-calc">
+  <div class="calc-icon">♟</div>
+  <div class="calc-msg">Kairos sta leggendo la tua partita…</div>
+</div>
+
+<!-- RESULT -->
+<div class="screen gone" id="s-res">
+  <div class="res-symbol" id="rsym"></div>
+  <div class="res-label">Il tuo archetipo</div>
+  <div class="res-name" id="rname"></div>
+  <div class="res-rule" id="rrule"></div>
+  <div class="res-desc" id="rdesc"></div>
+  <div class="res-tags">
+    <div class="res-ferita" id="rferita"></div>
+    <div class="res-desiderio" id="rdesiderio"></div>
+  </div>
+  <div class="res-quote" id="rquote">
+    <div class="res-quote-label">Kairos dice</div>
+    <div class="res-quote-text" id="rqtext"></div>
+  </div>
+
+  <!-- EMAIL CAPTURE — obbligatorio per ottenere il QR -->
+  <div class="capture-box" id="capture-box">
+    <div class="capture-title">Ricevi il tuo QR code personale</div>
+    <div class="capture-sub">Inserisci la tua email per attivare i 7 giorni gratuiti.<br>Nessuna carta richiesta.</div>
+    <div class="capture-row">
+      <input type="email" id="email-input" placeholder="la-tua@email.it" autocomplete="email" inputmode="email">
+      <button class="btn-qr" id="btn-qr" onclick="submitEmail()">
+        <span id="btn-qr-label">Attiva →</span>
+      </button>
+    </div>
+    <div class="capture-error" id="capture-error"></div>
+    <div class="capture-privacy">Niente spam. Solo il tuo messaggio quotidiano.</div>
+  </div>
+
+  <!-- QR RESULT (hidden until response) -->
+  <div class="qr-box gone" id="qr-box">
+    <div class="qr-label">Il tuo QR code personale</div>
+    <div class="qr-img-wrap">
+      <img id="qr-img" src="" alt="QR Code" width="180" height="180">
+    </div>
+    <div class="qr-note">Salvalo sul telefono. Scansionalo ogni giorno per il tuo messaggio.</div>
+    <div class="qr-email-note">Abbiamo inviato il link anche alla tua email.</div>
+  </div>
+
+  <button class="btn-restart" onclick="restart()">Ricomincia da capo</button>
+</div>
+
+<div class="sig">Scacchi Mentali · La vita è una partita.</div>
+
+<script>
+const Q=[
+  {bl:"Decisioni",tx:"Devi scegliere tra due strade. Una sicura ma limitante. L'altra rischiosa ma autentica. Cosa fai?",
+   opts:[
+    {k:'A',t:"Scegli quella che rispetta i tuoi valori, anche a costo di perdere"},
+    {k:'B',t:"Valuti quale delle due ti dà più possibilità di manovra"},
+    {k:'C',t:"Cerchi una terza via che minimizzi il rischio senza bloccarti"},
+    {k:'D',t:"Vedi un angolo che nessuno ha considerato e lo percorri"},
+    {k:'E',t:"Salti entrambe e inventi una mossa che nessuno si aspettava"},
+    {k:'F',t:"Scegli quella che ti permette di continuare ad avanzare, un passo alla volta"}
+  ]},
+  {bl:"Decisioni",tx:"Una persona che rispetti ti dice che stai sbagliando. Come reagisci?",
+   opts:[
+    {k:'A',t:"Ascolti, ma se sei convinto dei tuoi principi non cambi rotta"},
+    {k:'B',t:"Valuti il feedback come informazione strategica da integrare"},
+    {k:'C',t:"Analizzi i fatti prima di decidere se ha ragione"},
+    {k:'D',t:"Ti chiedi se la critica rivela qualcosa che non avevi visto"},
+    {k:'E',t:"Probabilmente l'avevi già previsto. E hai già cambiato strada."},
+    {k:'F',t:"Prendi nota, ci pensi, e aggiusti il tiro gradualmente"}
+  ]},
+  {bl:"Decisioni",tx:"Sei in ritardo su un obiettivo importante. Qual è la tua risposta?",
+   opts:[
+    {k:'A',t:"Vai avanti comunque. La direzione conta più della velocità."},
+    {k:'B',t:"Riorganizzi le priorità e trovi un modo per recuperare"},
+    {k:'C',t:"Analizzi dove hai perso tempo e costruisci un piano più solido"},
+    {k:'D',t:"Cerchi una scorciatoia non convenzionale che nessuno aveva visto"},
+    {k:'E',t:"Ti muovi lateralmente. Magari l'obiettivo stesso va ridefinito."},
+    {k:'F',t:"Accetti il ritardo, ma non ti fermi. Un passo alla volta."}
+  ]},
+  {bl:"Decisioni",tx:"Devi decidere in pochi minuti, senza dati sufficienti. Cosa fai?",
+   opts:[
+    {k:'A',t:"Ti fidi dei tuoi principi. Conosci già la risposta giusta."},
+    {k:'B',t:"Valuti rapidamente le conseguenze di ogni opzione e scegli"},
+    {k:'C',t:"Cerchi almeno un punto fermo su cui basarti prima di decidere"},
+    {k:'D',t:"Cerchi il pattern. Cosa ti dice la situazione tra le righe?"},
+    {k:'E',t:"Salti. Poi vedi dove atterri. L'adattamento è la tua forza."},
+    {k:'F',t:"Scegli la mossa più piccola e sicura per mantenere il movimento"}
+  ]},
+  {bl:"Relazioni",tx:"Sei in un gruppo che si muove nella direzione sbagliata. Cosa fai?",
+   opts:[
+    {k:'A',t:"Prendi posizione. Anche da solo, anche a costo di essere impopolare."},
+    {k:'B',t:"Lavori dall'interno per orientare il gruppo nella direzione giusta"},
+    {k:'C',t:"Proponi un processo chiaro per rivalutare la rotta"},
+    {k:'D',t:"Mostri un'alternativa che nessuno aveva considerato"},
+    {k:'E',t:"Ti muovi fuori dal gruppo e tracci una tua rotta"},
+    {k:'F',t:"Rimani, osservi, e cerchi il momento giusto per influenzare"}
+  ]},
+  {bl:"Relazioni",tx:"Quando le persone pensano a te, cosa vorresti che dicessero?",
+   opts:[
+    {k:'A',t:"\"È qualcuno su cui puoi contare. Non tradisce mai i suoi valori.\""},
+    {k:'B',t:"\"È brillante. Sa fare cose che gli altri non riescono nemmeno a immaginare.\""},
+    {k:'C',t:"\"Quando c'è lui, le cose si fanno. E durano.\""},
+    {k:'D',t:"\"Vede il mondo in modo diverso. Ti cambia la prospettiva.\""},
+    {k:'E',t:"\"Non sai mai cosa aspettarti. Ma ti stupisce sempre.\""},
+    {k:'F',t:"\"Ha fatto un percorso incredibile. È cambiato davvero.\""}
+  ]},
+  {bl:"Relazioni",tx:"Di fronte a un conflitto difficile, qual è il tuo istinto?",
+   opts:[
+    {k:'A',t:"Stabilisci cosa è giusto e non scendi a compromessi"},
+    {k:'B',t:"Cerchi la mossa che trasforma il conflitto in vantaggio"},
+    {k:'C',t:"Cerchi un accordo strutturato che regga nel tempo"},
+    {k:'D',t:"Sposti la conversazione su un piano diverso, più produttivo"},
+    {k:'E',t:"Esci dal conflitto con una mossa che nessuno si aspettava"},
+    {k:'F',t:"Assorbi, resisti, e aspetti che il tempo lavori per te"}
+  ]},
+  {bl:"Relazioni",tx:"Qual è la cosa che ti svuota di più?",
+   opts:[
+    {k:'A',t:"Quando devi tradire i tuoi principi per ottenere qualcosa"},
+    {k:'B',t:"Quando il tuo talento non viene visto né riconosciuto"},
+    {k:'C',t:"Quando tutto ciò che hai costruito viene destabilizzato senza senso"},
+    {k:'D',t:"Quando sei costretto a muoverti in modo lineare, senza spazio creativo"},
+    {k:'E',t:"Quando vieni forzato dentro schemi che non ti appartengono"},
+    {k:'F',t:"Quando hai la sensazione di non stare avanzando, di essere fermo"}
+  ]},
+  {bl:"Crescita",tx:"Qual è il tuo rapporto con il cambiamento?",
+   opts:[
+    {k:'A',t:"L'accetti se non compromette ciò in cui credi"},
+    {k:'B',t:"Lo cerchi. La staticità ti soffoca."},
+    {k:'C',t:"Lo gestisci meglio quando puoi prepararlo e strutturarlo"},
+    {k:'D',t:"È il tuo habitat naturale. Il cambiamento apre nuovi angoli."},
+    {k:'E',t:"Sei già cambiato prima che gli altri se ne accorgano"},
+    {k:'F',t:"Lo vivi come trasformazione. Ogni cambiamento ti rende diverso."}
+  ]},
+  {bl:"Crescita",tx:"Cosa ti dà più soddisfazione?",
+   opts:[
+    {k:'A',t:"Sapere che hai agito in modo coerente con chi sei"},
+    {k:'B',t:"Ottenere risultati in aree diverse dimostrando la tua capacità"},
+    {k:'C',t:"Vedere qualcosa che hai costruito resistere al tempo"},
+    {k:'D',t:"Aver visto qualcosa prima degli altri e aver avuto ragione"},
+    {k:'E',t:"Aver risolto un problema con una mossa che nessuno aveva previsto"},
+    {k:'F',t:"Guardare indietro e vedere quanto sei cambiato"}
+  ]},
+  {bl:"Crescita",tx:"Come descriveresti la tua relazione con le regole?",
+   opts:[
+    {k:'A',t:"Le rispetti se sono giuste. Le sfidi se tradiscono i valori."},
+    {k:'B',t:"Le usi quando ti servono, le aggirisci quando ti limitano"},
+    {k:'C',t:"Preferisci crearle tu. Una buona struttura libera più che vincolare."},
+    {k:'D',t:"Le vedi come il perimetro dentro cui trovare angoli inesplorati"},
+    {k:'E',t:"Spesso non le vedi proprio. Stai già altrove."},
+    {k:'F',t:"Le segui finché non capisci perché. Poi decidi tu."}
+  ]},
+  {bl:"Crescita",tx:"Immagina la tua versione migliore tra dieci anni. Cosa sta facendo?",
+   opts:[
+    {k:'A',t:"Guida qualcosa di importante, con integrità assoluta"},
+    {k:'B',t:"Domina più ambiti con una padronanza che altri faticano a seguire"},
+    {k:'C',t:"Ha costruito qualcosa di solido, di cui altri si fidano"},
+    {k:'D',t:"Ha cambiato il modo in cui le persone vedono qualcosa"},
+    {k:'E',t:"Ha percorso un cammino unico, incomparabile, tutto suo"},
+    {k:'F',t:"È diventato qualcuno di cui è fiero, partendo da zero"}
+  ]}
+];
+
+const ARCH={
+  re:{nome:"Il Re",sym:"♔",col:"#FFD700",
+    desc:"Porti tutto da solo, e lo fai con dignità. La tua forza è la coerenza: non tradisci i tuoi valori nemmeno quando costa caro. Il problema è che a volte la corona pesa così tanto che dimentichi di chiedere aiuto.",
+    ferita:"Ferita: porti tutto sulle spalle.",
+    desiderio:"Desiderio: essere guidato, non solo guidare.",
+    quote:"Non hai bisogno di vincere ogni partita. Hai bisogno di giocarla come solo tu sai."},
+  regina:{nome:"La Regina",sym:"♕",col:"#8A2BE2",
+    desc:"Sei il pezzo più potente sulla scacchiera, eppure spesso non sei riconosciuto. La tua versatilità ti permette di muoverti ovunque, in ogni direzione. Il rischio è disperdere questa energia senza mai occupare il centro.",
+    ferita:"Ferita: non riconosciuta per quello che vale.",
+    desiderio:"Desiderio: essere vista, finalmente.",
+    quote:"Il tuo talento non si dimostra cercando approvazione. Si dimostra muovendosi."},
+  torre:{nome:"La Torre",sym:"♖",col:"#32CD32",
+    desc:"Costruisci cose che durano. Sei il fondamento su cui gli altri si appoggiano senza nemmeno rendersene conto. La tua sfida è imparare che la solidità vera sa anche cedere, senza crollare.",
+    ferita:"Ferita: paura che il cambiamento distrugga ciò che hai costruito.",
+    desiderio:"Desiderio: solidità senza prigioni.",
+    quote:"Le fondamenta non si vedono. Ma senza di te, tutto crolla."},
+  alfiere:{nome:"L'Alfiere",sym:"♗",col:"#FF4500",
+    desc:"Vedi cose che gli altri non vedono. Ti muovi in diagonale — mai sul percorso più ovvio — e questo ti porta dove nessuno si aspetta. Il pericolo è restare ai margini del gioco, a guardare, senza mai entrare al centro.",
+    ferita:"Ferita: sempre laterale, mai al centro.",
+    desiderio:"Desiderio: trovare il proprio angolo di impatto.",
+    quote:"Il tuo valore non è nel muoverti dritto. È nel vedere prima degli altri dove porta la diagonale."},
+  cavallo:{nome:"Il Cavallo",sym:"♞",col:"#00CED1",
+    desc:"Sei l'unico pezzo che salta. Non segui le regole del percorso — le ignori. Questo ti rende incomprensibile agli altri, e a volte a te stesso. Ma quando trovi il tuo spazio, nessuno può prevedere la tua prossima mossa.",
+    ferita:"Ferita: incompreso, sempre fuori posto.",
+    desiderio:"Desiderio: un mondo che valorizzi la sua unicità.",
+    quote:"Non sei rotto. Sei semplicemente un pezzo che il gioco standard non sa come usare."},
+  pedone:{nome:"Il Pedone",sym:"♙",col:"#DC143C",
+    desc:"Parti da zero, e lo sai. Ma ogni mossa ti avvicina. Ogni passo è una scelta, non un caso. Il Pedone è l'unico pezzo che può diventare qualsiasi altro — ed è anche il più sottovalutato. Fino alla fine.",
+    ferita:"Ferita: la sensazione di partire sempre da zero.",
+    desiderio:"Desiderio: diventare qualcosa di più.",
+    quote:"Non sei indietro. Sei in movimento. E la scacchiera è lunga."}
+};
+const KEYS=['re','regina','torre','alfiere','cavallo','pedone'];
+
+let cur=0,sc=[0,0,0,0,0,0],busy=false;
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.classList.add('gone')});
+  const el=document.getElementById(id);
+  el.classList.remove('gone');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('active')));
+}
+
+function startQuiz(){show('s-quiz');render()}
+
+function render(){
+  const q=Q[cur];
+  document.getElementById('qc').textContent=`Domanda ${cur+1} di ${Q.length}`;
+  document.getElementById('qb').textContent=q.bl;
+  document.getElementById('pf').style.width=`${(cur/Q.length)*100}%`;
+
+  const qw=document.getElementById('qw');
+  const og=document.getElementById('og');
+  qw.classList.remove('slide-in','slide-out');
+  og.classList.remove('slide-in','slide-out');
+  void qw.offsetWidth;
+  qw.classList.add('slide-in');
+  og.classList.add('slide-in');
+
+  document.getElementById('qt').textContent=q.tx;
+  og.innerHTML='';
+  q.opts.forEach((o,i)=>{
+    const c=document.createElement('div');
+    c.className='opt';
+    c.innerHTML=`<div class="opt-k">${o.k}</div><div class="opt-t">${o.t}</div>`;
+    c.onclick=()=>pick(i,c);
+    og.appendChild(c);
+  });
+}
+
+function pick(idx,card){
+  if(busy)return;
+  busy=true;
+  document.querySelectorAll('.opt').forEach(c=>c.classList.remove('sel'));
+  card.classList.add('sel');
+  sc[idx]++;
+  setTimeout(()=>{
+    const qw=document.getElementById('qw'),og=document.getElementById('og');
+    qw.classList.add('slide-out');og.classList.add('slide-out');
+    setTimeout(()=>{
+      cur++;
+      if(cur>=Q.length){result();}
+      else{render();busy=false;}
+    },280);
+  },380);
+}
+
+function result(){
+  show('s-calc');
+  document.getElementById('pf').style.width='100%';
+  setTimeout(()=>{
+    const max=Math.max(...sc),wi=sc.indexOf(max),key=KEYS[wi],a=ARCH[key];
+    currentArchetipo=key;
+    document.getElementById('rsym').textContent=a.sym;
+    document.getElementById('rsym').style.color=a.col;
+    document.getElementById('rname').textContent=a.nome;
+    document.getElementById('rname').style.color=a.col;
+    document.getElementById('rrule').style.background=a.col;
+    document.getElementById('rdesc').textContent=a.desc;
+    document.getElementById('rferita').textContent=a.ferita;
+    document.getElementById('rdesiderio').textContent=a.desiderio;
+    document.getElementById('rdesiderio').style.color=a.col;
+    document.getElementById('rquote').style.borderLeftColor=a.col;
+    document.getElementById('rqtext').textContent=`"${a.quote}"`;
+    document.getElementById('capture-box').style.borderColor=a.col;
+    document.getElementById('btn-qr').style.background=a.col;
+    show('s-res');
+    busy=false;
+  },2400);
+}
+
+function restart(){cur=0;sc=[0,0,0,0,0,0];busy=false;document.getElementById('pf').style.width='0%';show('s-intro')}
+
+/* ── GAS INTEGRATION ── */
+const GAS_URL='https://script.google.com/macros/s/AKfycbwfGTUvGNzja6v43ppiibouCJdmREKGkvwgPjTcmY63gxG_DycAM6PyAjIdhzJiCAQB/exec';
+
+let currentArchetipo='';
+
+async function submitEmail(){
+  const email=document.getElementById('email-input').value.trim();
+  const errEl=document.getElementById('capture-error');
+  const btn=document.getElementById('btn-qr');
+  const label=document.getElementById('btn-qr-label');
+
+  errEl.textContent='';
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    errEl.textContent='Inserisci un indirizzo email valido.';
+    return;
+  }
+
+  btn.disabled=true;
+  label.textContent='…';
+
+  try{
+    const url=`${GAS_URL}?action=register&email=${encodeURIComponent(email)}&archetipo=${encodeURIComponent(currentArchetipo)}`;
+    const res=await fetch(url);
+    const data=await res.json();
+
+    if(data.error){
+      errEl.textContent=data.error;
+      btn.disabled=false;label.textContent='Inizia il trial';
+      return;
+    }
+
+    // Mostra QR
+    const a=ARCH[currentArchetipo];
+    const qrBox=document.getElementById('qr-box');
+    const qrImg=document.getElementById('qr-img');
+    qrImg.src=`https://api.qrserver.com/v1/create-qr-code/?size=360x360&format=png&margin=8&data=${encodeURIComponent(data.privateUrl)}`;
+    qrBox.style.borderColor=a.col;
+    qrBox.classList.remove('gone');
+
+    // Nasconde il form, mostra restart
+    document.getElementById('capture-box').style.display='none';
+    document.querySelector('.btn-restart').classList.add('visible');
+
+  }catch(err){
+    errEl.textContent='Errore di connessione. Riprova tra poco.';
+    btn.disabled=false;label.textContent='Inizia il trial';
+  }
+}
+</script>
+</body>
+</html>
