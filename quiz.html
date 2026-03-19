@@ -156,6 +156,38 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .res-quote-label{font-size:.62rem;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-bottom:.5rem}
 .res-quote-text{font-family:'Playfair Display',serif;font-style:italic;font-size:.95rem;line-height:1.65;color:var(--text-primary)}
 
+/* ── LOCKED CONTENT ── */
+.res-locked{
+  width:100%;max-width:500px;
+  position:relative;
+  overflow:hidden;
+  margin-bottom:1.2rem;
+  border-radius:4px
+}
+.res-locked::after{
+  content:'';
+  position:absolute;
+  bottom:0;left:0;right:0;
+  height:100%;
+  background:linear-gradient(to bottom,transparent 0%,var(--bg) 55%);
+  pointer-events:none;
+  transition:opacity .6s ease
+}
+.res-locked.unlocked::after{opacity:0}
+.res-locked .res-desc,
+.res-locked .res-tags,
+.res-locked .res-quote{
+  filter:blur(4px);
+  transition:filter .7s ease, opacity .7s ease;
+  opacity:.4
+}
+.res-locked.unlocked .res-desc,
+.res-locked.unlocked .res-tags,
+.res-locked.unlocked .res-quote{
+  filter:blur(0);
+  opacity:1
+}
+
 .capture-privacy{font-size:.7rem;color:var(--text-muted);text-align:center;margin-top:.7rem}
 
 .btn-restart{
@@ -278,28 +310,32 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   <div class="res-label">Il tuo archetipo</div>
   <div class="res-name" id="rname"></div>
   <div class="res-rule" id="rrule"></div>
-  <div class="res-desc" id="rdesc"></div>
-  <div class="res-tags">
-    <div class="res-ferita" id="rferita"></div>
-    <div class="res-desiderio" id="rdesiderio"></div>
-  </div>
-  <div class="res-quote" id="rquote">
-    <div class="res-quote-label">Kairos dice</div>
-    <div class="res-quote-text" id="rqtext"></div>
+
+  <!-- CONTENUTO BLOCCATO — visibile solo dopo email -->
+  <div class="res-locked" id="res-locked">
+    <div class="res-desc" id="rdesc"></div>
+    <div class="res-tags">
+      <div class="res-ferita" id="rferita"></div>
+      <div class="res-desiderio" id="rdesiderio"></div>
+    </div>
+    <div class="res-quote" id="rquote">
+      <div class="res-quote-label">Kairos dice</div>
+      <div class="res-quote-text" id="rqtext"></div>
+    </div>
   </div>
 
   <!-- EMAIL CAPTURE — obbligatorio per ottenere il QR -->
   <div class="capture-box" id="capture-box">
-    <div class="capture-title">Ricevi il tuo QR code personale</div>
-    <div class="capture-sub">Inserisci la tua email per attivare i 7 giorni gratuiti.<br>Nessuna carta richiesta.</div>
+    <div class="capture-title" id="capture-title">La tua ferita. Il tuo percorso.</div>
+    <div class="capture-sub">Inserisci la tua email per sbloccare il profilo completo<br>e attivare i 7 giorni gratuiti di messaggi quotidiani.</div>
     <div class="capture-row">
       <input type="email" id="email-input" placeholder="la-tua@email.it" autocomplete="email" inputmode="email">
       <button class="btn-qr" id="btn-qr" onclick="submitEmail()">
-        <span id="btn-qr-label">Attiva →</span>
+        <span id="btn-qr-label">Sblocca →</span>
       </button>
     </div>
     <div class="capture-error" id="capture-error"></div>
-    <div class="capture-privacy">Niente spam. Solo il tuo messaggio quotidiano.</div>
+    <div class="capture-privacy">Nessuna carta richiesta. 7 giorni gratuiti.</div>
   </div>
 
   <!-- QR RESULT (hidden until response) -->
@@ -429,6 +465,9 @@ const Q=[
   ]}
 ];
 
+/* ═══════════════════════════════════════════════════════
+   COLORI ARCHETIPI — da chess-whispers-arcane/css/style.css
+   ═══════════════════════════════════════════════════════ */
 const ARCH={
   re:{nome:"Il Re",sym:"♔",col:"#FFD700",
     desc:"Porti tutto da solo, e lo fai con dignità. La tua forza è la coerenza: non tradisci i tuoi valori nemmeno quando costa caro. Il problema è che a volte la corona pesa così tanto che dimentichi di chiedere aiuto.",
@@ -535,6 +574,7 @@ function result(){
     document.getElementById('rqtext').textContent=`"${a.quote}"`;
     document.getElementById('capture-box').style.borderColor=a.col;
     document.getElementById('btn-qr').style.background=a.col;
+    document.getElementById('capture-title').textContent=`La ferita de ${a.nome}. Il tuo percorso.`;
     show('s-res');
     busy=false;
   },2400);
@@ -543,6 +583,7 @@ function result(){
 function restart(){cur=0;sc=[0,0,0,0,0,0];busy=false;document.getElementById('pf').style.width='0%';show('s-intro')}
 
 /* ── GAS INTEGRATION ── */
+// TODO: sostituisci con l'URL della tua Web App GAS dopo il deploy
 const GAS_URL='https://script.google.com/macros/s/AKfycbwfGTUvGNzja6v43ppiibouCJdmREKGkvwgPjTcmY63gxG_DycAM6PyAjIdhzJiCAQB/exec';
 
 let currentArchetipo='';
@@ -573,13 +614,16 @@ async function submitEmail(){
       return;
     }
 
-    // Mostra QR
+    // Mostra QR + sblocca contenuto
     const a=ARCH[currentArchetipo];
     const qrBox=document.getElementById('qr-box');
     const qrImg=document.getElementById('qr-img');
     qrImg.src=`https://api.qrserver.com/v1/create-qr-code/?size=360x360&format=png&margin=8&data=${encodeURIComponent(data.privateUrl)}`;
     qrBox.style.borderColor=a.col;
     qrBox.classList.remove('gone');
+
+    // Sblocca il contenuto bloccato
+    document.getElementById('res-locked').classList.add('unlocked');
 
     // Nasconde il form, mostra restart
     document.getElementById('capture-box').style.display='none';
