@@ -252,8 +252,11 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   border-radius:4px;
   padding:24px 20px;
   margin-bottom:1.2rem;
-  text-align:center
+  text-align:center;
+  filter:blur(8px);
+  transition:filter .7s ease
 }
+.qr-box.revealed{filter:blur(0)}
 .qr-label{font-size:.65rem;letter-spacing:4px;text-transform:uppercase;color:var(--text-muted);margin-bottom:1rem}
 .qr-img-wrap{
   display:inline-flex;
@@ -621,6 +624,8 @@ async function submitEmail(){
     qrImg.src=`https://api.qrserver.com/v1/create-qr-code/?size=360x360&format=png&margin=8&data=${encodeURIComponent(data.privateUrl)}`;
     qrBox.style.borderColor=a.col;
     qrBox.classList.remove('gone');
+    qrImg.onload=()=>qrBox.classList.add('revealed');
+    qrImg.onerror=()=>qrBox.classList.add('revealed');
 
     // Sblocca il contenuto bloccato
     document.getElementById('res-locked').classList.add('unlocked');
