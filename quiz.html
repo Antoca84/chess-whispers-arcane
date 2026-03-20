@@ -190,6 +190,44 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 
 .capture-privacy{font-size:.7rem;color:var(--text-muted);text-align:center;margin-top:.7rem}
 
+/* ── FOUNDER BANNER ── */
+.founder-banner{
+  border-radius:3px;
+  padding:10px 14px;
+  margin-bottom:14px;
+  background:var(--gold-dim);
+  border:1px solid var(--gold);
+  text-align:center
+}
+.founder-badge{
+  font-size:.6rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:3px
+}
+.founder-text{font-size:.75rem;color:var(--text-secondary);line-height:1.5}
+
+/* ── PLAN SELECTOR ── */
+.plan-row{display:flex;gap:6px;margin-top:1rem}
+.plan-opt{flex:1;cursor:pointer}
+.plan-opt input{display:none}
+.plan-card{
+  border:1px solid var(--border);border-radius:4px;
+  padding:9px 6px;text-align:center;
+  transition:border-color .15s,background .15s;
+  background:var(--surface);height:100%
+}
+.plan-opt input:checked ~ .plan-card{border-color:var(--gold);background:var(--gold-dim)}
+.plan-card.plan-founder{border-color:rgba(201,168,76,0.35)}
+.plan-opt input:checked ~ .plan-card.plan-founder{border-color:var(--gold);background:var(--gold-dim)}
+.plan-badge{
+  font-size:.55rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  margin-bottom:3px;color:var(--text-muted)
+}
+.plan-badge-founder{color:var(--gold)}
+.plan-name{font-size:.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-bottom:2px}
+.plan-price{font-size:.9rem;font-weight:700;color:var(--text-primary);line-height:1.2}
+.plan-price span{font-size:.62rem;font-weight:400;color:var(--text-muted)}
+.plan-trial{font-size:.6rem;color:var(--text-muted);margin-top:2px;line-height:1.4}
+
 .btn-restart{
   background:transparent;color:var(--text-muted);border:1px solid var(--text-muted);
   padding:14px 28px;min-height:50px;
@@ -329,8 +367,13 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 
   <!-- EMAIL CAPTURE — obbligatorio per ottenere il QR -->
   <div class="capture-box" id="capture-box">
+    <!-- Banner fondatori — rimuovi dopo 30 giorni -->
+    <div class="founder-banner" id="founder-banner">
+      <div class="founder-badge">Offerta Fondatori</div>
+      <div class="founder-text">Entra adesso e blocca il prezzo per sempre.<br>Solo per i primi 30 giorni.</div>
+    </div>
     <div class="capture-title" id="capture-title">La tua ferita. Il tuo percorso.</div>
-    <div class="capture-sub">Inserisci la tua email per sbloccare il profilo completo<br>e attivare i 7 giorni gratuiti di messaggi quotidiani.</div>
+    <div class="capture-sub">Inserisci la tua email per sbloccare il profilo completo<br>e attivare il trial gratuito.</div>
     <div class="capture-row">
       <input type="email" id="email-input" placeholder="la-tua@email.it" autocomplete="email" inputmode="email">
       <button class="btn-qr" id="btn-qr" onclick="submitEmail()">
@@ -338,7 +381,35 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       </button>
     </div>
     <div class="capture-error" id="capture-error"></div>
-    <div class="capture-privacy">Nessuna carta richiesta. 7 giorni gratuiti.</div>
+    <div class="plan-row">
+      <label class="plan-opt">
+        <input type="radio" name="plan" value="monthly" checked>
+        <div class="plan-card">
+          <div class="plan-name">Mensile</div>
+          <div class="plan-price">€7,00<span>/mese</span></div>
+          <div class="plan-trial">7 giorni gratuiti</div>
+        </div>
+      </label>
+      <label class="plan-opt">
+        <input type="radio" name="plan" value="annual">
+        <div class="plan-card" id="plan-annual-card">
+          <div class="plan-badge" id="plan-annual-badge">Più scelto</div>
+          <div class="plan-name">Annuale</div>
+          <div class="plan-price">€49,00<span>/anno</span></div>
+          <div class="plan-trial">14 giorni gratuiti · -42%</div>
+        </div>
+      </label>
+      <label class="plan-opt">
+        <input type="radio" name="plan" value="founder">
+        <div class="plan-card plan-founder" id="plan-founder-card">
+          <div class="plan-badge plan-badge-founder" id="plan-founder-badge">Fondatori</div>
+          <div class="plan-name">Per sempre</div>
+          <div class="plan-price">€39,00<span>/anno</span></div>
+          <div class="plan-trial">14 giorni gratuiti · bloccato</div>
+        </div>
+      </label>
+    </div>
+    <div class="capture-privacy">Nessuna carta richiesta durante il trial.</div>
   </div>
 
   <!-- QR RESULT (hidden until response) -->
@@ -578,6 +649,14 @@ function result(){
     document.getElementById('capture-box').style.borderColor=a.col;
     document.getElementById('btn-qr').style.background=a.col;
     document.getElementById('capture-title').textContent=`La ferita de ${a.nome}. Il tuo percorso.`;
+    const badge=document.getElementById('plan-annual-badge');
+    if(badge){badge.style.color=a.col}
+    const annualCard=document.getElementById('plan-annual-card');
+    if(annualCard){annualCard.style.borderColor=a.col}
+    const founderBanner=document.getElementById('founder-banner');
+    if(founderBanner){founderBanner.style.borderColor=a.col;founderBanner.style.background=`rgba(${hexToRgb(a.col)},0.08)`}
+    const founderBadge=document.getElementById('plan-founder-badge');
+    if(founderBadge){founderBadge.style.color=a.col}
     show('s-res');
     busy=false;
   },2400);
@@ -587,7 +666,14 @@ function restart(){cur=0;sc=[0,0,0,0,0,0];busy=false;document.getElementById('pf
 
 /* ── GAS INTEGRATION ── */
 // TODO: sostituisci con l'URL della tua Web App GAS dopo il deploy
-const GAS_URL='https://script.google.com/macros/s/AKfycbwfGTUvGNzja6v43ppiibouCJdmREKGkvwgPjTcmY63gxG_DycAM6PyAjIdhzJiCAQB/exec';
+const GAS_URL='https://script.google.com/macros/s/SOSTITUISCI_CON_IL_TUO_URL/exec';
+
+function hexToRgb(hex){
+  const r=parseInt(hex.slice(1,3),16);
+  const g=parseInt(hex.slice(3,5),16);
+  const b=parseInt(hex.slice(5,7),16);
+  return `${r},${g},${b}`;
+}
 
 let currentArchetipo='';
 
@@ -596,6 +682,8 @@ async function submitEmail(){
   const errEl=document.getElementById('capture-error');
   const btn=document.getElementById('btn-qr');
   const label=document.getElementById('btn-qr-label');
+  const planInput=document.querySelector('input[name="plan"]:checked');
+  const plan=planInput ? planInput.value : 'monthly';
 
   errEl.textContent='';
   if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
@@ -607,17 +695,16 @@ async function submitEmail(){
   label.textContent='…';
 
   try{
-    const url=`${GAS_URL}?action=register&email=${encodeURIComponent(email)}&archetipo=${encodeURIComponent(currentArchetipo)}`;
+    const url=`${GAS_URL}?action=register&email=${encodeURIComponent(email)}&archetipo=${encodeURIComponent(currentArchetipo)}&plan=${encodeURIComponent(plan)}`;
     const res=await fetch(url);
     const data=await res.json();
 
     if(data.error){
       errEl.textContent=data.error;
-      btn.disabled=false;label.textContent='Inizia il trial';
+      btn.disabled=false;label.textContent='Sblocca →';
       return;
     }
 
-    // Mostra QR + sblocca contenuto
     const a=ARCH[currentArchetipo];
     const qrBox=document.getElementById('qr-box');
     const qrImg=document.getElementById('qr-img');
@@ -627,16 +714,13 @@ async function submitEmail(){
     qrImg.onload=()=>qrBox.classList.add('revealed');
     qrImg.onerror=()=>qrBox.classList.add('revealed');
 
-    // Sblocca il contenuto bloccato
     document.getElementById('res-locked').classList.add('unlocked');
-
-    // Nasconde il form, mostra restart
     document.getElementById('capture-box').style.display='none';
     document.querySelector('.btn-restart').classList.add('visible');
 
   }catch(err){
     errEl.textContent='Errore di connessione. Riprova tra poco.';
-    btn.disabled=false;label.textContent='Inizia il trial';
+    btn.disabled=false;label.textContent='Sblocca →';
   }
 }
 </script>
