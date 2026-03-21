@@ -3,27 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>L'Alfiere – Messaggio Quotidiano | Scacchi Mentali</title>
-  <meta name="description" content="Messaggio quotidiano personalizzato per l'archetipo dell'Alfiere: visione strategica e creatività.">
-  <link rel="canonical" href="https://scacchimentali.it/archetipi/alfiere/">
-  <meta property="og:locale" content="it_IT">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Scacchi Mentali">
-  <meta property="og:title" content="L'Alfiere - Messaggio Quotidiano | Scacchi Mentali">
-  <meta property="og:description" content="Messaggio quotidiano personalizzato per l'archetipo dell'Alfiere: visione strategica e creatività.">
-  <meta property="og:url" content="https://scacchimentali.it/archetipi/alfiere/">
-  <meta property="og:image" content="https://scacchimentali.it/images/logo.png">
-  <meta property="og:image:alt" content="Logo di Scacchi Mentali">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="L'Alfiere - Messaggio Quotidiano | Scacchi Mentali">
-  <meta name="twitter:description" content="Messaggio quotidiano personalizzato per l'archetipo dell'Alfiere: visione strategica e creatività.">
-  <meta name="twitter:image" content="https://scacchimentali.it/images/logo.png">
-
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><text y='18' font-size='18'>♗</text></svg>">
+  <title id="page-title">Messaggio Quotidiano | Scacchi Mentali</title>
+  <meta name="description" id="page-desc" content="Il tuo messaggio quotidiano personalizzato di Scacchi Mentali.">
+  <meta name="robots" content="noindex, nofollow">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-XE6BJT3222"></script>
@@ -35,13 +21,10 @@
   </script>
 
   <style>
-    /* ============================================
-       CSS VARIABLES — ALFIERE
-       ============================================ */
     :root {
-      --arch-color:      #FF4500;
-      --arch-color-dim:  rgba(255,69,0,0.2);
-      --arch-color-glow: rgba(255,69,0,0.4);
+      --arch-color:      #FFD700;
+      --arch-color-dim:  rgba(255,215,0,0.15);
+      --arch-color-glow: rgba(255,215,0,0.35);
       --bg:      #0d0d0d;
       --surface: rgba(28,28,28,0.85);
       --text-1:  #f8f9fa;
@@ -49,16 +32,11 @@
       --text-3:  #6b7280;
     }
 
-    /* ============================================
-       RESET & BASE
-       ============================================ */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Montserrat', sans-serif;
       background-color: var(--bg);
-      background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><path d='M-10 10 L10 -10 M0 40 L40 0 M30 50 L50 30' stroke='%23FF4500' stroke-width='0.5' stroke-opacity='0.03' fill='none'/></svg>");
-      background-repeat: repeat;
       color: var(--text-1);
       min-height: 100vh;
       overflow-x: hidden;
@@ -66,394 +44,135 @@
 
     a { text-decoration: none; color: inherit; }
 
-    .container {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
+    .container { max-width: 680px; margin: 0 auto; padding: 0 20px; }
 
-    /* ============================================
-       PAGE CONTENT
-       ============================================ */
-    #page-content {
-      opacity: 1;
-    }
-
+    /* Loading */
+    #page-content { opacity: 1; }
     body.loading-active .section-message,
+    body.loading-active .section-paywall,
     body.loading-active .section-sub,
     body.loading-active .site-footer {
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.35s ease;
+      opacity: 0; pointer-events: none; transition: opacity 0.35s ease;
     }
-
-    /* Mobile fallback: restore old full-cover loading experience */
     @media (max-width: 768px) {
-      body.loading-active #page-content {
-        opacity: 0;
-        transition: opacity 0.4s ease;
-      }
+      body.loading-active #page-content { opacity: 0; transition: opacity 0.4s ease; }
       body.loading-active .section-message,
+      body.loading-active .section-paywall,
       body.loading-active .section-sub,
-      body.loading-active .site-footer {
-        opacity: 1;
-        pointer-events: auto;
-      }
-      #loading-canvas-wrapper {
-        z-index: 9999 !important;
-        background: #0d0d0d !important;
-      }
-      #loading-canvas {
-        opacity: 1 !important;
-      }
+      body.loading-active .site-footer { opacity: 1; pointer-events: auto; }
+      #loading-canvas-wrapper { z-index: 9999 !important; background: #0d0d0d !important; }
+      #loading-canvas { opacity: 1 !important; }
     }
 
-    /* ============================================
-       PARTICLES (generati via JS)
-       ============================================ */
-    .particle {
-      position: fixed;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 0;
-    }
-
+    /* Particles */
+    .particle { position: fixed; border-radius: 50%; pointer-events: none; z-index: 0; }
     @keyframes particleFloat {
       0%, 100% { transform: translateY(0);    opacity: var(--p-opacity); }
       50%       { transform: translateY(-30px); opacity: calc(var(--p-opacity) * 0.5); }
     }
 
-    /* ============================================
-       ACCESS NOTICE BANNER (iniettato da JS)
-       ============================================ */
+    /* Banner */
     .access-notice {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 1000;
-      padding: 12px 20px;
-      text-align: center;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.78rem;
-      font-weight: 600;
-      letter-spacing: 0.5px;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      padding: 12px 20px; text-align: center;
+      font-family: 'Montserrat', sans-serif; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.5px;
     }
     .access-notice.private {
-      background: rgba(255,69,0,0.15);
-      color: var(--arch-color);
-      border-bottom: 1px solid rgba(255,69,0,0.3);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      background: var(--arch-color-dim); color: var(--arch-color);
+      border-bottom: 1px solid var(--arch-color-glow);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     }
     .access-notice.public {
-      background: rgba(30,30,30,0.9);
-      color: var(--text-3);
+      background: rgba(30,30,30,0.9); color: var(--text-3);
       border-bottom: 1px solid rgba(255,255,255,0.06);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     }
 
-    /* ============================================
-       HEADER
-       ============================================ */
+    /* Header */
     .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      padding: 16px 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(13,13,13,0.9);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255,69,0,0.08);
+      position: sticky; top: 0; z-index: 100;
+      padding: 16px 20px; display: flex; align-items: center; gap: 10px;
+      background: rgba(13,13,13,0.9); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--arch-color-dim);
     }
-    .site-header img {
-      width: 32px;
-      height: 32px;
-      border-radius: 6px;
-    }
-    .site-header-name {
-      font-family: 'Cinzel', serif;
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--arch-color);
-      letter-spacing: 2.5px;
-    }
+    .site-header img { width: 32px; height: 32px; border-radius: 6px; }
+    .site-header-name { font-family: 'Cinzel', serif; font-size: 0.9rem; font-weight: 700; color: var(--arch-color); letter-spacing: 2.5px; }
 
-    /* ============================================
-       HERO
-       ============================================ */
-    .hero {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      padding: 60px 20px 40px;
-    }
-
+    /* Hero */
+    .hero { position: relative; z-index: 1; text-align: center; padding: 56px 20px 36px; }
     .hero-symbol {
-      font-size: 5rem;
-      color: var(--arch-color);
-      text-shadow: 0 0 30px rgba(255,69,0,0.6);
-      animation: pulseGlow 3s ease-in-out infinite;
-      line-height: 1;
-      margin-bottom: 20px;
+      font-size: 5rem; color: var(--arch-color); text-shadow: 0 0 30px var(--arch-color-glow);
+      animation: pulseGlow 3s ease-in-out infinite; line-height: 1; margin-bottom: 16px;
     }
-
     @keyframes pulseGlow {
-      0%, 100% { text-shadow: 0 0 20px rgba(255,69,0,0.4), 0 0 40px rgba(255,69,0,0.2); }
-      50%       { text-shadow: 0 0 40px rgba(255,69,0,0.8), 0 0 80px rgba(255,69,0,0.35); }
+      0%, 100% { text-shadow: 0 0 20px var(--arch-color-dim), 0 0 40px var(--arch-color-dim); }
+      50%       { text-shadow: 0 0 40px var(--arch-color-glow), 0 0 80px var(--arch-color-dim); }
     }
+    .hero-title { font-family: 'Cinzel', serif; font-size: clamp(2rem, 6vw, 2.8rem); font-weight: 700; color: var(--text-1); letter-spacing: 3px; margin-bottom: 8px; }
+    .hero-subtitle { font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 300; text-transform: uppercase; letter-spacing: 2px; color: var(--text-2); margin-bottom: 20px; }
+    .hero-meta { display: flex; justify-content: center; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+    .day-pill { display: inline-block; background: var(--arch-color); color: #0d0d0d; border-radius: 20px; padding: 5px 14px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+    .date-pill { display: inline-block; background: var(--arch-color-dim); border: 1px solid var(--arch-color-glow); border-radius: 20px; padding: 5px 14px; font-size: 0.78rem; color: var(--text-2); font-weight: 400; }
+    .hero-separator { width: 60px; height: 1px; margin: 0 auto; background: linear-gradient(to right, transparent, var(--arch-color), transparent); }
 
-    .hero-title {
-      font-family: 'Cinzel', serif;
-      font-size: clamp(2rem, 6vw, 2.8rem);
-      font-weight: 700;
-      color: var(--text-1);
-      letter-spacing: 3px;
-      margin-bottom: 10px;
-    }
+    /* Quiz CTA */
+    .quiz-cta { position: relative; z-index: 1; margin: 28px auto; max-width: 640px; padding: 0 20px; }
+    .quiz-cta-inner { background: rgba(28,28,28,0.8); border: 1px solid var(--arch-color-dim); border-radius: 16px; padding: 32px 28px; text-align: center; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .quiz-cta h3 { font-family: 'Cinzel', serif; font-size: 1.1rem; color: var(--arch-color); margin-bottom: 12px; letter-spacing: 1px; }
+    .quiz-cta p { font-size: 0.9rem; color: var(--text-2); line-height: 1.7; margin-bottom: 24px; }
+    .quiz-cta a { display: inline-block; background: var(--arch-color); color: #0d0d0d; padding: 13px 32px; border-radius: 30px; font-weight: 700; font-size: 0.9rem; letter-spacing: 0.5px; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .quiz-cta a:hover { transform: translateY(-2px); box-shadow: 0 8px 24px var(--arch-color-glow); }
 
-    .hero-subtitle {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 300;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: var(--text-2);
-      margin-bottom: 24px;
-    }
+    /* Message section */
+    .section-message { position: relative; z-index: 1; padding: 28px 0 16px; }
+    .message-card { background: rgba(28,28,28,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--arch-color-dim); border-left: 3px solid var(--arch-color); border-radius: 16px; padding: 32px 28px; box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 40px var(--arch-color-dim); }
+    .message-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; gap: 16px; }
+    .message-card-label { font-family: 'Montserrat', sans-serif; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--arch-color); }
+    .arch-image { width: 56px; height: 56px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+    @media (max-width: 768px) { .arch-image { display: none; } }
 
-    .date-pill {
-      display: inline-block;
-      background: rgba(255,69,0,0.1);
-      border: 1px solid rgba(255,69,0,0.3);
-      border-radius: 20px;
-      padding: 6px 16px;
-      font-size: 0.8rem;
-      color: var(--text-2);
-      font-weight: 400;
-      margin-bottom: 24px;
-    }
+    .msg-loading { text-align: center; padding: 40px 0; color: var(--text-3); font-size: 0.9rem; font-style: italic; }
+    .msg-titolo { font-family: 'Playfair Display', serif; font-size: clamp(1.3rem, 4vw, 1.7rem); font-weight: 700; color: var(--text-1); line-height: 1.3; margin-bottom: 20px; }
+    .msg-testo { font-family: 'Lato', sans-serif; font-size: 1.0rem; font-weight: 400; line-height: 1.85; color: #e0e0e0; margin-bottom: 24px; white-space: pre-line; }
+    .msg-mossa-box { border-left: 3px solid var(--arch-color); background: var(--arch-color-dim); border-radius: 0 10px 10px 0; padding: 16px 20px; margin-bottom: 20px; }
+    .msg-mossa-label { font-family: 'Montserrat', sans-serif; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--arch-color); margin-bottom: 8px; }
+    .msg-mossa { font-family: 'Lato', sans-serif; font-size: 0.95rem; font-weight: 700; color: var(--text-1); line-height: 1.6; }
+    .msg-kairos { font-family: 'Playfair Display', serif; font-style: italic; font-size: 0.95rem; color: var(--text-2); text-align: center; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.06); line-height: 1.6; }
+    .msg-kairos::before { content: '\201C'; margin-right: 2px; }
+    .msg-kairos::after  { content: '\201D'; margin-left:  2px; }
 
-    .hero-separator {
-      width: 60px;
-      height: 1px;
-      margin: 0 auto;
-      background: linear-gradient(to right, transparent, var(--arch-color), transparent);
-    }
+    /* Actions */
+    .message-actions { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
+    .btn-primary { flex: 1; min-width: 130px; padding: 14px 24px; background: var(--arch-color); color: #0d0d0d; border: none; border-radius: 30px; font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 700; letter-spacing: 0.5px; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease; }
+    .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 24px var(--arch-color-glow); }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-secondary { flex: 1; min-width: 130px; padding: 14px 24px; background: transparent; color: var(--arch-color); border: 1px solid var(--arch-color-glow); border-radius: 30px; font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 600; letter-spacing: 0.5px; cursor: pointer; transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease; }
+    .btn-secondary:hover:not(:disabled) { transform: translateY(-2px); border-color: var(--arch-color); box-shadow: 0 4px 16px var(--arch-color-dim); }
+    .btn-secondary:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    /* ============================================
-       QUIZ CTA PUBBLICA (iniettata da JS)
-       ============================================ */
-    .quiz-cta {
-      position: relative;
-      z-index: 1;
-      margin: 32px auto;
-      max-width: 640px;
-      padding: 0 20px;
-    }
-    .quiz-cta-inner {
-      background: rgba(28,28,28,0.8);
-      border: 1px solid rgba(255,69,0,0.2);
-      border-radius: 16px;
-      padding: 32px 28px;
-      text-align: center;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-    }
-    .quiz-cta h3 {
-      font-family: 'Cinzel', serif;
-      font-size: 1.1rem;
-      color: var(--arch-color);
-      margin-bottom: 12px;
-      letter-spacing: 1px;
-    }
-    .quiz-cta p {
-      font-size: 0.9rem;
-      color: var(--text-2);
-      line-height: 1.7;
-      margin-bottom: 24px;
-    }
-    .quiz-cta a {
-      display: inline-block;
-      background: linear-gradient(135deg, #FF4500, #FF8C00);
-      color: #fff;
-      padding: 13px 32px;
-      border-radius: 30px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      letter-spacing: 0.5px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .quiz-cta a:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(255,69,0,0.35);
-    }
+    /* Paywall */
+    .section-paywall { position: relative; z-index: 1; padding: 28px 0 16px; display: none; }
+    .paywall-card { background: rgba(28,28,28,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--arch-color-dim); border-radius: 16px; padding: 40px 32px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
+    .paywall-symbol { font-size: 4rem; opacity: 0.25; filter: blur(1px); margin-bottom: 20px; display: block; }
+    .paywall-title { font-family: 'Cinzel', serif; font-size: 1.4rem; color: var(--text-1); margin-bottom: 12px; letter-spacing: 1px; }
+    .paywall-text { font-family: 'Lato', sans-serif; font-size: 0.95rem; color: var(--text-2); line-height: 1.7; margin-bottom: 32px; max-width: 400px; margin-left: auto; margin-right: auto; }
+    .paywall-plans { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .plan-card { flex: 1; min-width: 180px; max-width: 220px; background: rgba(13,13,13,0.6); border: 1px solid var(--arch-color-dim); border-radius: 12px; padding: 24px 20px; }
+    .plan-name { font-family: 'Montserrat', sans-serif; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--arch-color); margin-bottom: 8px; }
+    .plan-price { font-family: 'Cinzel', serif; font-size: 1.8rem; color: var(--text-1); font-weight: 700; margin-bottom: 4px; }
+    .plan-period { font-size: 0.78rem; color: var(--text-3); margin-bottom: 20px; }
+    .btn-plan { display: block; width: 100%; padding: 12px 20px; background: var(--arch-color); color: #0d0d0d; border: none; border-radius: 30px; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.5px; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; text-align: center; }
+    .btn-plan:hover { transform: translateY(-2px); box-shadow: 0 8px 24px var(--arch-color-glow); }
 
-    /* ============================================
-       SEZIONE MESSAGGIO
-       ============================================ */
-    .section-message {
-      position: relative;
-      z-index: 1;
-      padding: 32px 0 16px;
-    }
+    /* Sub CTA */
+    .section-sub { position: relative; z-index: 1; padding: 16px 0 48px; text-align: center; }
+    .btn-sub { display: inline-block; padding: 16px 40px; background: var(--arch-color); color: #0d0d0d; border-radius: 30px; font-family: 'Montserrat', sans-serif; font-size: 0.95rem; font-weight: 700; letter-spacing: 0.5px; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .btn-sub:hover { transform: translateY(-2px); box-shadow: 0 10px 30px var(--arch-color-glow); }
 
-    .message-card {
-      background: rgba(28,28,28,0.85);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,69,0,0.2);
-      border-left: 3px solid var(--arch-color);
-      border-radius: 16px;
-      padding: 32px 28px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 40px rgba(255,69,0,0.05);
-    }
-
-    .message-card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-      gap: 16px;
-    }
-
-    .message-card-title {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: var(--arch-color);
-    }
-
-    .arch-image {
-      width: 60px;
-      height: 60px;
-      border-radius: 8px;
-      object-fit: cover;
-      flex-shrink: 0;
-    }
-
-    @media (max-width: 768px) {
-      .arch-image { display: none; }
-    }
-
-    .message-body { position: relative; }
-
-    .message-body::before {
-      content: '\201C';
-      font-family: 'Cinzel', serif;
-      font-size: 4rem;
-      line-height: 0.8;
-      color: rgba(255,69,0,0.25);
-      display: block;
-      margin-bottom: 8px;
-    }
-
-    #daily-message {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 1.1rem;
-      font-weight: 300;
-      line-height: 1.8;
-      color: #e8e8e8;
-    }
-
-    /* ============================================
-       AZIONI
-       ============================================ */
-    .message-actions {
-      display: flex;
-      gap: 12px;
-      margin-top: 32px;
-      flex-wrap: wrap;
-    }
-
-    .btn-primary {
-      flex: 1;
-      min-width: 130px;
-      padding: 14px 24px;
-      background: linear-gradient(135deg, #FF4500, #FF8C00);
-      color: #fff;
-      border: none;
-      border-radius: 30px;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.88rem;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
-    }
-    .btn-primary:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(255,69,0,0.35);
-    }
-    .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
-
-    .btn-secondary {
-      flex: 1;
-      min-width: 130px;
-      padding: 14px 24px;
-      background: transparent;
-      color: var(--arch-color);
-      border: 1px solid rgba(255,69,0,0.4);
-      border-radius: 30px;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.88rem;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      cursor: pointer;
-      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
-    }
-    .btn-secondary:hover:not(:disabled) {
-      transform: translateY(-2px);
-      border-color: var(--arch-color);
-      box-shadow: 0 4px 16px rgba(255,69,0,0.15);
-    }
-    .btn-secondary:disabled { opacity: 0.45; cursor: not-allowed; }
-
-    /* ============================================
-       SUBSCRIPTION
-       ============================================ */
-    .section-sub {
-      position: relative;
-      z-index: 1;
-      padding: 16px 0 48px;
-      text-align: center;
-    }
-    .btn-sub {
-      display: inline-block;
-      padding: 16px 40px;
-      background: linear-gradient(135deg, #FF4500, #FF8C00);
-      color: #fff;
-      border-radius: 30px;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .btn-sub:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(255,69,0,0.4);
-    }
-
-    /* ============================================
-       PRIVATE CONTENT
-       ============================================ */
     .private-content { display: none; }
 
-    /* ============================================
-       FOOTER
-       ============================================ */
-    .site-footer {
-      position: relative;
-      z-index: 1;
-      padding: 32px 20px;
-      text-align: center;
-      border-top: 1px solid rgba(255,255,255,0.05);
-    }
+    /* Footer */
+    .site-footer { position: relative; z-index: 1; padding: 32px 20px; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); }
     .site-footer p { font-size: 0.78rem; color: var(--text-3); margin-bottom: 10px; }
     .footer-links { display: flex; justify-content: center; gap: 20px; }
     .footer-links a { font-size: 0.78rem; color: var(--text-3); transition: color 0.2s ease; }
@@ -462,22 +181,12 @@
 </head>
 <body class="loading-active">
 
-  <!-- =============================================
-       LOADING CANVAS — Three.js, z-index 9999
-       ============================================= -->
-  <div id="loading-canvas-wrapper" style="
-    position: fixed; inset: 0; z-index: 30;
-    pointer-events: none;
-  ">
+  <div id="loading-canvas-wrapper" style="position:fixed;inset:0;z-index:30;pointer-events:none;">
     <canvas id="loading-canvas" style="position:absolute;top:0;left:0;opacity:0.85;"></canvas>
   </div>
 
-  <!-- =============================================
-       PAGE CONTENT (opacity: 0 fino a fine loading)
-       ============================================= -->
   <div id="page-content">
 
-    <!-- HEADER -->
     <header class="site-header">
       <a href="../../index.html" style="display:flex;align-items:center;gap:10px;">
         <img src="../../images/logo.png" alt="Scacchi Mentali">
@@ -485,30 +194,35 @@
       </a>
     </header>
 
-    <!-- HERO -->
     <section class="hero">
-      <div class="hero-symbol">♗</div>
-      <h1 class="hero-title">L'Alfiere</h1>
-      <p class="hero-subtitle">Visionario &bull; Creativo &bull; Strategico</p>
-      <div class="date-pill">
-        <span id="current-date">Caricamento…</span>
+      <div class="hero-symbol" id="hero-symbol">♔</div>
+      <h1 class="hero-title" id="hero-title">Il Re</h1>
+      <p class="hero-subtitle" id="hero-subtitle">Autorità · Visione · Responsabilità</p>
+      <div class="hero-meta">
+        <span class="day-pill" id="day-pill">Giorno —</span>
+        <span class="date-pill" id="current-date">Caricamento…</span>
       </div>
       <div class="hero-separator"></div>
     </section>
 
-    <!-- CTA PUBBLICA (iniettata da JS) -->
     <div id="public-cta-container"></div>
 
-    <!-- MESSAGGIO QUOTIDIANO (privato) -->
     <section class="section-message private-content">
       <div class="container">
         <div class="message-card">
           <div class="message-card-header">
-            <span class="message-card-title">Il Tuo Messaggio di Oggi</span>
-            <img src="../../images/archetipi/alfiere.png" alt="L'Alfiere" class="arch-image">
+            <span class="message-card-label">Il Tuo Messaggio di Oggi</span>
+            <img id="arch-img" src="../../images/archetipi/re.png" alt="Il Re" class="arch-image">
           </div>
           <div class="message-body">
-            <p id="daily-message">Caricamento del messaggio…</p>
+            <p class="msg-loading" id="msg-loading">Kairos sta preparando il tuo messaggio…</p>
+            <h2 class="msg-titolo" id="msg-titolo" style="display:none;"></h2>
+            <p class="msg-testo"   id="msg-testo"   style="display:none;"></p>
+            <div class="msg-mossa-box" id="msg-mossa-box" style="display:none;">
+              <div class="msg-mossa-label">La mossa di oggi</div>
+              <p class="msg-mossa" id="msg-mossa"></p>
+            </div>
+            <p class="msg-kairos" id="msg-kairos" style="display:none;"></p>
           </div>
           <div class="message-actions">
             <button id="share-button" class="btn-primary"   disabled>Condividi</button>
@@ -518,19 +232,39 @@
       </div>
     </section>
 
-    <!-- SUBSCRIPTION CTA (privata) -->
-    <section class="section-sub private-content">
+    <section class="section-paywall" id="section-paywall">
       <div class="container">
-        <a href="../../subscribe/?archetipo=alfiere" class="btn-sub">
-          Accedi alla Subscription per L'Alfiere
-        </a>
+        <div class="paywall-card">
+          <span class="paywall-symbol" id="paywall-symbol">♔</span>
+          <h2 class="paywall-title">Il tuo trial è scaduto.</h2>
+          <p class="paywall-text">Hai completato il periodo di prova gratuito.<br>Continua il percorso con Scacchi Mentali e ricevi ogni giorno il messaggio del tuo archetipo.</p>
+          <div class="paywall-plans">
+            <div class="plan-card">
+              <div class="plan-name">Mensile</div>
+              <div class="plan-price">€7</div>
+              <div class="plan-period">al mese</div>
+              <a id="btn-stripe-monthly" href="#" class="btn-plan">Inizia ora</a>
+            </div>
+            <div class="plan-card">
+              <div class="plan-name">Annuale</div>
+              <div class="plan-price">€49</div>
+              <div class="plan-period">all'anno · risparmia il 41%</div>
+              <a id="btn-stripe-annual" href="#" class="btn-plan">Inizia ora</a>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- FOOTER -->
+    <section class="section-sub private-content">
+      <div class="container">
+        <a id="sub-link" href="../../subscribe/" class="btn-sub">Gestisci la tua Subscription</a>
+      </div>
+    </section>
+
     <footer class="site-footer">
       <div class="container">
-        <p>&copy; 2026 Scacchi Mentali. Tutti i diritti riservati.</p>
+        <p>&copy; 2026 Scacchi Mentali &middot; La vita è una partita.</p>
         <div class="footer-links">
           <a href="../../index.html">Home</a>
           <a href="#privacy">Privacy</a>
@@ -539,486 +273,354 @@
       </div>
     </footer>
 
-  </div><!-- /page-content -->
+  </div>
 
-  <!-- =============================================
-       LIBRERIE
-       ============================================= -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
 
-  <!-- =============================================
-       LOADING SEQUENCE — Three.js particles
-       ============================================= -->
+  <!-- CONFIG ARCHETIPI -->
+  <script>
+  var ARCH_CONFIG = {
+    re: {
+      name: 'Il Re', symbol: '♔', subtitle: 'Autorità · Visione · Responsabilità',
+      color: '#FFD700', rgb: [1.0, 0.843, 0.0],
+      profile: [
+        [0.20,0],[0.38,0.08],[0.28,0.12],[0.38,0.18],[0.28,0.22],[0.38,0.28],
+        [0.50,0.38],[0.36,0.48],[0.28,0.56],[0.32,0.68],[0.40,0.80],
+        [0.40,0.90],[0.28,0.98],[0.16,1.06],[0.06,1.14],[0,1.20]
+      ]
+    },
+    regina: {
+      name: 'La Regina', symbol: '♕', subtitle: 'Strategia · Intelligenza · Potere',
+      color: '#8A2BE2', rgb: [0.541, 0.169, 0.886],
+      profile: [
+        [0.12,0],[0.30,0.06],[0.52,0.14],[0.38,0.22],[0.55,0.32],
+        [0.38,0.42],[0.30,0.52],[0.34,0.64],[0.42,0.76],
+        [0.42,0.88],[0.30,0.96],[0.18,1.04],[0.08,1.12],[0,1.18]
+      ]
+    },
+    torre: {
+      name: 'La Torre', symbol: '♖', subtitle: 'Solidità · Disciplina · Struttura',
+      color: '#32CD32', rgb: [0.196, 0.804, 0.196],
+      profile: [
+        [0.52,0],[0.52,0.10],[0.38,0.14],[0.52,0.18],[0.52,0.30],
+        [0.44,0.38],[0.36,0.48],[0.36,0.72],[0.36,0.84],
+        [0.44,0.90],[0.52,0.98],[0.52,1.06],[0.36,1.12],[0,1.18]
+      ]
+    },
+    alfiere: {
+      name: "L'Alfiere", symbol: '♗', subtitle: 'Visione · Creatività · Strategia',
+      color: '#FF4500', rgb: [1.0, 0.271, 0.0],
+      profile: [
+        [0.7,0],[0.55,0.05],[0.32,0.12],[0.24,0.22],[0.26,0.4],
+        [0.28,0.55],[0.26,0.65],[0.32,0.72],[0.36,0.8],[0.28,0.86],
+        [0.2,0.92],[0.16,1.0],[0.18,1.08],[0.22,1.15],[0.18,1.22],
+        [0.1,1.28],[0.05,1.35],[0.08,1.42],[0.04,1.48],[0,1.52]
+      ]
+    },
+    cavallo: {
+      name: 'Il Cavallo', symbol: '♞', subtitle: 'Intuizione · Agilità · Originalità',
+      color: '#00CED1', rgb: [0.0, 0.808, 0.820],
+      profile: [
+        [0.18,0],[0.32,0.08],[0.48,0.18],[0.56,0.30],[0.50,0.42],
+        [0.36,0.52],[0.26,0.62],[0.30,0.72],[0.38,0.84],
+        [0.38,0.94],[0.28,1.02],[0.16,1.10],[0.06,1.16],[0,1.22]
+      ]
+    },
+    pedone: {
+      name: 'Il Pedone', symbol: '♙', subtitle: 'Resilienza · Progresso · Trasformazione',
+      color: '#DC143C', rgb: [0.863, 0.078, 0.235],
+      profile: [
+        [0.34,0],[0.48,0.10],[0.48,0.20],[0.34,0.30],
+        [0.18,0.40],[0.20,0.50],[0.28,0.62],[0.38,0.74],
+        [0.38,0.86],[0.28,0.94],[0.16,1.02],[0.06,1.10],[0,1.16]
+      ]
+    }
+  };
+
+  /* Detect archetipo from URL path */
+  var _parts = window.location.pathname.replace(/\/$/, '').split('/').filter(Boolean);
+  var ARCHETIPO = _parts[_parts.length - 1] || 're';
+  if (!ARCH_CONFIG[ARCHETIPO]) ARCHETIPO = 're';
+  var CFG = ARCH_CONFIG[ARCHETIPO];
+
+  /* Apply CSS vars */
+  (function () {
+    var hex = CFG.color.replace('#','');
+    var ri = parseInt(hex.substr(0,2),16);
+    var gi = parseInt(hex.substr(2,2),16);
+    var bi = parseInt(hex.substr(4,2),16);
+    var s = document.documentElement.style;
+    s.setProperty('--arch-color',      CFG.color);
+    s.setProperty('--arch-color-dim',  'rgba('+ri+','+gi+','+bi+',0.15)');
+    s.setProperty('--arch-color-glow', 'rgba('+ri+','+gi+','+bi+',0.35)');
+  }());
+
+  /* Apply DOM */
+  document.getElementById('hero-symbol').textContent    = CFG.symbol;
+  document.getElementById('hero-title').textContent     = CFG.name;
+  document.getElementById('hero-subtitle').textContent  = CFG.subtitle;
+  document.getElementById('paywall-symbol').textContent = CFG.symbol;
+  document.getElementById('arch-img').src = '../../images/archetipi/' + ARCHETIPO + '.png';
+  document.getElementById('arch-img').alt = CFG.name;
+  document.getElementById('sub-link').href = '../../subscribe/?archetipo=' + ARCHETIPO;
+  document.title = CFG.name + ' – Messaggio Quotidiano | Scacchi Mentali';
+
+  var favLink = document.createElement('link');
+  favLink.rel = 'icon';
+  favLink.href = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><text y='18' font-size='18'>" + CFG.symbol + "</text></svg>";
+  document.head.appendChild(favLink);
+
+  document.body.style.backgroundImage = "url(\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><path d='M-10 10 L10 -10 M0 40 L40 0 M30 50 L50 30' stroke='" + encodeURIComponent(CFG.color) + "' stroke-width='0.5' stroke-opacity='0.03' fill='none'/></svg>\")";
+  document.body.style.backgroundRepeat = 'repeat';
+  </script>
+
+  <!-- THREE.JS LOADING SEQUENCE -->
   <script>
   (function () {
-    var LC = 2000; // loading particle count
-    var PS = 3.5;  // PROF_SCALE per il loading
-
-    var ALFIERE = [
-      [0.7,0],[0.55,0.05],[0.32,0.12],[0.24,0.22],[0.26,0.4],
-      [0.28,0.55],[0.26,0.65],[0.32,0.72],[0.36,0.8],[0.28,0.86],
-      [0.2,0.92],[0.16,1.0],[0.18,1.08],[0.22,1.15],[0.18,1.22],
-      [0.1,1.28],[0.05,1.35],[0.08,1.42],[0.04,1.48],[0,1.52]
-    ];
-
+    var LC = 1800, PS = 3.2;
+    var PROFILE = CFG.profile;
     var lRenderer, lScene, lCamera, lGeo, lMat, lPoints, lGroup;
-    var lPos, lSizes, lColors, lVelocities;
-    var lAnimId  = null;
-    var lPhase   = 'chaos';
-    var lFallback = null;
+    var lPos, lSizes, lColors, lVelocities = [];
+    var lAnimId = null, lPhase = 'chaos', lFallback = null;
 
-    /* ------ profile helpers ------ */
-    function profMaxY(p) {
-      var m = 0;
-      for (var i = 0; i < p.length; i++) if (p[i][1] > m) m = p[i][1];
-      return m;
-    }
+    function profMaxY(p) { var m=0; for(var i=0;i<p.length;i++) if(p[i][1]>m) m=p[i][1]; return m; }
     function profRadius(p, y) {
-      for (var i = 1; i < p.length; i++) {
-        if (y <= p[i][1]) {
-          var t = (y - p[i-1][1]) / (p[i][1] - p[i-1][1]);
-          return p[i-1][0] + t * (p[i][0] - p[i-1][0]);
-        }
-      }
-      return 0;
+      for(var i=1;i<p.length;i++) {
+        if(y<=p[i][1]) { var t=(y-p[i-1][1])/(p[i][1]-p[i-1][1]); return p[i-1][0]+t*(p[i][0]-p[i-1][0]); }
+      } return 0;
     }
 
-    /* ------ build convergence targets ------ */
     function buildTargets() {
-      var maxY = profMaxY(ALFIERE);
-      var t = new Float32Array(LC * 3);
-      for (var i = 0; i < LC; i++) {
-        var yn  = Math.random() * maxY;
-        var r   = profRadius(ALFIERE, yn) * Math.pow(Math.random(), 0.3) * PS;
-        var ang = Math.random() * Math.PI * 2;
-        var i3  = i * 3;
-        t[i3]   = Math.cos(ang) * r;
-        t[i3+1] = (yn / maxY) * PS - PS * 0.5;
-        t[i3+2] = Math.sin(ang) * r;
-      }
-      return t;
+      var maxY=profMaxY(PROFILE), t=new Float32Array(LC*3);
+      for(var i=0;i<LC;i++) {
+        var yn=Math.random()*maxY, r=profRadius(PROFILE,yn)*Math.pow(Math.random(),0.3)*PS, ang=Math.random()*Math.PI*2, i3=i*3;
+        t[i3]=Math.cos(ang)*r; t[i3+1]=(yn/maxY)*PS-PS*0.5; t[i3+2]=Math.sin(ang)*r;
+      } return t;
     }
 
-    /* ------ init Three.js scene ------ */
     function init() {
-      var canvas = document.getElementById('loading-canvas');
-      if (!canvas || typeof THREE === 'undefined') { showPage(); return; }
-
-      lRenderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: false, alpha: true });
-      lRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-      lRenderer.setSize(window.innerWidth, window.innerHeight);
-
-      lScene  = new THREE.Scene();
-      lCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-      lCamera.position.set(0, 0, 10);
-      lCamera.lookAt(0, 0, 0);
-
-      lPos      = new Float32Array(LC * 3);
-      lSizes    = new Float32Array(LC);
-      lColors   = new Float32Array(LC * 3);
-      lVelocities = [];
-
-      var bR = 1.0, bG = 0.271, bB = 0.0; // #FF4500
-      for (var i = 0; i < LC; i++) {
-        var i3 = i * 3;
-        lPos[i3]   = (Math.random() - 0.5) * 14;
-        lPos[i3+1] = (Math.random() - 0.5) * 10;
-        lPos[i3+2] = (Math.random() - 0.5) *  4;
-
-        var vx = (Math.random() - 0.5);
-        var vy = (Math.random() - 0.5);
-        var vz = (Math.random() - 0.5) * 0.3;
-        var mag = Math.sqrt(vx*vx + vy*vy + vz*vz) || 1;
-        var spd = 0.15 + Math.random() * 0.35;
-        lVelocities.push({ x: (vx/mag)*spd, y: (vy/mag)*spd, z: (vz/mag)*spd });
-
-        var bv = 0.8 + Math.random() * 0.4;
-        lColors[i3]   = Math.min(1, bR * bv);
-        lColors[i3+1] = Math.min(1, bG * bv);
-        lColors[i3+2] = Math.min(1, bB * bv);
-
-        lSizes[i] = 0.015 + Math.random() * 0.020;
+      var canvas=document.getElementById('loading-canvas');
+      if(!canvas||typeof THREE==='undefined'){showPage();return;}
+      lRenderer=new THREE.WebGLRenderer({canvas:canvas,antialias:false,alpha:true});
+      lRenderer.setPixelRatio(Math.min(window.devicePixelRatio,1.5));
+      lRenderer.setSize(window.innerWidth,window.innerHeight);
+      lScene=new THREE.Scene();
+      lCamera=new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,100);
+      lCamera.position.set(0,0,10); lCamera.lookAt(0,0,0);
+      lPos=new Float32Array(LC*3); lSizes=new Float32Array(LC); lColors=new Float32Array(LC*3);
+      var bR=CFG.rgb[0],bG=CFG.rgb[1],bB=CFG.rgb[2];
+      for(var i=0;i<LC;i++) {
+        var i3=i*3;
+        lPos[i3]=(Math.random()-0.5)*14; lPos[i3+1]=(Math.random()-0.5)*10; lPos[i3+2]=(Math.random()-0.5)*4;
+        var vx=Math.random()-0.5,vy=Math.random()-0.5,vz=(Math.random()-0.5)*0.3;
+        var mag=Math.sqrt(vx*vx+vy*vy+vz*vz)||1, spd=0.15+Math.random()*0.35;
+        lVelocities.push({x:(vx/mag)*spd,y:(vy/mag)*spd,z:(vz/mag)*spd});
+        var bv=0.8+Math.random()*0.4;
+        lColors[i3]=Math.min(1,bR*bv); lColors[i3+1]=Math.min(1,bG*bv); lColors[i3+2]=Math.min(1,bB*bv);
+        lSizes[i]=0.015+Math.random()*0.020;
       }
-
-      lGeo = new THREE.BufferGeometry();
-      lGeo.setAttribute('position', new THREE.BufferAttribute(lPos,    3));
-      lGeo.setAttribute('aSize',    new THREE.BufferAttribute(lSizes,  1));
-      lGeo.setAttribute('aColor',   new THREE.BufferAttribute(lColors, 3));
-
-      lMat = new THREE.ShaderMaterial({
-        vertexShader: [
-          'attribute float aSize;',
-          'attribute vec3 aColor;',
-          'varying vec3 vColor;',
-          'void main() {',
-          '  vColor = aColor;',
-          '  vec4 mv = modelViewMatrix * vec4(position, 1.0);',
-          '  gl_PointSize = aSize * (900.0 / -mv.z);',
-          '  gl_Position = projectionMatrix * mv;',
-          '}'
-        ].join('\n'),
-        fragmentShader: [
-          'varying vec3 vColor;',
-          'void main() {',
-          '  vec2 uv = gl_PointCoord - 0.5;',
-          '  if (length(uv) > 0.5) discard;',
-          '  float alpha = smoothstep(0.5, 0.1, length(uv));',
-          '  gl_FragColor = vec4(vColor, alpha * 0.9);',
-          '}'
-        ].join('\n'),
-        transparent: true,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
+      lGeo=new THREE.BufferGeometry();
+      lGeo.setAttribute('position',new THREE.BufferAttribute(lPos,3));
+      lGeo.setAttribute('aSize',new THREE.BufferAttribute(lSizes,1));
+      lGeo.setAttribute('aColor',new THREE.BufferAttribute(lColors,3));
+      lMat=new THREE.ShaderMaterial({
+        vertexShader:'attribute float aSize;attribute vec3 aColor;varying vec3 vColor;void main(){vColor=aColor;vec4 mv=modelViewMatrix*vec4(position,1.0);gl_PointSize=aSize*(900.0/-mv.z);gl_Position=projectionMatrix*mv;}',
+        fragmentShader:'varying vec3 vColor;void main(){vec2 uv=gl_PointCoord-0.5;if(length(uv)>0.5)discard;float alpha=smoothstep(0.5,0.1,length(uv));gl_FragColor=vec4(vColor,alpha*0.9);}',
+        transparent:true, blending:THREE.AdditiveBlending, depthWrite:false
       });
-
-      lGroup  = new THREE.Group();
-      lPoints = new THREE.Points(lGeo, lMat);
-      lGroup.add(lPoints);
-      lScene.add(lGroup);
-
-      window.addEventListener('resize', function () {
-        if (!lCamera || !lRenderer) return;
-        lCamera.aspect = window.innerWidth / window.innerHeight;
-        lCamera.updateProjectionMatrix();
-        lRenderer.setSize(window.innerWidth, window.innerHeight);
-      });
-
-      renderLoop();
-      listenAuth();
+      lGroup=new THREE.Group(); lPoints=new THREE.Points(lGeo,lMat); lGroup.add(lPoints); lScene.add(lGroup);
+      window.addEventListener('resize',function(){if(!lCamera||!lRenderer)return;lCamera.aspect=window.innerWidth/window.innerHeight;lCamera.updateProjectionMatrix();lRenderer.setSize(window.innerWidth,window.innerHeight);});
+      renderLoop(); listenAuth();
     }
 
-    /* ------ render loop ------ */
     function renderLoop() {
-      if (lPhase === 'done') return;
-      lAnimId = requestAnimationFrame(renderLoop);
-      if (lGroup) lGroup.rotation.y += 0.005;
-      if (lPhase === 'chaos') {
-        for (var i = 0; i < LC; i++) {
-          var i3 = i * 3, v = lVelocities[i];
-          lPos[i3]   += v.x * 0.012;
-          lPos[i3+1] += v.y * 0.012;
-          lPos[i3+2] += v.z * 0.012;
-          if (lPos[i3]   >  8) lPos[i3]   = -8;
-          if (lPos[i3]   < -8) lPos[i3]   =  8;
-          if (lPos[i3+1] >  6) lPos[i3+1] = -6;
-          if (lPos[i3+1] < -6) lPos[i3+1] =  6;
-        }
-        lGeo.attributes.position.needsUpdate = true;
+      if(lPhase==='done') return;
+      lAnimId=requestAnimationFrame(renderLoop);
+      if(lGroup) lGroup.rotation.y+=0.005;
+      if(lPhase==='chaos') {
+        for(var i=0;i<LC;i++){var i3=i*3,v=lVelocities[i];lPos[i3]+=v.x*0.012;lPos[i3+1]+=v.y*0.012;lPos[i3+2]+=v.z*0.012;if(lPos[i3]>8)lPos[i3]=-8;if(lPos[i3]<-8)lPos[i3]=8;if(lPos[i3+1]>6)lPos[i3+1]=-6;if(lPos[i3+1]<-6)lPos[i3+1]=6;}
+        lGeo.attributes.position.needsUpdate=true;
       }
-      lRenderer.render(lScene, lCamera);
+      lRenderer.render(lScene,lCamera);
     }
 
-    /* ------ listen for auth-result event ------ */
     function listenAuth() {
-      /* fallback: if no event after 8s, just show the page */
-      lFallback = setTimeout(function () {
-        if (lPhase !== 'chaos') return;
-        doFadeAndShow(null);
-      }, 8000);
-
-      window.addEventListener('auth-result', function (e) {
+      lFallback=setTimeout(function(){if(lPhase!=='chaos')return;doFadeAndShow(null);},8000);
+      window.addEventListener('auth-result',function(e){
         clearTimeout(lFallback);
-        var valid       = e.detail.valid;
-        var redirectUrl = e.detail.redirectUrl;
-        var noToken     = e.detail.noToken;
-
-        if (noToken) {
-          /* no token: skip 3D animation, immediate fade */
-          doFadeAndShow(null);
-          return;
-        }
-
-        lPhase = 'converge';
-        converge(function () {
-          setTimeout(function () {
-            if (valid) {
-              explodeExit();
-            } else {
-              implodeExit(redirectUrl);
-            }
-          }, 300);
-        });
-      }, { once: true });
+        if(e.detail.noToken){doFadeAndShow(null);return;}
+        lPhase='converge';
+        converge(function(){setTimeout(function(){e.detail.valid?explodeExit():implodeExit(e.detail.redirectUrl);},300);});
+      },{once:true});
     }
 
-    /* ------ convergence tween ------ */
     function converge(onDone) {
-      var targets  = buildTargets();
-      var startPos = new Float32Array(lPos);
-      var p = { t: 0 };
-      gsap.to(p, {
-        t: 1, duration: 0.8, ease: 'power2.inOut',
-        onUpdate: function () {
-          for (var i = 0; i < LC; i++) {
-            var i3 = i * 3;
-            lPos[i3]   = startPos[i3]   + (targets[i3]   - startPos[i3])   * p.t;
-            lPos[i3+1] = startPos[i3+1] + (targets[i3+1] - startPos[i3+1]) * p.t;
-            lPos[i3+2] = startPos[i3+2] + (targets[i3+2] - startPos[i3+2]) * p.t;
-          }
-          lGeo.attributes.position.needsUpdate = true;
-        },
-        onComplete: function () {
-          for (var j = 0; j < targets.length; j++) lPos[j] = targets[j];
-          lGeo.attributes.position.needsUpdate = true;
-          if (onDone) onDone();
-        }
+      var targets=buildTargets(), startPos=new Float32Array(lPos), p={t:0};
+      gsap.to(p,{t:1,duration:0.8,ease:'power2.inOut',
+        onUpdate:function(){for(var i=0;i<LC;i++){var i3=i*3;lPos[i3]=startPos[i3]+(targets[i3]-startPos[i3])*p.t;lPos[i3+1]=startPos[i3+1]+(targets[i3+1]-startPos[i3+1])*p.t;lPos[i3+2]=startPos[i3+2]+(targets[i3+2]-startPos[i3+2])*p.t;}lGeo.attributes.position.needsUpdate=true;},
+        onComplete:function(){for(var j=0;j<targets.length;j++)lPos[j]=targets[j];lGeo.attributes.position.needsUpdate=true;if(onDone)onDone();}
       });
     }
 
-    /* ------ valid exit: explode outward ------ */
     function explodeExit() {
-      var start = new Float32Array(lPos);
-      var p = { t: 0 };
-      /* Start canvas fade simultaneously */
+      var start=new Float32Array(lPos),p={t:0};
       fadeCanvasOut(500);
-      gsap.to(p, {
-        t: 1, duration: 0.6, ease: 'power2.in',
-        onUpdate: function () {
-          var scale = 1 + p.t * 2;
-          for (var i = 0; i < LC; i++) {
-            var i3 = i * 3;
-            lPos[i3]   = start[i3]   * scale;
-            lPos[i3+1] = start[i3+1] * scale;
-            lPos[i3+2] = start[i3+2] * scale;
-          }
-          lGeo.attributes.position.needsUpdate = true;
-        },
-        onComplete: function () {
-          destroyLoader();
-          showPage();
-        }
+      gsap.to(p,{t:1,duration:0.6,ease:'power2.in',
+        onUpdate:function(){var sc=1+p.t*2;for(var i=0;i<LC;i++){var i3=i*3;lPos[i3]=start[i3]*sc;lPos[i3+1]=start[i3+1]*sc;lPos[i3+2]=start[i3+2]*sc;}lGeo.attributes.position.needsUpdate=true;},
+        onComplete:function(){destroyLoader();showPage();}
       });
     }
 
-    /* ------ invalid exit: implode inward ------ */
     function implodeExit(redirectUrl) {
-      var start = new Float32Array(lPos);
-      var p = { t: 0 };
+      var start=new Float32Array(lPos),p={t:0};
       fadeCanvasOut(400);
-      gsap.to(p, {
-        t: 1, duration: 0.5, ease: 'power2.in',
-        onUpdate: function () {
-          for (var i = 0; i < LC; i++) {
-            var i3 = i * 3;
-            lPos[i3]   = start[i3]   * (1 - p.t);
-            lPos[i3+1] = start[i3+1] * (1 - p.t);
-            lPos[i3+2] = start[i3+2] * (1 - p.t);
-          }
-          lGeo.attributes.position.needsUpdate = true;
-        },
-        onComplete: function () {
-          destroyLoader();
-          if (redirectUrl) {
-            window.location.href = redirectUrl;
-          } else {
-            showPage();
-          }
-        }
+      gsap.to(p,{t:1,duration:0.5,ease:'power2.in',
+        onUpdate:function(){for(var i=0;i<LC;i++){var i3=i*3;lPos[i3]=start[i3]*(1-p.t);lPos[i3+1]=start[i3+1]*(1-p.t);lPos[i3+2]=start[i3+2]*(1-p.t);}lGeo.attributes.position.needsUpdate=true;},
+        onComplete:function(){destroyLoader();if(redirectUrl)window.location.href=redirectUrl;else showPage();}
       });
     }
 
-    /* ------ canvas opacity fade (CSS, non-blocking) ------ */
     function fadeCanvasOut(ms) {
-      var w = document.getElementById('loading-canvas-wrapper');
-      if (!w) return;
-      w.style.transition = 'opacity ' + (ms / 1000).toFixed(2) + 's ease';
-      w.style.opacity = '0';
+      var w=document.getElementById('loading-canvas-wrapper');
+      if(!w)return; w.style.transition='opacity '+(ms/1000).toFixed(2)+'s ease'; w.style.opacity='0';
     }
-
-    /* ------ fade page in + remove wrapper ------ */
     function doFadeAndShow(redirectUrl) {
       fadeCanvasOut(300);
-      setTimeout(function () {
-        destroyLoader();
-        if (redirectUrl) {
-          window.location.href = redirectUrl;
-        } else {
-          showPage();
-        }
-      }, 350);
+      setTimeout(function(){destroyLoader();if(redirectUrl)window.location.href=redirectUrl;else showPage();},350);
     }
-
-    /* ------ dispose WebGL resources ------ */
     function destroyLoader() {
-      lPhase = 'done';
-      cancelAnimationFrame(lAnimId);
-      var w = document.getElementById('loading-canvas-wrapper');
-      if (w) w.remove();
-      if (lGeo)      { lGeo.dispose();      lGeo = null; }
-      if (lMat)      { lMat.dispose();      lMat = null; }
-      if (lRenderer) { lRenderer.dispose(); lRenderer = null; }
-      lScene = lCamera = lPoints = lGroup = null;
-      lPos = lSizes = lColors = null;
-      lVelocities = [];
+      lPhase='done'; cancelAnimationFrame(lAnimId);
+      var w=document.getElementById('loading-canvas-wrapper'); if(w)w.remove();
+      if(lGeo){lGeo.dispose();lGeo=null;} if(lMat){lMat.dispose();lMat=null;} if(lRenderer){lRenderer.dispose();lRenderer=null;}
+      lScene=lCamera=lPoints=lGroup=null; lPos=lSizes=lColors=null; lVelocities=[];
     }
-
-    /* ------ fade in page content ------ */
     function showPage() {
       document.body.classList.remove('loading-active');
-      var pc = document.getElementById('page-content');
-      if (pc) pc.style.opacity = '1';
+      var pc=document.getElementById('page-content'); if(pc)pc.style.opacity='1';
     }
 
-    /* start on DOMContentLoaded */
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', init);
-    } else {
-      init();
-    }
+    if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
   }());
   </script>
 
-  <!-- =============================================
-       PARTICELLE SFONDO (80 span CSS)
-       ============================================= -->
+  <!-- PARTICELLE SFONDO -->
   <script>
   (function () {
-    for (var i = 0; i < 80; i++) {
-      var el  = document.createElement('span');
-      el.className = 'particle';
-      var sz  = (2 + Math.random() * 3).toFixed(1);
-      var op  = (0.15 + Math.random() * 0.30).toFixed(2);
-      var dur = (8  + Math.random() * 8).toFixed(1);
-      var del = (Math.random() * 8).toFixed(1);
-      var lft = (Math.random() * 100).toFixed(1);
-      var top = (Math.random() * 100).toFixed(1);
-      el.style.cssText = [
-        'width:'        + sz  + 'px',
-        'height:'       + sz  + 'px',
-        'left:'         + lft + 'vw',
-        'top:'          + top + 'vh',
-        '--p-opacity:'  + op,
-        'background:rgba(255,69,0,' + op + ')',
-        'box-shadow:0 0 6px rgba(255,69,0,' + op + ')',
-        'animation:particleFloat ' + dur + 's ease-in-out ' + del + 's infinite',
-      ].join(';');
+    var hex=CFG.color.replace('#','');
+    var r=parseInt(hex.substr(0,2),16),g=parseInt(hex.substr(2,2),16),b=parseInt(hex.substr(4,2),16);
+    for(var i=0;i<80;i++){
+      var el=document.createElement('span'); el.className='particle';
+      var sz=(2+Math.random()*3).toFixed(1), op=(0.12+Math.random()*0.25).toFixed(2);
+      var dur=(8+Math.random()*8).toFixed(1), del=(Math.random()*8).toFixed(1);
+      var lft=(Math.random()*100).toFixed(1), top=(Math.random()*100).toFixed(1);
+      el.style.cssText=['width:'+sz+'px','height:'+sz+'px','left:'+lft+'vw','top:'+top+'vh',
+        '--p-opacity:'+op,'background:rgba('+r+','+g+','+b+','+op+')','box-shadow:0 0 6px rgba('+r+','+g+','+b+','+op+')',
+        'animation:particleFloat '+dur+'s ease-in-out '+del+'s infinite'].join(';');
       document.body.appendChild(el);
     }
   }());
   </script>
 
-  <!-- =============================================
-       AUTENTICAZIONE + LOGICA PAGINA
-       ============================================= -->
+  <!-- AUTH + MESSAGGI -->
   <script>
-  /* -------------------- CONFIG -------------------- */
-  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbweYcCMsWIaHb6TpZzY4-Tk5NcwzM4WNAZBsEKd92mxY6inWuq9h1Bm3r3szdEqL9nthg/exec';
-  const ERROR_PAGE  = 'https://antoca84.github.io/chess-whispers-arcane/accesso-negato.html';
-  const ARCHETIPO   = 'alfiere';
+  const GAS_URL     = 'https://script.google.com/macros/s/AKfycbwfGTUvGNzja6v43ppiibouCJdmREKGkvwgPjTcmY63gxG_DycAM6PyAjIdhzJiCAQB/exec';
+  const ERROR_PAGE  = 'https://scacchimentali.it/accesso-negato.html';
+  const LAUNCH_DATE = '2025-04-01';
 
-  /* -------------------- UTILITY UI -------------------- */
   function addBanner(type, msg) {
-    const b = document.createElement('div');
-    b.className = 'access-notice ' + type;
-    b.textContent = msg;
-    document.body.prepend(b);
-    document.body.style.paddingTop = '48px';
+    var b=document.createElement('div'); b.className='access-notice '+type; b.textContent=msg;
+    document.body.prepend(b); document.body.style.paddingTop='48px';
   }
-
   function showQuizCTA() {
-    document.getElementById('public-cta-container').innerHTML =
-      '<div class="quiz-cta">' +
-        '<div class="quiz-cta-inner">' +
-          '<h3>Accedi ai Messaggi Completi</h3>' +
-          '<p>Completa il quiz gratuito per scoprire il tuo archetipo e sbloccare i messaggi quotidiani personalizzati.</p>' +
-          '<a href="../../index.html">Inizia il Quiz Gratuito</a>' +
-        '</div>' +
-      '</div>';
+    document.getElementById('public-cta-container').innerHTML=
+      '<div class="quiz-cta"><div class="quiz-cta-inner">'+
+      '<h3>Accedi ai Messaggi Completi</h3>'+
+      '<p>Completa il quiz gratuito per scoprire il tuo archetipo e sbloccare i messaggi quotidiani personalizzati.</p>'+
+      '<a href="../../index.html">Inizia il Quiz Gratuito</a></div></div>';
   }
-
   function showPrivateSections() {
-    document.querySelectorAll('.private-content').forEach(function (el) { el.style.display = 'block'; });
-    document.getElementById('share-button').disabled = false;
-    document.getElementById('save-button').disabled  = false;
+    document.querySelectorAll('.private-content').forEach(function(el){el.style.display='block';});
+    document.getElementById('share-button').disabled=false;
+    document.getElementById('save-button').disabled=false;
   }
-
   function hidePrivateSections() {
-    document.querySelectorAll('.private-content').forEach(function (el) { el.style.display = 'none'; });
+    document.querySelectorAll('.private-content').forEach(function(el){el.style.display='none';});
   }
-
-  /* -------------------- TOKEN FLOW -------------------- */
+  function showPaywall(stripeMonthly, stripeAnnual) {
+    hidePrivateSections();
+    document.getElementById('section-paywall').style.display='block';
+    if(stripeMonthly) document.getElementById('btn-stripe-monthly').href=stripeMonthly;
+    if(stripeAnnual)  document.getElementById('btn-stripe-annual').href=stripeAnnual;
+  }
+  function calcDayIndex() {
+    var launch=new Date(LAUNCH_DATE).getTime(), days=Math.floor((Date.now()-launch)/86400000);
+    return {dayNumber:days+1, index:((days%30)+30)%30};
+  }
   async function verifyToken(token) {
     try {
-      const r = await fetch(WEB_APP_URL + '?action=verify&token=' + encodeURIComponent(token) + '&archetipo=' + ARCHETIPO);
-      if (!r.ok) return { valid: false };
+      var r=await fetch(GAS_URL+'?action=verify&token='+encodeURIComponent(token)+'&archetipo='+ARCHETIPO);
+      if(!r.ok) return {valid:false};
       return await r.json();
-    } catch (e) {
-      console.error(e); return { valid: false };
-    }
+    } catch(e){console.error(e);return {valid:false};}
   }
-
   async function handleAuth() {
-    document.getElementById('current-date').textContent =
-      new Date().toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    var di=calcDayIndex();
+    document.getElementById('current-date').textContent=new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    document.getElementById('day-pill').textContent='Giorno '+di.dayNumber;
 
-    const params = new URLSearchParams(window.location.search);
-    const token  = params.get('token');
-
-    if (!token) {
-      /* Dispatch BEFORE banner/CTA so loading can fade immediately */
-      window.dispatchEvent(new CustomEvent('auth-result', { detail: { valid: false, noToken: true } }));
-      addBanner('public', 'Contenuto Limitato – nessun token presente');
-      hidePrivateSections();
-      showQuizCTA();
-      return;
+    var params=new URLSearchParams(window.location.search), token=params.get('token');
+    if(!token) {
+      window.dispatchEvent(new CustomEvent('auth-result',{detail:{valid:false,noToken:true}}));
+      addBanner('public','Contenuto Limitato – nessun token presente');
+      hidePrivateSections(); showQuizCTA(); return;
     }
-
-    const res = await verifyToken(token);
-
-    if (res && res.valid) {
-      /* Set up page content first (hidden behind loading canvas) */
-      addBanner('private', 'Accesso Autorizzato — Alfiere');
-      showPrivateSections();
-      loadDailyMessage();
-      enableActions();
-      /* Then trigger loading exit animation */
-      window.dispatchEvent(new CustomEvent('auth-result', { detail: { valid: true } }));
+    var res=await verifyToken(token);
+    if(res&&res.valid) {
+      addBanner('private','Accesso Autorizzato — '+CFG.name);
+      showPrivateSections(); loadDailyMessage(di.index); enableActions();
+      window.dispatchEvent(new CustomEvent('auth-result',{detail:{valid:true}}));
+    } else if(res&&res.status==='expired') {
+      window.dispatchEvent(new CustomEvent('auth-result',{detail:{valid:false,noToken:true}}));
+      showPaywall(res.stripeMonthly,res.stripeAnnual);
     } else {
-      const redirectUrl = ERROR_PAGE + '?error=' + encodeURIComponent((res && res.error) || 'Token non valido');
-      /* Let loading sequence handle redirect after implode animation */
-      window.dispatchEvent(new CustomEvent('auth-result', { detail: { valid: false, redirectUrl: redirectUrl } }));
+      var errMsg=(res&&res.error)||'Token non valido';
+      var redir=ERROR_PAGE+'?error='+encodeURIComponent(errMsg);
+      window.dispatchEvent(new CustomEvent('auth-result',{detail:{valid:false,redirectUrl:redir}}));
     }
   }
-
-  /* -------------------- MESSAGGI -------------------- */
-  async function loadDailyMessage() {
+  async function loadDailyMessage(index) {
     try {
-      const r    = await fetch('../../messages/alfiere-messages.json');
-      const data = await r.json();
-      const today = new Date().toISOString().split('T')[0];
-      const msg   = data[today] || 'Messaggio non disponibile per oggi.';
-      document.getElementById('daily-message').textContent = msg;
-      window._currentMsg = msg;
-    } catch (e) {
-      document.getElementById('daily-message').textContent = 'Errore nel caricamento del messaggio.';
-    }
+      var r=await fetch('./messages.json'), data=await r.json();
+      var msgs=data.messages||data, msg=msgs[index]||msgs[0];
+      if(!msg){document.getElementById('msg-loading').textContent='Messaggio non disponibile per oggi.';return;}
+      document.getElementById('msg-loading').style.display='none';
+      document.getElementById('msg-titolo').textContent=msg.titolo;
+      document.getElementById('msg-testo').textContent=msg.testo;
+      document.getElementById('msg-mossa').textContent=msg.mossa;
+      document.getElementById('msg-kairos').textContent=msg.kairos;
+      document.getElementById('msg-titolo').style.display='';
+      document.getElementById('msg-testo').style.display='';
+      document.getElementById('msg-mossa-box').style.display='';
+      document.getElementById('msg-kairos').style.display='';
+      window._currentMsg={titolo:msg.titolo,testo:msg.testo,mossa:msg.mossa,kairos:msg.kairos};
+    } catch(e){document.getElementById('msg-loading').textContent='Errore nel caricamento del messaggio.';console.error(e);}
   }
-
-  /* -------------------- AZIONI SHARE / SAVE -------------------- */
   function enableActions() {
-    const shareBtn = document.getElementById('share-button');
-    const saveBtn  = document.getElementById('save-button');
-
-    shareBtn.onclick = async function () {
-      const text = window._currentMsg + '\n\nScacchi Mentali';
-      if (navigator.share) {
-        try { await navigator.share({ title: 'Messaggio dell\'Alfiere', text: text, url: location.href }); } catch (e) {}
-      } else {
-        try { await navigator.clipboard.writeText(text); alert('Messaggio copiato negli appunti!'); } catch (e) {}
-      }
+    document.getElementById('share-button').onclick=async function(){
+      var m=window._currentMsg; if(!m)return;
+      var text=m.titolo+'\n\n'+m.testo+'\n\nLa mossa di oggi: '+m.mossa+'\n\n«'+m.kairos+'»\n\nScacchi Mentali';
+      if(navigator.share){try{await navigator.share({title:'Messaggio di '+CFG.name,text:text,url:location.href});}catch(e){}}
+      else{try{await navigator.clipboard.writeText(text);alert('Messaggio copiato!');}catch(e){}}
     };
-
-    saveBtn.onclick = function () {
-      const blob = new Blob([window._currentMsg], { type: 'text/plain' });
-      const url  = URL.createObjectURL(blob);
-      const a    = document.createElement('a');
-      a.href = url;
-      a.download = 'messaggio-alfiere-' + new Date().toISOString().split('T')[0] + '.txt';
-      document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+    document.getElementById('save-button').onclick=function(){
+      var m=window._currentMsg; if(!m)return;
+      var content=m.titolo+'\n\n'+m.testo+'\n\nLa mossa di oggi:\n'+m.mossa+'\n\n«'+m.kairos+'»\n\nScacchi Mentali — '+new Date().toLocaleDateString('it-IT');
+      var blob=new Blob([content],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+      a.href=url; a.download='messaggio-'+ARCHETIPO+'-'+new Date().toISOString().split('T')[0]+'.txt';
+      document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
     };
   }
-
   document.addEventListener('DOMContentLoaded', handleAuth);
   </script>
 </body>
