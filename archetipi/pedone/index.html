@@ -164,6 +164,15 @@
     .btn-plan { display: block; width: 100%; padding: 12px 20px; background: var(--arch-color); color: #0d0d0d; border: none; border-radius: 30px; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.5px; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; text-align: center; }
     .btn-plan:hover { transform: translateY(-2px); box-shadow: 0 8px 24px var(--arch-color-glow); }
 
+    /* Error section */
+    .section-error { position: relative; z-index: 1; padding: 28px 0 16px; display: none; }
+    .error-card { background: rgba(28,28,28,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--arch-color-dim); border-radius: 16px; padding: 40px 32px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
+    .error-symbol { font-size: 4rem; opacity: 0.2; filter: blur(1px); margin-bottom: 20px; display: block; }
+    .error-title { font-family: 'Cinzel', serif; font-size: 1.3rem; color: var(--text-1); margin-bottom: 10px; letter-spacing: 1px; }
+    .error-text { font-family: 'Lato', sans-serif; font-size: 0.92rem; color: var(--text-3); line-height: 1.7; }
+    .btn-retry { display: inline-block; margin-top: 24px; padding: 13px 32px; background: transparent; color: var(--arch-color); border: 1px solid var(--arch-color-glow); border-radius: 30px; font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 600; letter-spacing: 0.5px; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .btn-retry:hover { transform: translateY(-2px); box-shadow: 0 4px 16px var(--arch-color-dim); }
+
     /* Sub CTA */
     .section-sub { position: relative; z-index: 1; padding: 16px 0 48px; text-align: center; }
     .btn-sub { display: inline-block; padding: 16px 40px; background: var(--arch-color); color: #0d0d0d; border-radius: 30px; font-family: 'Montserrat', sans-serif; font-size: 0.95rem; font-weight: 700; letter-spacing: 0.5px; transition: transform 0.2s ease, box-shadow 0.2s ease; }
@@ -252,6 +261,17 @@
               <a id="btn-stripe-annual" href="#" class="btn-plan">Inizia ora</a>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-error" id="section-error">
+      <div class="container">
+        <div class="error-card">
+          <span class="error-symbol" id="error-symbol"></span>
+          <h2 class="error-title" id="error-title"></h2>
+          <p class="error-text" id="error-text"></p>
+          <button class="btn-retry" id="btn-retry" style="display:none;" onclick="window.location.reload()">Riprova</button>
         </div>
       </div>
     </section>
@@ -361,6 +381,7 @@
   document.getElementById('hero-title').textContent     = CFG.name;
   document.getElementById('hero-subtitle').textContent  = CFG.subtitle;
   document.getElementById('paywall-symbol').textContent = CFG.symbol;
+  document.getElementById('error-symbol').textContent   = CFG.symbol;
   document.getElementById('arch-img').src = '../../images/archetipi/' + ARCHETIPO + '.png';
   document.getElementById('arch-img').alt = CFG.name;
   document.getElementById('sub-link').href = '../../subscribe/?archetipo=' + ARCHETIPO;
@@ -449,9 +470,9 @@
       lFallback=setTimeout(function(){if(lPhase!=='chaos')return;doFadeAndShow(null);},8000);
       window.addEventListener('auth-result',function(e){
         clearTimeout(lFallback);
-        if(e.detail.noToken){doFadeAndShow(null);return;}
+        if(e.detail.noToken){doFadeAndShow();return;}
         lPhase='converge';
-        converge(function(){setTimeout(function(){e.detail.valid?explodeExit():implodeExit(e.detail.redirectUrl);},300);});
+        converge(function(){setTimeout(function(){e.detail.valid?explodeExit():implodeExit();},300);});
       },{once:true});
     }
 
@@ -472,12 +493,12 @@
       });
     }
 
-    function implodeExit(redirectUrl) {
+    function implodeExit() {
       var start=new Float32Array(lPos),p={t:0};
       fadeCanvasOut(400);
       gsap.to(p,{t:1,duration:0.5,ease:'power2.in',
         onUpdate:function(){for(var i=0;i<LC;i++){var i3=i*3;lPos[i3]=start[i3]*(1-p.t);lPos[i3+1]=start[i3+1]*(1-p.t);lPos[i3+2]=start[i3+2]*(1-p.t);}lGeo.attributes.position.needsUpdate=true;},
-        onComplete:function(){destroyLoader();if(redirectUrl)window.location.href=redirectUrl;else showPage();}
+        onComplete:function(){destroyLoader();showPage();}
       });
     }
 
@@ -485,9 +506,9 @@
       var w=document.getElementById('loading-canvas-wrapper');
       if(!w)return; w.style.transition='opacity '+(ms/1000).toFixed(2)+'s ease'; w.style.opacity='0';
     }
-    function doFadeAndShow(redirectUrl) {
+    function doFadeAndShow() {
       fadeCanvasOut(300);
-      setTimeout(function(){destroyLoader();if(redirectUrl)window.location.href=redirectUrl;else showPage();},350);
+      setTimeout(function(){destroyLoader();showPage();},350);
     }
     function destroyLoader() {
       lPhase='done'; cancelAnimationFrame(lAnimId);
@@ -525,19 +546,11 @@
   <!-- AUTH + MESSAGGI -->
   <script>
   const GAS_URL     = 'https://script.google.com/macros/s/AKfycbwfGTUvGNzja6v43ppiibouCJdmREKGkvwgPjTcmY63gxG_DycAM6PyAjIdhzJiCAQB/exec';
-  const ERROR_PAGE  = 'https://scacchimentali.it/accesso-negato.html';
   const LAUNCH_DATE = '2025-04-01';
 
   function addBanner(type, msg) {
     var b=document.createElement('div'); b.className='access-notice '+type; b.textContent=msg;
     document.body.prepend(b); document.body.style.paddingTop='48px';
-  }
-  function showQuizCTA() {
-    document.getElementById('public-cta-container').innerHTML=
-      '<div class="quiz-cta"><div class="quiz-cta-inner">'+
-      '<h3>Accedi ai Messaggi Completi</h3>'+
-      '<p>Completa il quiz gratuito per scoprire il tuo archetipo e sbloccare i messaggi quotidiani personalizzati.</p>'+
-      '<a href="../../index.html">Inizia il Quiz Gratuito</a></div></div>';
   }
   function showPrivateSections() {
     document.querySelectorAll('.private-content').forEach(function(el){el.style.display='block';});
@@ -546,6 +559,20 @@
   }
   function hidePrivateSections() {
     document.querySelectorAll('.private-content').forEach(function(el){el.style.display='none';});
+  }
+  function showErrorScreen(type) {
+    hidePrivateSections();
+    var sec=document.getElementById('section-error'); sec.style.display='block';
+    var retry=document.getElementById('btn-retry');
+    if(type==='network') {
+      document.getElementById('error-title').textContent='Impossibile verificare il QR code.';
+      document.getElementById('error-text').textContent='Controlla la connessione e riprova.';
+      retry.style.display='';
+    } else {
+      document.getElementById('error-title').textContent='QR code non valido.';
+      document.getElementById('error-text').textContent='Verifica di aver scansionato il codice corretto.';
+      retry.style.display='none';
+    }
   }
   function showPaywall(stripeMonthly, stripeAnnual) {
     hidePrivateSections();
@@ -562,7 +589,7 @@
       var r=await fetch(GAS_URL+'?action=verify&token='+encodeURIComponent(token)+'&archetipo='+ARCHETIPO);
       if(!r.ok) return {valid:false};
       return await r.json();
-    } catch(e){console.error(e);return {valid:false};}
+    } catch(e){console.error(e);return {valid:false,error:'network'};}
   }
   async function handleAuth() {
     var di=calcDayIndex();
@@ -572,8 +599,7 @@
     var params=new URLSearchParams(window.location.search), token=params.get('token');
     if(!token) {
       window.dispatchEvent(new CustomEvent('auth-result',{detail:{valid:false,noToken:true}}));
-      addBanner('public','Contenuto Limitato – nessun token presente');
-      hidePrivateSections(); showQuizCTA(); return;
+      showErrorScreen('invalid'); return;
     }
     var res=await verifyToken(token);
     if(res&&res.valid) {
@@ -583,10 +609,12 @@
     } else if(res&&res.status==='expired') {
       window.dispatchEvent(new CustomEvent('auth-result',{detail:{valid:false,noToken:true}}));
       showPaywall(res.stripeMonthly,res.stripeAnnual);
+    } else if(res&&res.error==='network') {
+      window.dispatchEvent(new CustomEvent('auth-result',{detail:{valid:false,noToken:true}}));
+      showErrorScreen('network');
     } else {
-      var errMsg=(res&&res.error)||'Token non valido';
-      var redir=ERROR_PAGE+'?error='+encodeURIComponent(errMsg);
-      window.dispatchEvent(new CustomEvent('auth-result',{detail:{valid:false,redirectUrl:redir}}));
+      window.dispatchEvent(new CustomEvent('auth-result',{detail:{valid:false}}));
+      showErrorScreen('invalid');
     }
   }
   async function loadDailyMessage(index) {
