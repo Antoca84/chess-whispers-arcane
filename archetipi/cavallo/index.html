@@ -586,11 +586,13 @@
       retry.style.display='none';
     }
   }
-  function showPaywall(stripeMonthly, stripeAnnual) {
+  function showPaywall(email) {
     hidePrivateSections();
     document.getElementById('section-paywall').style.display='block';
-    if(stripeMonthly) document.getElementById('btn-stripe-monthly').href=stripeMonthly;
-    if(stripeAnnual)  document.getElementById('btn-stripe-annual').href=stripeAnnual;
+    var base='https://antoca84.github.io/chess-whispers-arcane/subscribe/';
+    var ep=email?'&email='+encodeURIComponent(email):'';
+    document.getElementById('btn-stripe-monthly').href=base+'?archetipo='+ARCHETIPO+'&plan=monthly'+ep;
+    document.getElementById('btn-stripe-annual').href=base+'?archetipo='+ARCHETIPO+'&plan=annual'+ep;
   }
   function calcDayIndex() {
     var launch=new Date(LAUNCH_DATE).getTime(), days=Math.floor((Date.now()-launch)/86400000);
@@ -620,7 +622,7 @@
       window.dispatchEvent(new CustomEvent('auth-result',{detail:{valid:true}}));
     } else if(res&&res.status==='expired') {
       window.dispatchEvent(new CustomEvent('auth-result',{detail:{valid:false,noToken:true}}));
-      showPaywall(res.stripeMonthly,res.stripeAnnual);
+      showPaywall(res.email);
     } else if(res&&res.error==='network') {
       window.dispatchEvent(new CustomEvent('auth-result',{detail:{valid:false,noToken:true}}));
       showErrorScreen('network');
