@@ -1,436 +1,1014 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subscription Mensile - Scacchi Mentali</title>
-    <meta name="description" content="Attiva la tua subscription mensile per ricevere messaggi quotidiani personalizzati del tuo archetipo degli scacchi mentali.">
-    <link rel="canonical" href="https://scacchimentali.it/subscribe/">
-    <meta property="og:locale" content="it_IT">
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Scacchi Mentali">
-    <meta property="og:title" content="Subscription Mensile - Scacchi Mentali">
-    <meta property="og:description" content="Attiva la tua subscription mensile per ricevere messaggi quotidiani personalizzati del tuo archetipo degli scacchi mentali.">
-    <meta property="og:url" content="https://scacchimentali.it/subscribe/">
-    <meta property="og:image" content="https://scacchimentali.it/images/logo.png">
-    <meta property="og:image:alt" content="Logo di Scacchi Mentali">
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Subscription Mensile - Scacchi Mentali">
-    <meta name="twitter:description" content="Attiva la tua subscription mensile per ricevere messaggi quotidiani personalizzati del tuo archetipo degli scacchi mentali.">
-    <meta name="twitter:image" content="https://scacchimentali.it/images/logo.png">
-    
-    <!-- Favicon -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2024/svg' viewBox='0 0 24 24'><text y='18' font-size='18'>♟</text></svg>">
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Styles -->
-    <link rel="stylesheet" href="../css/style.css">
-    <style>
-        /* Stili specifici per la pagina subscription */
-        .subscription-hero {
-            background: radial-gradient(circle at center, #2a2215 0%, var(--color-background) 100%);
-            padding: 80px 0;
-        }
-        
-        .pricing-card {
-            background: var(--gradient-card);
-            padding: 40px 30px;
-            border-radius: 20px;
-            text-align: center;
-            max-width: 480px;
-            margin: 40px auto;
-            border-top: 4px solid var(--color-re);
-            box-shadow: var(--shadow-deep);
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .pricing-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-        
-        .pricing-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
-            animation: shimmer 3s infinite;
-        }
-        
-        @keyframes shimmer {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-        
-        .price {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--color-re);
-            margin: 15px 0;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: baseline;
-            justify-content: center;
-            gap: 5px;
-        }
-        
-        .price-currency {
-            font-size: 1.8rem;
-            vertical-align: top;
-        }
-        
-        .price-period {
-            font-size: 1rem;
-            color: var(--color-text-secondary);
-            font-weight: 300;
-        }
-        
-        .offer-badge {
-            background: linear-gradient(135deg, #FF4500, #FFD700);
-            color: #1a1a1a;
-            padding: 15px 20px;
-            border-radius: 12px;
-            margin: 20px 0;
-            font-weight: 600;
-            font-size: 0.9rem;
-            box-shadow: 0 4px 15px rgba(255, 69, 0, 0.3);
-        }
-        
-        .countdown-container {
-            margin-top: 8px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            opacity: 0.9;
-        }
-        
-        .features-list {
-            list-style: none;
-            padding: 30px 0;
-            margin: 0;
-        }
-        
-        .features-list li {
-            padding: 12px 0;
-            color: var(--color-text-secondary);
-            border-bottom: 1px solid #333;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .features-list li:last-child {
-            border-bottom: none;
-        }
-        
-        .feature-icon {
-            color: var(--color-re);
-            font-size: 1.2rem;
-            min-width: 20px;
-        }
-        
-        .guarantee {
-            background: var(--color-surface);
-            padding: 30px;
-            border-radius: 15px;
-            margin: 40px 0;
-            text-align: center;
-            border: 1px solid #333;
-        }
-        
-        .guarantee-icon {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            color: var(--color-torre);
-        }
-        
-        .archetipo-badge {
-            display: inline-block;
-            background: var(--gradient-cta);
-            color: var(--color-background);
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .testimonials {
-            padding: 80px 0;
-            background: var(--color-surface);
-        }
-        
-        .testimonial {
-            background: var(--color-background);
-            padding: 40px;
-            border-radius: 15px;
-            margin: 30px 0;
-            border-left: 4px solid var(--color-re);
-            box-shadow: var(--shadow-card);
-        }
-        
-        .testimonial-author {
-            margin-top: 20px;
-            color: var(--color-text-secondary);
-            font-style: italic;
-        }
-    </style>
-    
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XE6BJT3222"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-XE6BJT3222');
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Scegli il tuo piano | Scacchi Mentali</title>
+  <meta name="description" content="Un messaggio al giorno calibrato sul tuo archetipo. Non motivazione generica — una mossa specifica per chi sei tu.">
+  <meta name="robots" content="noindex, nofollow">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><text y='18' font-size='18'>♟</text></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XE6BJT3222"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XE6BJT3222');
+  </script>
+
+  <style>
+    /* ============================================================
+       VARIABLES — overridden by JS based on ?archetipo=
+       ============================================================ */
+    :root {
+      --accent:      #FFD700;
+      --accent-dim:  rgba(255,215,0,0.12);
+      --accent-glow: rgba(255,215,0,0.30);
+      --bg:          #0d0d0d;
+      --surface:     #1c1c1c;
+      --surface-2:   #242424;
+      --text-1:      #f8f9fa;
+      --text-2:      #b8bcc0;
+      --text-3:      #6b7280;
+      --radius:      14px;
+    }
+
+    /* ============================================================
+       RESET & BASE
+       ============================================================ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--bg);
+      color: var(--text-1);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* Grain texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.025;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .container-narrow {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ============================================================
+       HEADER
+       ============================================================ */
+    .site-header {
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      z-index: 10;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .site-header img { width: 30px; height: 30px; border-radius: 6px; }
+    .site-header-name {
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 2.5px;
+    }
+
+    /* ============================================================
+       SECTION SPACING
+       ============================================================ */
+    section { position: relative; z-index: 1; }
+
+    .section-divider {
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--accent), transparent);
+      margin: 0 auto 48px;
+    }
+
+    /* ============================================================
+       HERO
+       ============================================================ */
+    .hero {
+      padding: 88px 24px 72px;
+      text-align: center;
+      position: relative;
+    }
+
+    /* Radial glow behind hero */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse at center, var(--accent-dim) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero-symbol {
+      font-size: 3.2rem;
+      color: var(--accent);
+      text-shadow: 0 0 30px var(--accent-glow);
+      display: block;
+      margin-bottom: 28px;
+      animation: symbolPulse 4s ease-in-out infinite;
+      position: relative;
+      z-index: 1;
+    }
+
+    @keyframes symbolPulse {
+      0%, 100% { text-shadow: 0 0 20px var(--accent-dim), 0 0 40px var(--accent-dim); }
+      50%       { text-shadow: 0 0 40px var(--accent-glow), 0 0 80px var(--accent-dim); }
+    }
+
+    .hero-headline {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.7rem, 4.5vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.25;
+      color: var(--text-1);
+      letter-spacing: 1px;
+      max-width: 700px;
+      margin: 0 auto 28px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-copy {
+      font-size: 1.05rem;
+      font-weight: 300;
+      color: var(--text-2);
+      line-height: 1.85;
+      max-width: 520px;
+      margin: 0 auto 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-cta {
+      display: inline-block;
+      padding: 16px 40px;
+      background: var(--accent);
+      color: #0d0d0d;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-cta:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px var(--accent-glow);
+    }
+
+    /* ============================================================
+       SOCIAL PROOF
+       ============================================================ */
+    .section-proof {
+      padding: 72px 0;
+      background: linear-gradient(180deg, transparent 0%, rgba(28,28,28,0.3) 50%, transparent 100%);
+    }
+
+    .section-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .proof-card {
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      position: relative;
+    }
+
+    .proof-card::before {
+      content: '\201C';
+      font-family: 'Cinzel', serif;
+      font-size: 3.5rem;
+      line-height: 1;
+      color: var(--accent);
+      opacity: 0.3;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .proof-quote {
+      font-size: 0.92rem;
+      font-weight: 400;
+      color: var(--text-2);
+      line-height: 1.75;
+      margin-bottom: 20px;
+    }
+
+    .proof-author {
+      font-family: 'Cinzel', serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 1px;
+    }
+
+    /* ============================================================
+       COME FUNZIONA
+       ============================================================ */
+    .section-how {
+      padding: 72px 0;
+    }
+
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.3rem, 3vw, 1.8rem);
+      font-weight: 700;
+      color: var(--text-1);
+      text-align: center;
+      letter-spacing: 1.5px;
+      margin-bottom: 56px;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      text-align: center;
+    }
+
+    .step {
+      padding: 32px 20px;
+    }
+
+    .step-icon {
+      font-size: 2.4rem;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .step-number {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .step-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-1);
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    .step-desc {
+      font-size: 0.88rem;
+      color: var(--text-3);
+      line-height: 1.7;
+    }
+
+    /* ============================================================
+       PRICING
+       ============================================================ */
+    .section-pricing {
+      padding: 72px 0 48px;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .plan-card {
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      padding: 36px 28px;
+      position: relative;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .plan-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+    }
+
+    /* Card annuale — in evidenza */
+    .plan-card.featured {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent), 0 20px 60px rgba(0,0,0,0.6), 0 0 40px var(--accent-dim);
+    }
+
+    /* Piano attivo da URL param */
+    .plan-card.active-plan {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent), 0 20px 60px rgba(0,0,0,0.5);
+    }
+
+    .plan-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 20px;
+    }
+    .badge-featured { background: var(--accent); color: #0d0d0d; }
+    .badge-limited  { background: rgba(255,255,255,0.08); color: var(--text-2); border: 1px solid rgba(255,255,255,0.12); }
+
+    .plan-name {
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--text-3);
+      margin-bottom: 12px;
+    }
+
+    .plan-price {
+      font-family: 'Cinzel', serif;
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--text-1);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .plan-price sup {
+      font-size: 1.2rem;
+      vertical-align: super;
+      font-weight: 400;
+    }
+
+    .plan-period {
+      font-size: 0.8rem;
+      color: var(--text-3);
+      margin-bottom: 6px;
+    }
+
+    .plan-saving {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 28px;
+    }
+
+    .plan-trial {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-2);
+      margin-bottom: 28px;
+    }
+
+    .plan-features {
+      list-style: none;
+      margin-bottom: 32px;
+    }
+    .plan-features li {
+      font-size: 0.88rem;
+      color: var(--text-2);
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .plan-features li::before {
+      content: '✓';
+      color: var(--accent);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .btn-plan {
+      display: block;
+      width: 100%;
+      padding: 15px 20px;
+      background: var(--accent);
+      color: #0d0d0d;
+      border: none;
+      border-radius: 50px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+    .btn-plan:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px var(--accent-glow);
+    }
+    .btn-plan.btn-ghost {
+      background: transparent;
+      color: var(--text-2);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .btn-plan.btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: none;
+    }
+
+    /* ============================================================
+       URGENCY BANNER
+       ============================================================ */
+    .urgency-banner {
+      margin: 0 0 48px;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+    .urgency-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      background: rgba(255,215,0,0.06);
+      border: 1px solid rgba(255,215,0,0.2);
+      border-radius: 8px;
+      padding: 14px 24px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-2);
+    }
+    .urgency-inner strong { color: var(--accent); }
+
+    /* ============================================================
+       FAQ
+       ============================================================ */
+    .section-faq {
+      padding: 72px 0;
+      background: linear-gradient(180deg, transparent 0%, rgba(28,28,28,0.2) 50%, transparent 100%);
+    }
+
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .faq-item {
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 22px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      text-align: left;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text-1);
+      transition: color 0.2s ease;
+    }
+    .faq-question:hover { color: var(--accent); }
+
+    .faq-icon {
+      font-size: 1.2rem;
+      color: var(--accent);
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+      font-style: normal;
+    }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+      padding: 0 24px;
+    }
+    .faq-item.open .faq-answer {
+      max-height: 300px;
+      padding: 0 24px 22px;
+    }
+    .faq-answer p {
+      font-size: 0.9rem;
+      color: var(--text-2);
+      line-height: 1.8;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding-top: 16px;
+    }
+
+    /* ============================================================
+       FINAL CTA
+       ============================================================ */
+    .section-final-cta {
+      padding: 80px 0;
+      text-align: center;
+    }
+
+    .final-cta-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.4rem, 3.5vw, 2rem);
+      font-weight: 700;
+      color: var(--text-1);
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .final-cta-sub {
+      font-size: 0.92rem;
+      color: var(--text-3);
+      margin-bottom: 36px;
+    }
+
+    .btn-final {
+      display: inline-block;
+      padding: 18px 48px;
+      background: var(--accent);
+      color: #0d0d0d;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.5px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn-final:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 36px var(--accent-glow);
+    }
+
+    .final-trial-note {
+      margin-top: 16px;
+      font-size: 0.78rem;
+      color: var(--text-3);
+    }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    .site-footer {
+      padding: 32px 24px;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      position: relative;
+      z-index: 1;
+    }
+    .site-footer p { font-size: 0.75rem; color: var(--text-3); margin-bottom: 10px; }
+    .footer-links { display: flex; justify-content: center; gap: 24px; }
+    .footer-links a { font-size: 0.75rem; color: var(--text-3); transition: color 0.2s ease; }
+    .footer-links a:hover { color: var(--accent); }
+
+    /* ============================================================
+       BREAKPOINT 768px
+       ============================================================ */
+    @media (max-width: 768px) {
+      .proof-grid {
+        grid-template-columns: 1fr;
+        max-width: 480px;
+        margin: 0 auto;
+      }
+      .steps-grid {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+        margin: 0 auto;
+        gap: 16px;
+      }
+      .step { padding: 24px 16px; }
+      .pricing-grid {
+        grid-template-columns: 1fr;
+        max-width: 420px;
+        margin: 0 auto;
+      }
+      .plan-card.featured { order: -1; }
+    }
+
+    /* ============================================================
+       BREAKPOINT 480px
+       ============================================================ */
+    @media (max-width: 480px) {
+      .hero { padding: 56px 16px 48px; }
+      .hero-headline { font-size: 1.55rem; }
+      .hero-copy { font-size: 0.95rem; }
+      .hero-cta { padding: 14px 32px; }
+      .section-title { margin-bottom: 40px; }
+      .plan-card { padding: 28px 20px; }
+      .btn-final { padding: 16px 36px; font-size: 0.92rem; }
+      .proof-card { padding: 22px 18px; }
+      .faq-question { padding: 18px 18px; font-size: 0.88rem; }
+      .faq-item.open .faq-answer { padding: 0 18px 18px; }
+    }
+  </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <a href="../index.html">
-                    <img src="../images/logo.png" alt="Scacchi Mentali Logo" class="logo">
-                </a>
-                <h1 class="header-title">Scacchi Mentali</h1>
-            </div>
-        </div>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="subscription-hero hero">
-        <div class="container">
-            <div class="hero-content">
-                <div id="archetipo-badge" class="archetipo-badge">
-                    Loading...
-                </div>
-                <h1 class="hero-title">Potenzia il Tuo Archetipo</h1>
-                <p class="hero-description">
-                    Ricevi messaggi quotidiani personalizzati, strategie avanzate e content esclusivi 
-                    per sviluppare al massimo il potenziale del tuo archetipo degli scacchi mentali.
-                </p>
-            </div>
-        </div>
-    </section>
+  <!-- HEADER -->
+  <header class="site-header">
+    <a href="../index.html" style="display:flex;align-items:center;gap:10px;">
+      <img src="../images/logo.png" alt="Scacchi Mentali">
+      <span class="site-header-name">Scacchi Mentali</span>
+    </a>
+  </header>
 
-    <!-- Pricing Section -->
-    <section class="pricing">
-        <div class="container">
-            <div class="pricing-card">
-                <h2>Subscription Premium</h2>
-                <div class="price">
-                    <span class="price-currency">€</span>4,99<span class="price-period">/mese</span>
-                </div>
-                
-                <div class="offer-badge">
-                    🚀 Offerta Early Adopters
-                    <div class="countdown-container">
-                        Solo <span id="countdown-timer">12g 7h 23m</span> rimasti!
-                    </div>
-                </div>
-                
-                <ul class="features-list">
-                    <li>
-                        <span class="feature-icon">📱</span>
-                        <span>Messaggio quotidiano personalizzato via QR</span>
-                    </li>
-                    <li>
-                        <span class="feature-icon">🧠</span>
-                        <span>Strategie avanzate per il tuo archetipo</span>
-                    </li>
-                    <li>
-                        <span class="feature-icon">📊</span>
-                        <span>Analisi settimanale dei tuoi progressi</span>
-                    </li>
-                    <li>
-                        <span class="feature-icon">💎</span>
-                        <span>Content esclusivo e approfondimenti</span>
-                    </li>
-                    <li>
-                        <span class="feature-icon">🎯</span>
-                        <span>Sfide personalizzate per crescere</span>
-                    </li>
-                    <li>
-                        <span class="feature-icon">👥</span>
-                        <span>Accesso alla community premium</span>
-                    </li>
-                    <li>
-                        <span class="feature-icon">⚡</span>
-                        <span>Notifiche push intelligenti</span>
-                    </li>
-                </ul>
-                
-                <button class="cta-button" onclick="activateSubscription()">
-                    🚀 Attiva Ora la Subscription
-                </button>
-            </div>
-        </div>
-    </section>
+  <!-- ================================================
+       1. HERO
+       ================================================ -->
+  <section class="hero">
+    <span class="hero-symbol" id="hero-symbol">♟</span>
+    <h1 class="hero-headline" id="hero-headline">
+      La partita non finisce quando smetti di giocare.<br>Finisce quando smetti di imparare.
+    </h1>
+    <p class="hero-copy">
+      Ogni giorno un messaggio calibrato sul tuo archetipo.<br>
+      Non motivazione generica — una mossa specifica per chi sei tu.<br>
+      Scansioni il QR. Leggi. Agisci.
+    </p>
+    <a href="#prezzi" class="hero-cta">Scegli il tuo piano</a>
+  </section>
 
-    <!-- Garanzia -->
-    <section class="guarantee-section">
-        <div class="container">
-            <div class="guarantee">
-                <div class="guarantee-icon">🛡️</div>
-                <h3>Garanzia 100% Soddisfatti o Rimborsati</h3>
-                <p>
-                    Prova la subscription per 7 giorni. Se non sei completamente soddisfatto, 
-                    ti rimborsiamo immediatamente senza domande.
-                </p>
-            </div>
-        </div>
-    </section>
+  <!-- ================================================
+       2. SOCIAL PROOF
+       ================================================ -->
+  <!-- TODO: sostituire con testimonianze reali post-lancio -->
+  <section class="section-proof">
+    <div class="container">
+      <p class="section-label">Chi ha già iniziato</p>
+      <div class="proof-grid">
 
-    <!-- Testimonials -->
-    <section class="testimonials">
-        <div class="container">
-            <h2 class="section-title">Cosa Dicono i Nostri Utenti</h2>
-            
-            <div class="testimonial">
-                <p>
-                    "I messaggi quotidiani del mio archetipo Re mi hanno aiutato a diventare un leader 
-                    più consapevole nel mio team. Ogni mattina ricevo la strategia perfetta per affrontare la giornata."
-                </p>
-                <div class="testimonial-author">- Marco T., Manager</div>
-            </div>
-            
-            <div class="testimonial">
-                <p>
-                    "Come Regina, ho imparato a bilanciare meglio i miei molteplici ruoli. 
-                    Le strategie sono incredibilmente precise e mi aiutano a eccellere in ogni ambito."
-                </p>
-                <div class="testimonial-author">- Sofia R., Imprenditrice</div>
-            </div>
-            
-            <div class="testimonial">
-                <p>
-                    "Il mio archetipo Pedone mi ha insegnato che ogni piccolo passo conta. 
-                    I messaggi mi motivano quotidianamente verso la mia trasformazione personale."
-                </p>
-                <div class="testimonial-author">- Luca M., Studente</div>
-            </div>
+        <div class="proof-card">
+          <p class="proof-quote">
+            Ho smesso di portare tutto da solo dopo il terzo messaggio.
+            Non pensavo che 90 secondi al mattino potessero cambiare
+            come affronto la giornata.
+          </p>
+          <span class="proof-author">Marco — Il Re</span>
         </div>
-    </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <p>&copy; 2026 Scacchi Mentali. Tutti i diritti riservati.</p>
-                <div class="footer-links">
-                    <a href="../index.html">Home</a>
-                    <a href="#privacy">Privacy Policy</a>
-                    <a href="#termini">Termini di Servizio</a>
-                    <a href="#supporto">Supporto</a>
-                </div>
-            </div>
+        <div class="proof-card">
+          <p class="proof-quote">
+            Finalmente qualcosa che parla a me, non a tutti.
+            Ogni messaggio sembra scritto per quello che sto
+            vivendo in quel momento.
+          </p>
+          <span class="proof-author">Giulia — La Regina</span>
         </div>
-    </footer>
 
-    <script src="../js/main.js"></script>
-    <script src="../js/countdown.js"></script>
-    <script>
-        // Gestione parametri URL e personalizzazione della pagina
-        document.addEventListener('DOMContentLoaded', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const archetipo = urlParams.get('archetipo') || 'generico';
-            
-            // Personalizza la pagina in base all'archetipo
-            personalizeForArchetype(archetipo);
-            
-            // Google Analytics - traccia la visualizzazione della subscription
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'view_subscription_page', {
-                    'archetipo': archetipo,
-                    'event_category': 'subscription',
-                    'event_label': 'page_view'
-                });
-            }
-        });
-        
-        function personalizeForArchetype(archetipo) {
-            const archetipoData = {
-                're': {
-                    name: '👑 Il Re',
-                    color: '#FFD700',
-                    description: 'Leadership e Strategia'
-                },
-                'regina': {
-                    name: '👑 La Regina', 
-                    color: '#8A2BE2',
-                    description: 'Versatilità e Potere'
-                },
-                'torre': {
-                    name: '🏰 La Torre',
-                    color: '#32CD32', 
-                    description: 'Stabilità e Forza'
-                },
-                'alfiere': {
-                    name: '🔥 L\'Alfiere',
-                    color: '#FF4500',
-                    description: 'Visione e Creatività'
-                },
-                'cavallo': {
-                    name: '🐎 Il Cavallo',
-                    color: '#00CED1',
-                    description: 'Agilità e Innovazione'
-                },
-                'pedone': {
-                    name: '👑 Il Pedone',
-                    color: '#DC143C',
-                    description: 'Crescita e Trasformazione'
-                }
-            };
-            
-            const data = archetipoData[archetipo] || {
-                name: '♟ Archetipo Generico',
-                color: '#FFD700',
-                description: 'Strategia Personalizzata'
-            };
-            
-            // Aggiorna il badge dell'archetipo
-            const badge = document.getElementById('archetipo-badge');
-            if (badge) {
-                badge.textContent = `${data.name} • ${data.description}`;
-                badge.style.background = `linear-gradient(135deg, ${data.color}, #FF8C00)`;
-            }
-            
-            // Aggiorna il colore del pricing card
-            const pricingCard = document.querySelector('.pricing-card');
-            if (pricingCard) {
-                pricingCard.style.borderTopColor = data.color;
-            }
-        }
-        
-        function activateSubscription() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const archetipo = urlParams.get('archetipo') || 'generico';
-            
-            // Google Analytics - traccia il click di attivazione
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'click_activate_subscription', {
-                    'archetipo': archetipo,
-                    'event_category': 'subscription',
-                    'event_label': 'activate_button'
-                });
-            }
-            
-            // Qui integrare con sistema di pagamento (Stripe, PayPal, etc.)
-            alert(`Attivazione subscription per ${archetipo}!\n\nQuesta funzionalità sarà disponibile a breve.\nSarai reindirizzato al sistema di pagamento.`);
-            
-            // Esempio di redirect per pagamento
-            // window.location.href = `https://checkout.stripe.com/pay?archetipo=${archetipo}`;
-        }
-    </script>
+        <div class="proof-card">
+          <p class="proof-quote">
+            Pensavo di essere in ritardo su tutto.
+            Adesso so che stavo solo costruendo le fondamenta.
+          </p>
+          <span class="proof-author">Luca — Il Pedone</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       3. COME FUNZIONA
+       ================================================ -->
+  <section class="section-how">
+    <div class="container">
+      <div class="section-divider"></div>
+      <h2 class="section-title">Come funziona</h2>
+      <div class="steps-grid">
+
+        <div class="step">
+          <span class="step-icon">♟</span>
+          <p class="step-number">Passo 1</p>
+          <h3 class="step-title">Fai il quiz</h3>
+          <p class="step-desc">Scopri il tuo archetipo in 4 minuti. Sei già qui, quindi probabilmente lo conosci già.</p>
+        </div>
+
+        <div class="step">
+          <span class="step-icon">📧</span>
+          <p class="step-number">Passo 2</p>
+          <h3 class="step-title">Ricevi il QR</h3>
+          <p class="step-desc">Il tuo codice personale arriva via email. È la tua chiave di accesso, valida ogni giorno.</p>
+        </div>
+
+        <div class="step">
+          <span class="step-icon">☀️</span>
+          <p class="step-number">Ogni mattina</p>
+          <h3 class="step-title">Scansiona. Leggi. Agisci.</h3>
+          <p class="step-desc">90 secondi. Un messaggio. Una mossa concreta per la tua giornata.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       4. PREZZI
+       ================================================ -->
+  <section class="section-pricing" id="prezzi">
+    <div class="container">
+      <div class="section-divider"></div>
+      <h2 class="section-title">Scegli il tuo piano</h2>
+      <div class="pricing-grid">
+
+        <!-- MENSILE -->
+        <div class="plan-card" id="card-monthly">
+          <p class="plan-name">Mensile</p>
+          <div class="plan-price"><sup>€</sup>7</div>
+          <p class="plan-period">al mese · rinnovo mensile</p>
+          <p class="plan-trial">7 giorni gratuiti</p>
+          <ul class="plan-features">
+            <li>Messaggio quotidiano del tuo archetipo</li>
+            <li>Accesso via QR code personale</li>
+            <li>Cancelli quando vuoi</li>
+          </ul>
+          <a id="link-monthly" href="#" class="btn-plan btn-ghost">Inizia gratis →</a>
+        </div>
+
+        <!-- ANNUALE — featured -->
+        <div class="plan-card featured" id="card-annual">
+          <span class="plan-badge badge-featured">Più scelto</span>
+          <p class="plan-name">Annuale</p>
+          <div class="plan-price"><sup>€</sup>49</div>
+          <p class="plan-period">all'anno · un unico pagamento</p>
+          <p class="plan-saving">Risparmi il 42% rispetto al mensile</p>
+          <p class="plan-trial">14 giorni gratuiti</p>
+          <ul class="plan-features">
+            <li>Messaggio quotidiano del tuo archetipo</li>
+            <li>Accesso via QR code personale</li>
+            <li>Rinnovo annuale — massima libertà</li>
+            <li>14 giorni di trial per testare tutto</li>
+          </ul>
+          <a id="link-annual" href="#" class="btn-plan">Inizia gratis →</a>
+        </div>
+
+        <!-- FONDATORI -->
+        <div class="plan-card" id="card-founder">
+          <span class="plan-badge badge-limited">Offerta limitata</span>
+          <p class="plan-name">Fondatori</p>
+          <div class="plan-price"><sup>€</sup>39</div>
+          <p class="plan-period">all'anno · prezzo bloccato per sempre</p>
+          <p class="plan-saving">Risparmi il 55% rispetto al mensile</p>
+          <p class="plan-trial">14 giorni gratuiti</p>
+          <ul class="plan-features">
+            <li>Messaggio quotidiano del tuo archetipo</li>
+            <li>Accesso via QR code personale</li>
+            <li>Prezzo bloccato per sempre</li>
+            <li>Priorità su nuove funzionalità</li>
+          </ul>
+          <a id="link-founder" href="#" class="btn-plan btn-ghost">Entra come Fondatore →</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       5. URGENCY — rimuovi questo blocco quando vuoi
+       ================================================ -->
+  <div class="urgency-banner" id="urgency-banner">
+    <div class="urgency-inner">
+      <strong>Offerta Fondatori:</strong>
+      disponibile solo per i primi 30 giorni dal lancio. Dopo sparirà.
+    </div>
+  </div>
+
+  <!-- ================================================
+       6. FAQ
+       ================================================ -->
+  <section class="section-faq">
+    <div class="container-narrow">
+      <div class="section-divider"></div>
+      <h2 class="section-title">Domande frequenti</h2>
+      <div class="faq-list">
+
+        <div class="faq-item">
+          <button class="faq-question">
+            Devo inserire la carta per il trial?
+            <i class="faq-icon">+</i>
+          </button>
+          <div class="faq-answer">
+            <p>No. Il trial è completamente gratuito. La carta si inserisce solo se decidi di continuare oltre il periodo di prova.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            Posso cancellare quando voglio?
+            <i class="faq-icon">+</i>
+          </button>
+          <div class="faq-answer">
+            <p>Sì. Nessun vincolo, nessuna penale. Cancelli quando vuoi, direttamente dal tuo account.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            I messaggi cambiano ogni giorno?
+            <i class="faq-icon">+</i>
+          </button>
+          <div class="faq-answer">
+            <p>Sì. Ogni mattina un messaggio diverso, calibrato sul tuo archetipo. Niente contenuto generico — ogni messaggio è pensato per chi sei tu.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            Cosa succede dopo i 30 messaggi?
+            <i class="faq-icon">+</i>
+          </button>
+          <div class="faq-answer">
+            <p>Il ciclo ricomincia. Ma tu nel frattempo sei cambiato — i messaggi che rileggi hanno un significato diverso. È come rileggere un libro dopo un anno: parole uguali, lettura nuova.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       7. FINAL CTA
+       ================================================ -->
+  <section class="section-final-cta">
+    <div class="container-narrow" style="text-align:center;">
+      <div class="section-divider"></div>
+      <h2 class="final-cta-title">Inizia adesso.<br>La prima mossa è gratuita.</h2>
+      <p class="final-cta-sub">Nessuna carta richiesta durante il trial.</p>
+      <a id="link-final" href="#" class="btn-final">Prova gratis per 14 giorni</a>
+      <p class="final-trial-note">Piano annuale · €49/anno · cancelli quando vuoi</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <p>&copy; 2026 Scacchi Mentali &middot; La vita è una partita.</p>
+    <div class="footer-links">
+      <a href="../index.html">Home</a>
+      <a href="#privacy">Privacy</a>
+      <a href="#termini">Termini</a>
+    </div>
+  </footer>
+
+  <!-- ================================================
+       JAVASCRIPT
+       ================================================ -->
+  <script>
+  /* ── STRIPE LINKS ──────────────────────────────────────────────
+     TODO: sostituire con i link reali prima del lancio          */
+  const STRIPE_MONTHLY = 'https://buy.stripe.com/MENSILE';
+  const STRIPE_ANNUAL  = 'https://buy.stripe.com/ANNUALE';
+  const STRIPE_FOUNDER = 'https://buy.stripe.com/FONDATORI';
+
+  /* ── ARCHETYPE CONFIG ─────────────────────────────────────────*/
+  const ARCH = {
+    re:      { symbol: '♔', color: '#FFD700', rgb: '255,215,0',
+               headline: 'Hai portato tutto da solo fino a qui.<br>È ora di smettere di farlo senza supporto.' },
+    regina:  { symbol: '♕', color: '#8A2BE2', rgb: '138,43,226',
+               headline: 'Il tuo talento è reale.<br>Il problema è che lo stai ancora nascondendo.' },
+    torre:   { symbol: '♖', color: '#32CD32', rgb: '50,205,50',
+               headline: 'Hai costruito fondamenta solide.<br>Il prossimo passo è non farlo più da solo.' },
+    alfiere: { symbol: '♗', color: '#FF4500', rgb: '255,69,0',
+               headline: 'Vedi cose che gli altri non vedono ancora.<br>È ora di agire su quello che vedi.' },
+    cavallo: { symbol: '♞', color: '#00CED1', rgb: '0,206,209',
+               headline: 'Hai saltato mille volte.<br>Questa volta atterri su qualcosa di solido.' },
+    pedone:  { symbol: '♙', color: '#DC143C', rgb: '220,20,60',
+               headline: 'Ogni passo che hai fatto finora ha un peso.<br>Non buttarlo via fermandoti adesso.' },
+  };
+
+  /* ── URL PARAMS ───────────────────────────────────────────────*/
+  const params    = new URLSearchParams(window.location.search);
+  const archetipo = params.get('archetipo') || '';
+  const planParam = params.get('plan') || '';
+  const emailParam= params.get('email') || '';
+
+  /* ── APPLY ARCHETYPE COLOR + COPY ────────────────────────────*/
+  (function applyArchetype() {
+    const cfg = ARCH[archetipo];
+    if (!cfg) return; // usa default gold
+
+    const r = document.documentElement.style;
+    r.setProperty('--accent',      cfg.color);
+    r.setProperty('--accent-dim',  'rgba(' + cfg.rgb + ',0.12)');
+    r.setProperty('--accent-glow', 'rgba(' + cfg.rgb + ',0.30)');
+
+    document.getElementById('hero-symbol').textContent = cfg.symbol;
+    document.getElementById('hero-headline').innerHTML = cfg.headline;
+  })();
+
+  /* ── BUILD STRIPE LINKS (con email prefill opzionale) ─────────*/
+  (function buildStripeLinks() {
+    function stripeUrl(base) {
+      if (!emailParam) return base;
+      const sep = base.includes('?') ? '&' : '?';
+      return base + sep + 'prefilled_email=' + encodeURIComponent(emailParam);
+    }
+
+    document.getElementById('link-monthly').href = stripeUrl(STRIPE_MONTHLY);
+    document.getElementById('link-annual').href  = stripeUrl(STRIPE_ANNUAL);
+    document.getElementById('link-founder').href = stripeUrl(STRIPE_FOUNDER);
+    document.getElementById('link-final').href   = stripeUrl(STRIPE_ANNUAL);
+  })();
+
+  /* ── HIGHLIGHT PLAN FROM URL PARAM ───────────────────────────*/
+  (function highlightPlan() {
+    const map = { monthly: 'card-monthly', annual: 'card-annual', founder: 'card-founder' };
+    const cardId = map[planParam];
+    if (!cardId) return;
+
+    // Rimuovi featured dalla card annuale se stiamo evidenziando un'altra
+    if (planParam !== 'annual') {
+      document.getElementById('card-annual').classList.remove('featured');
+    }
+    document.getElementById(cardId).classList.add('active-plan');
+
+    // Scorri la sezione prezzi dopo un attimo
+    setTimeout(function() {
+      document.getElementById('prezzi').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 600);
+  })();
+
+  /* ── FAQ ACCORDION ────────────────────────────────────────────*/
+  document.querySelectorAll('.faq-question').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+
+      // Chiudi tutti
+      document.querySelectorAll('.faq-item.open').forEach(function(el) {
+        el.classList.remove('open');
+      });
+
+      // Apri questo se era chiuso
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+
+  /* ── FINAL CTA TRIAL NOTE per piano mensile ──────────────────*/
+  (function adjustFinalCta() {
+    if (planParam === 'monthly') {
+      document.querySelector('.final-trial-note').textContent =
+        'Piano mensile · €7/mese · cancelli quando vuoi';
+      document.getElementById('link-final').href =
+        document.getElementById('link-monthly').href;
+    } else if (planParam === 'founder') {
+      document.querySelector('.final-trial-note').textContent =
+        'Piano Fondatori · €39/anno · prezzo bloccato per sempre';
+      document.getElementById('link-final').href =
+        document.getElementById('link-founder').href;
+    }
+  })();
+  </script>
+
 </body>
 </html>
