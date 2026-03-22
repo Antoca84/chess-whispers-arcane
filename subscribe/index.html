@@ -44,7 +44,7 @@
        ============================================================ */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; overflow-x: hidden; max-width: 100%; }
 
     body {
       font-family: 'Montserrat', sans-serif;
@@ -52,6 +52,7 @@
       color: var(--text-1);
       min-height: 100vh;
       overflow-x: hidden;
+      max-width: 100%;
       line-height: 1.6;
     }
 
@@ -175,6 +176,18 @@
       line-height: 1.85;
       max-width: 520px;
       margin: 0 auto 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-description {
+      font-size: clamp(1rem, 2.5vw, 1.15rem);
+      font-weight: 300;
+      color: var(--text-2);
+      line-height: 1.9;
+      max-width: 520px;
+      margin: 0 auto 40px;
+      text-align: center;
       position: relative;
       z-index: 1;
     }
@@ -673,10 +686,10 @@
     <h1 class="hero-headline" id="hero-headline">
       La partita non finisce quando smetti di giocare.<br>Finisce quando smetti di imparare.
     </h1>
-    <p class="hero-copy">
-      Ogni giorno un messaggio calibrato sul tuo archetipo.<br>
+    <p class="hero-description">
+      Ogni giorno un messaggio calibrato sul tuo archetipo.<br><br>
       <strong>Non motivazione generica</strong> —<br>
-      una mossa specifica per chi sei tu.<br>
+      una mossa specifica per chi sei tu.<br><br>
       Scansioni il QR. Leggi. Agisci.
     </p>
     <a href="#pricing" class="hero-cta">Scegli il tuo piano</a>
