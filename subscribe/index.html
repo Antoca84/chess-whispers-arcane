@@ -756,7 +756,7 @@
   <!-- ================================================
        4. PREZZI
        ================================================ -->
-  <section class="section-pricing" id="prezzi">
+  <section class="section-pricing" id="pricing">
     <div class="container">
       <div class="section-divider"></div>
       <h2 class="section-title">Scegli il tuo piano</h2>
@@ -873,10 +873,9 @@
   <section class="section-final-cta">
     <div class="container-narrow" style="text-align:center;">
       <div class="section-divider"></div>
-      <h2 class="final-cta-title">Inizia adesso.<br>La prima mossa è gratuita.</h2>
-      <p class="final-cta-sub">Nessuna carta richiesta durante il trial.</p>
-      <a id="link-final" href="#" class="btn-final">Prova gratis per 14 giorni</a>
-      <p class="final-trial-note">Piano annuale · €49/anno · cancelli quando vuoi</p>
+      <h2 class="final-cta-title">Non rimandare ancora.</h2>
+      <a id="link-final" href="#pricing" class="btn-final" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'});return false;">Scegli il tuo piano →</a>
+      <p class="final-trial-note">La scacchiera non aspetta.</p>
     </div>
   </section>
 
@@ -947,7 +946,6 @@
     document.getElementById('link-monthly').href = stripeUrl(STRIPE_MONTHLY);
     document.getElementById('link-annual').href  = stripeUrl(STRIPE_ANNUAL);
     document.getElementById('link-founder').href = stripeUrl(STRIPE_FOUNDER);
-    document.getElementById('link-final').href   = stripeUrl(STRIPE_ANNUAL);
   })();
 
   /* ── HIGHLIGHT PLAN FROM URL PARAM ───────────────────────────*/
@@ -984,20 +982,6 @@
     });
   });
 
-  /* ── FINAL CTA TRIAL NOTE per piano mensile ──────────────────*/
-  (function adjustFinalCta() {
-    if (planParam === 'monthly') {
-      document.querySelector('.final-trial-note').textContent =
-        'Piano mensile · €7/mese · cancelli quando vuoi';
-      document.getElementById('link-final').href =
-        document.getElementById('link-monthly').href;
-    } else if (planParam === 'founder') {
-      document.querySelector('.final-trial-note').textContent =
-        'Piano Fondatori · €39/anno · prezzo bloccato per sempre';
-      document.getElementById('link-final').href =
-        document.getElementById('link-founder').href;
-    }
-  })();
   </script>
 
 </body>
