@@ -358,8 +358,8 @@
     }
   };
 
-  /* Detect archetipo from URL path */
-  var _parts = window.location.pathname.replace(/\/$/, '').split('/').filter(Boolean);
+  /* Detect archetipo from URL path — ignora 'index.html' se presente */
+  var _parts = window.location.pathname.replace(/\/$/, '').split('/').filter(function(p){ return p && p !== 'index.html'; });
   var ARCHETIPO = _parts[_parts.length - 1] || 're';
   if (!ARCH_CONFIG[ARCHETIPO]) ARCHETIPO = 're';
   var CFG = ARCH_CONFIG[ARCHETIPO];
