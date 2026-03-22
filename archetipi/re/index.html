@@ -115,14 +115,6 @@
     .date-pill { display: inline-block; background: var(--arch-color-dim); border: 1px solid var(--arch-color-glow); border-radius: 20px; padding: 5px 14px; font-size: 0.78rem; color: var(--text-2); font-weight: 400; }
     .hero-separator { width: 60px; height: 1px; margin: 0 auto; background: linear-gradient(to right, transparent, var(--arch-color), transparent); }
 
-    /* Quiz CTA */
-    .quiz-cta { position: relative; z-index: 1; margin: 28px auto; max-width: 640px; padding: 0 20px; }
-    .quiz-cta-inner { background: rgba(28,28,28,0.8); border: 1px solid var(--arch-color-dim); border-radius: 16px; padding: 32px 28px; text-align: center; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-    .quiz-cta h3 { font-family: 'Cinzel', serif; font-size: 1.1rem; color: var(--arch-color); margin-bottom: 12px; letter-spacing: 1px; }
-    .quiz-cta p { font-size: 0.9rem; color: var(--text-2); line-height: 1.7; margin-bottom: 24px; }
-    .quiz-cta a { display: inline-block; background: var(--arch-color); color: #0d0d0d; padding: 13px 32px; border-radius: 30px; font-weight: 700; font-size: 0.9rem; letter-spacing: 0.5px; transition: transform 0.2s ease, box-shadow 0.2s ease; }
-    .quiz-cta a:hover { transform: translateY(-2px); box-shadow: 0 8px 24px var(--arch-color-glow); }
-
     /* Message section */
     .section-message { position: relative; z-index: 1; padding: 28px 0 16px; }
     .message-card { background: rgba(28,28,28,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--arch-color-dim); border-left: 3px solid var(--arch-color); border-radius: 16px; padding: 32px 28px; box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 40px var(--arch-color-dim); }
@@ -186,6 +178,25 @@
     .footer-links { display: flex; justify-content: center; gap: 20px; }
     .footer-links a { font-size: 0.78rem; color: var(--text-3); transition: color 0.2s ease; }
     .footer-links a:hover { color: var(--arch-color); }
+
+    /* ============================================
+       BREAKPOINT 480px — telefoni piccoli
+       ============================================ */
+    @media (max-width: 480px) {
+      .hero { padding: 40px 16px 28px; }
+      .hero-symbol { font-size: 3.8rem; }
+      .hero-meta { gap: 10px; }
+      .message-card { padding: 24px 18px; }
+      .msg-titolo { font-size: 1.2rem; }
+      .msg-testo { font-size: 0.93rem; }
+      .paywall-card { padding: 28px 18px; }
+      .paywall-plans { flex-direction: column; align-items: center; }
+      .plan-card { max-width: 100%; width: 100%; }
+      .error-card { padding: 28px 18px; }
+      .message-actions { flex-direction: column; }
+      .btn-primary, .btn-secondary { min-width: unset; }
+      .footer-links { gap: 14px; }
+    }
   </style>
 </head>
 <body class="loading-active">
@@ -213,8 +224,6 @@
       </div>
       <div class="hero-separator"></div>
     </section>
-
-    <div id="public-cta-container"></div>
 
     <section class="section-message private-content">
       <div class="container">
@@ -546,6 +555,9 @@
   <!-- AUTH + MESSAGGI -->
   <script>
   const GAS_URL     = 'https://script.google.com/macros/s/AKfycbyvX6-7BSUi50y6onFNfaNtjH1k3VEd2_0jZPG8SuOCd32OtZ_IuHPLbxsuSi_agfBX/exec';
+  // TODO: aggiornare con la data reale di lancio prima di andare live.
+  // Determina quale messaggio (1-30) viene mostrato oggi a tutti gli utenti.
+  // Cambiare in tutti e 6 i file archetipi/*/index.html.
   const LAUNCH_DATE = '2025-04-01';
 
   function addBanner(type, msg) {
