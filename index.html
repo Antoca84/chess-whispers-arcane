@@ -152,7 +152,7 @@
   #hero {
     position: relative;
     z-index: 1;
-    min-height: 100vh;
+    min-height: 85vh;
     display: flex;
     align-items: center;
     /* Left side readable, right side shows Three.js canvas */
@@ -522,6 +522,76 @@
     transition: color 0.2s;
   }
   .footer-links a:hover { color: var(--gold); }
+
+  /* ================================================
+     DESKTOP OVERRIDE — Journey Grid (≥ 769px)
+     ================================================ */
+  @media (min-width: 769px) {
+
+    /* Journey: da 6 × 100vh a grid 3×2 */
+    #journey {
+      padding: 90px 5% 80px;
+      background: linear-gradient(to bottom, rgba(13,13,13,0.35) 0%, rgba(13,13,13,0.72) 100%);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Panel → compact glass card */
+    .arch-panel {
+      height: auto;
+      min-height: unset;
+      background: rgba(11,11,11,0.78) !important;
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-top: 3px solid var(--arch-color);
+      border-radius: 24px;
+      padding: 32px 28px 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .arch-panel:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 28px 56px rgba(0,0,0,0.7), 0 0 30px rgba(255,255,255,0.03);
+    }
+    .arch-panel::after { display: none; }
+
+    /* Watermark glyph inutile su card compatte */
+    .arch-bg-glyph { display: none; }
+
+    /* Card wrap si appiattisce sul panel */
+    .arch-card-wrap {
+      margin: 0;
+      width: 100%;
+    }
+
+    /* Card inner diventa trasparente: è il panel il "vetro" */
+    .arch-card-inner {
+      background: transparent !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      border: none !important;
+      padding: 0 !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+    }
+    .arch-card-inner::before { display: none; } /* la linea top è ora border-top del panel */
+
+    /* Proporzioni testo in card compatta */
+    .arch-glyph   { font-size: 2.4rem; margin-bottom: 10px; }
+    .arch-name    { font-size: clamp(1.1rem, 1.6vw, 1.35rem); margin-bottom: 10px; }
+    .arch-desc    { font-size: 0.88rem; line-height: 1.65; margin-bottom: 20px; }
+    .arch-ordinal { font-size: 0.62rem; margin-bottom: 10px; }
+  }
 
   /* ================================================
      MOBILE (≤ 768px)
@@ -1584,44 +1654,31 @@
         trigger: '#hero',
         start: 'center center',
         end: 'bottom top',
-        scrub: 1.2,
+        scrub: 0.5,
       },
     });
 
-    /* Piece shifts left when journey begins */
+    /* Piece shifts left when journey grid comes into view */
     ScrollTrigger.create({
       trigger: '#journey',
       start: 'top 85%',
       onEnter: function () {
-        gsap.to(particleGroup.position, { x: -2.8, duration: 1.1, ease: 'power3.inOut' });
-        gsap.to(camera.position,        { x: -0.8, duration: 1.1, ease: 'power3.inOut' });
+        gsap.to(particleGroup.position, { x: -2.8, duration: 0.65, ease: 'power3.inOut' });
+        gsap.to(camera.position,        { x: -0.8, duration: 0.65, ease: 'power3.inOut' });
       },
       onLeaveBack: function () {
-        gsap.to(particleGroup.position, { x: 0, duration: 1.0, ease: 'power3.inOut' });
-        gsap.to(camera.position,        { x: 0, duration: 1.0, ease: 'power3.inOut' });
+        gsap.to(particleGroup.position, { x: 0, duration: 0.6, ease: 'power3.inOut' });
+        gsap.to(camera.position,        { x: 0, duration: 0.6, ease: 'power3.inOut' });
       },
     });
 
-    /* Scroll-driven rotation + color sync */
-    ScrollTrigger.create({
-      trigger: '#journey',
-      start: 'top top',
-      end: 'bottom bottom',
-      scrub: 2.5,
-      onUpdate: function (self) {
-        scrollRot = self.progress * Math.PI * 4.5;
-        var idx = Math.min(5, Math.floor(self.progress * 6));
-        setArchetypeColor(idx);
-      },
-    });
-
-    /* Piece returns to center after journey */
+    /* Piece returns to center after journey grid */
     ScrollTrigger.create({
       trigger: '#come-funziona',
       start: 'top 70%',
       onEnter: function () {
-        gsap.to(particleGroup.position, { x: 0, duration: 1.2, ease: 'power3.inOut' });
-        gsap.to(camera.position,        { x: 0, duration: 1.2, ease: 'power3.inOut' });
+        gsap.to(particleGroup.position, { x: 0, duration: 0.7, ease: 'power3.inOut' });
+        gsap.to(camera.position,        { x: 0, duration: 0.7, ease: 'power3.inOut' });
       },
     });
   }
@@ -1631,28 +1688,28 @@
   ------------------------------------------ */
   function initGSAPAnimations(noWebGL) {
 
-    /* Archetype card entrances */
-    document.querySelectorAll('.arch-card-wrap').forEach(function (card) {
-      if (noWebGL) {
+    /* Archetype card entrances — staggered grid */
+    if (noWebGL) {
+      document.querySelectorAll('.arch-card-wrap').forEach(function (card) {
         card.style.opacity = '1';
         card.style.transform = 'none';
-        return;
-      }
-      gsap.fromTo(card,
-        { opacity: 0, x: 55, y: 15 },
+      });
+    } else {
+      gsap.fromTo('.arch-card-wrap',
+        { opacity: 0, y: 24 },
         {
-          opacity: 1, x: 0, y: 0,
-          duration: 0.85,
+          opacity: 1, y: 0,
+          duration: 0.5,
+          stagger: 0.08,
           ease: 'power3.out',
           scrollTrigger: {
-            trigger: card.closest('.arch-panel'),
-            start: 'top 68%',
-            end: 'top 32%',
+            trigger: '#journey',
+            start: 'top 75%',
             toggleActions: 'play none none reverse',
           },
         }
       );
-    });
+    }
 
     /* Step cards — staggered entrance */
     if (!noWebGL) {
@@ -1661,8 +1718,8 @@
           { opacity: 0, y: 36 },
           {
             opacity: 1, y: 0,
-            duration: 0.7,
-            delay: i * 0.12,
+            duration: 0.42,
+            delay: i * 0.07,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: '#come-funziona',
@@ -1679,8 +1736,8 @@
         { opacity: 0, y: 28 },
         {
           opacity: 1, y: 0,
-          duration: 0.75,
-          stagger: 0.10,
+          duration: 0.45,
+          stagger: 0.06,
           ease: 'power3.out',
           scrollTrigger: {
             trigger: '#cta-finale',
