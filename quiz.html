@@ -253,7 +253,36 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .slide-out{animation:slideOut .26s cubic-bezier(.4,0,.2,1) both}
 
 /* FOOTER */
-.sig{position:fixed;bottom:calc(1rem + var(--safe-bottom));left:50%;transform:translateX(-50%);font-size:.64rem;letter-spacing:3.5px;text-transform:uppercase;color:rgba(248,249,250,0.78);z-index:10;pointer-events:none;opacity:1;white-space:nowrap;text-shadow:0 1px 12px rgba(0,0,0,0.55)}
+.sig{
+  position:fixed;
+  bottom:calc(.45rem + var(--safe-bottom));
+  left:50%;
+  transform:translateX(-50%);
+  font-size:.64rem;
+  letter-spacing:3.5px;
+  text-transform:uppercase;
+  color:rgba(248,249,250,0.88);
+  z-index:10;
+  pointer-events:none;
+  opacity:1;
+  white-space:nowrap;
+  text-shadow:0 1px 12px rgba(0,0,0,0.55);
+}
+.sig::before{
+  content:'';
+  position:fixed;
+  left:50%;
+  bottom:calc(var(--safe-bottom) - .2rem);
+  transform:translateX(-50%);
+  width:min(92vw, 720px);
+  height:40px;
+  border-radius:999px;
+  background:rgba(7,7,15,0.34);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  box-shadow:0 8px 24px rgba(0,0,0,0.16);
+  z-index:-1;
+}
 
 /* ── EMAIL CAPTURE ── */
 .capture-box{
@@ -264,8 +293,9 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   padding:22px 20px;
   margin-bottom:1.2rem;
   position:relative;
+  top:0;
   z-index:4;
-  transition:transform .38s ease, box-shadow .38s ease, opacity .6s ease;
+  transition:top .38s ease, box-shadow .38s ease, opacity .6s ease;
   opacity:0;animation:fadeUp .6s 1.9s forwards
 }
 .capture-title{font-size:.95rem;font-weight:700;color:var(--text-primary);margin-bottom:.3rem;text-align:center}
@@ -297,7 +327,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 @media (max-width: 480px){
   .capture-box{padding:22px 16px}
   .capture-box.capture-overlap{
-    transform:translateY(-132px);
+    top:-132px;
     box-shadow:0 24px 46px rgba(0,0,0,0.38);
   }
   .capture-title{font-size:1rem;line-height:1.35}
