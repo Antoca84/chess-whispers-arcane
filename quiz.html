@@ -680,6 +680,8 @@ const INTRO_HEADLINES=[
   'Non tutte le tue scelte sono davvero tue. Quale archetipo le muove?',
   'C’è un archetipo che guida le tue mosse. Scoprilo prima che continui a farlo da solo.'
 ];
+var currentIntroHeadline = '';
+var currentIntroHeadlineIndex = -1;
 
 let cur=0,sc=[0,0,0,0,0,0],busy=false;
 var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1006,17 +1008,29 @@ function show(id){
   var el=document.getElementById('intro-title');
   if(!el||!INTRO_HEADLINES.length)return;
   var idx=Math.floor(Math.random()*INTRO_HEADLINES.length);
-  el.textContent=INTRO_HEADLINES[idx];
+  currentIntroHeadlineIndex=idx;
+  currentIntroHeadline=INTRO_HEADLINES[idx];
+  el.textContent=currentIntroHeadline;
   if(typeof gtag==='function'){
     gtag('event','quiz_headline_viewed',{
       event_category:'engagement',
       headline_index:idx,
-      headline_text:INTRO_HEADLINES[idx]
+      headline_text:currentIntroHeadline
     });
   }
 }());
 
-function startQuiz(){show('s-quiz');render()}
+function startQuiz(){
+  if(typeof gtag==='function'){
+    gtag('event','quiz_started',{
+      event_category:'conversion',
+      headline_index:currentIntroHeadlineIndex,
+      headline_text:currentIntroHeadline
+    });
+  }
+  show('s-quiz');
+  render();
+}
 
 function render(){
   const q=Q[cur];
@@ -1144,6 +1158,15 @@ async function submitEmail(){
     }
 
     const a=ARCH[currentArchetipo];
+    if(typeof gtag==='function'){
+      gtag('event','quiz_email_submitted',{
+        event_category:'conversion',
+        headline_index:currentIntroHeadlineIndex,
+        headline_text:currentIntroHeadline,
+        archetipo:currentArchetipo,
+        plan:plan
+      });
+    }
     const qrBox=document.getElementById('qr-box');
     const qrImg=document.getElementById('qr-img');
     qrImg.src=`https://api.qrserver.com/v1/create-qr-code/?size=360x360&format=png&margin=8&data=${encodeURIComponent(data.privateUrl)}`;
