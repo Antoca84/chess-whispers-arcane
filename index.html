@@ -796,11 +796,11 @@
     </div>
     <div class="hero-stats">
       <div class="hero-stat">
-        <span class="num">200+</span>
+        <span class="num" data-count="200" data-suffix="+">200+</span>
         <span class="lbl">persone ne fanno parte</span>
       </div>
       <div class="hero-stat">
-        <span class="num">4.9/5</span>
+        <span class="num" data-count="4.9" data-suffix="/5">4.9/5</span>
         <span class="lbl">Rating medio</span>
       </div>
     </div>
@@ -1863,6 +1863,42 @@
       mRen.render(mScene, mCam);
     }());
   }
+
+  /* ------------------------------------------
+     HERO COUNTERS
+  ------------------------------------------ */
+  function initHeroCounters() {
+    var els = document.querySelectorAll('.hero-stat .num[data-count]');
+    if (!els.length || mobilePerf.reduced) return;
+
+    var DURATION = 1400;
+    var DELAY    = 380;
+
+    function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+
+    els.forEach(function (el) {
+      var target   = parseFloat(el.dataset.count);
+      var suffix   = el.dataset.suffix || '';
+      var decimal  = el.dataset.count.indexOf('.') !== -1;
+
+      el.textContent = (decimal ? '0.0' : '0') + suffix;
+
+      setTimeout(function () {
+        var start = null;
+        function step(ts) {
+          if (!start) start = ts;
+          var p = Math.min((ts - start) / DURATION, 1);
+          var v = target * easeOut(p);
+          el.textContent = (decimal ? v.toFixed(1) : Math.round(v)) + suffix;
+          if (p < 1) requestAnimationFrame(step);
+          else el.textContent = (decimal ? target.toFixed(1) : target) + suffix;
+        }
+        requestAnimationFrame(step);
+      }, DELAY);
+    });
+  }
+
+  initHeroCounters();
 
   /* ------------------------------------------
      COUNTDOWN
