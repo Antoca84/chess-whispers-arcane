@@ -124,7 +124,21 @@
     .message-card { background: rgba(28,28,28,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--arch-color-dim); border-left: 3px solid var(--arch-color); border-radius: 16px; padding: 32px 28px; box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 40px var(--arch-color-dim); }
     .message-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; gap: 16px; }
     .message-card-label { font-family: 'Montserrat', sans-serif; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--arch-color); }
-    .arch-image { width: 56px; height: 56px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+    .arch-image {
+      width: 56px;
+      height: 56px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      line-height: 1;
+      color: var(--arch-color);
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--arch-color-dim);
+      text-shadow: 0 0 20px var(--arch-color-glow);
+    }
     @media (max-width: 768px) { .arch-image { display: none; } }
 
     .msg-loading { text-align: center; padding: 40px 0; color: var(--text-3); font-size: 0.9rem; font-style: italic; }
@@ -234,7 +248,7 @@
         <div class="message-card">
           <div class="message-card-header">
             <span class="message-card-label">Il Tuo Messaggio di Oggi</span>
-            <img id="arch-img" src="../../images/archetipi/re.png" alt="Il Re" class="arch-image">
+            <div id="arch-img" class="arch-image" role="img" aria-label="Il Re">♔</div>
           </div>
           <div class="message-body">
             <p class="msg-loading" id="msg-loading">Kairos sta preparando il tuo messaggio…</p>
@@ -390,8 +404,9 @@
   document.getElementById('hero-subtitle').textContent  = CFG.subtitle;
   document.getElementById('paywall-symbol').textContent = CFG.symbol;
   document.getElementById('error-symbol').textContent   = CFG.symbol;
-  document.getElementById('arch-img').src = '../../images/archetipi/' + ARCHETIPO + '.png';
-  document.getElementById('arch-img').alt = CFG.name;
+  document.getElementById('arch-img').textContent = CFG.symbol;
+  document.getElementById('arch-img').setAttribute('aria-label', CFG.name);
+  document.getElementById('arch-img').setAttribute('title', CFG.name);
   document.getElementById('sub-link').href = '../../subscribe/?archetipo=' + ARCHETIPO;
   document.title = CFG.name + ' – Messaggio Quotidiano | Scacchi Mentali';
 
