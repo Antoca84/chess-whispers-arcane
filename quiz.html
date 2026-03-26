@@ -35,7 +35,7 @@
 html{height:100%;-webkit-text-size-adjust:100%}
 body{min-height:100%;min-height:-webkit-fill-available;background:var(--bg);color:var(--text-primary);font-family:'Lato',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 
-body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");pointer-events:none;z-index:999;opacity:0.35}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");pointer-events:none;z-index:1;opacity:0.35}
 
 /* PROGRESS */
 .pbar{position:fixed;top:0;left:0;right:0;height:3px;background:rgba(255,255,255,0.04);z-index:100;top:var(--safe-top)}
@@ -51,6 +51,10 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 }
 .screen.active{opacity:1}
 .screen.gone{display:none}
+
+#s-intro{
+  background:var(--surface);
+}
 
 /* Mobile intro particles */
 #quiz-mobile-particles{
@@ -296,7 +300,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     display:block;
     position:fixed;
     inset:0;
-    z-index:0;
+    z-index:2;
     pointer-events:none;
     overflow:hidden;
     mix-blend-mode:screen;
@@ -307,9 +311,9 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   #quiz-mobile-particles span{
     position:absolute;
     border-radius:50%;
-    background:rgba(255,215,0,0.88);
-    box-shadow:0 0 12px rgba(255,215,0,0.16);
-    opacity:0.22;
+    background:rgba(255,215,0,0.96);
+    box-shadow:0 0 14px rgba(255,215,0,0.22);
+    opacity:0.34;
     transform:translate3d(0,0,0);
     will-change:transform;
   }
@@ -317,7 +321,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   #s-quiz,
   #s-calc,
   #s-res{
-    z-index:1;
+    z-index:3;
   }
 }
 
@@ -652,7 +656,7 @@ function initQuizMobileParticles(){
     el.style.height = size.toFixed(1) + 'px';
     el.style.left = x.toFixed(1) + 'px';
     el.style.top = y.toFixed(1) + 'px';
-    el.style.opacity = (0.12 + Math.random() * 0.22).toFixed(2);
+    el.style.opacity = (0.18 + Math.random() * 0.28).toFixed(2);
     host.appendChild(el);
     quizParticleState.particles.push({
       el: el,
@@ -674,20 +678,20 @@ function animateQuizParticles(){
   var w = window.innerWidth;
   var h = window.innerHeight;
 
-  quizParticleState.tiltVX *= 0.92;
-  quizParticleState.tiltVY *= 0.92;
+  quizParticleState.tiltVX *= 0.96;
+  quizParticleState.tiltVY *= 0.96;
 
   for (var i = 0; i < quizParticleState.particles.length; i++) {
     var p = quizParticleState.particles[i];
     p.ox += quizParticleState.tiltVX * p.depth;
     p.oy += quizParticleState.tiltVY * p.depth;
-    p.ox *= 0.92;
-    p.oy *= 0.92;
+    p.ox *= 0.96;
+    p.oy *= 0.96;
 
-    if (p.ox > 14) p.ox = 14;
-    if (p.ox < -14) p.ox = -14;
-    if (p.oy > 14) p.oy = 14;
-    if (p.oy < -14) p.oy = -14;
+    if (p.ox > 22) p.ox = 22;
+    if (p.ox < -22) p.ox = -22;
+    if (p.oy > 22) p.oy = 22;
+    if (p.oy < -22) p.oy = -22;
 
     var tx = p.ox;
     var ty = p.oy;
@@ -717,8 +721,8 @@ function onQuizOrientation(ev){
   quizParticleState.lastBeta = ev.beta;
   quizParticleState.lastGamma = ev.gamma;
 
-  var impulseX = Math.max(-0.12, Math.min(0.12, dGamma * 0.012));
-  var impulseY = Math.max(-0.12, Math.min(0.12, dBeta * 0.012));
+  var impulseX = Math.max(-0.32, Math.min(0.32, dGamma * 0.03));
+  var impulseY = Math.max(-0.32, Math.min(0.32, dBeta * 0.03));
 
   quizParticleState.tiltVX += impulseX;
   quizParticleState.tiltVY += impulseY;
