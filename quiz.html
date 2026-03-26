@@ -658,7 +658,8 @@ var burstFx = {
   particles: [],
   streamers: [],
   startedAt: 0,
-  duration: 1180
+  duration: 1560,
+  releaseAt: 240
 };
 
 function shade(hex, amt){
@@ -836,12 +837,13 @@ function runArchetypeBurst(key, sym, hex, done){
   burstFx.particles = [];
   burstFx.streamers = [];
   burstFx.startedAt = performance.now();
-  burstFx.duration = 1180;
+  burstFx.duration = 1560;
+  burstFx.releaseAt = 240;
 
-  for (var i = 0; i < 56; i++) {
+  for (var i = 0; i < 72; i++) {
     var ang = randomBetween(-Math.PI * 0.92, -Math.PI * 0.08);
-    var speed = randomBetween(4.8, 10.5);
-    var zSpeed = randomBetween(0.04, 0.14);
+    var speed = randomBetween(5.8, 11.8);
+    var zSpeed = randomBetween(0.05, 0.16);
     var shape = sig.shapes[Math.floor(Math.random() * sig.shapes.length)];
     burstFx.particles.push({
       x: cx,
@@ -853,19 +855,19 @@ function runArchetypeBurst(key, sym, hex, done){
       gravity: randomBetween(0.06, 0.12),
       rot: randomBetween(0, Math.PI * 2),
       vr: randomBetween(-0.18, 0.18),
-      size: randomBetween(8, 18),
-      baseSize: randomBetween(8, 18),
+      size: randomBetween(10, 22),
+      baseSize: randomBetween(10, 22),
       color: palette[Math.floor(Math.random() * palette.length)],
-      alpha: randomBetween(0.62, 0.98),
+      alpha: randomBetween(0.72, 1),
       shape: shape,
       sx: cx,
       sy: cy
     });
   }
 
-  for (var j = 0; j < 11; j++) {
+  for (var j = 0; j < 14; j++) {
     var sang = randomBetween(-Math.PI * 0.86, -Math.PI * 0.14);
-    var sSpeed = randomBetween(5.2, 8.4);
+    var sSpeed = randomBetween(6.2, 9.8);
     burstFx.streamers.push({
       x: cx,
       y: cy,
@@ -875,8 +877,8 @@ function runArchetypeBurst(key, sym, hex, done){
       amp: randomBetween(6, 12),
       phase: randomBetween(0, Math.PI * 2),
       spin: randomBetween(0.12, 0.24),
-      alpha: randomBetween(0.45, 0.8),
-      width: randomBetween(1.8, 2.8),
+      alpha: randomBetween(0.55, 0.9),
+      width: randomBetween(2.2, 3.2),
       color: palette[Math.floor(Math.random() * palette.length)]
     });
   }
@@ -886,32 +888,57 @@ function runArchetypeBurst(key, sym, hex, done){
   function frame(now){
     var t = now - burstFx.startedAt;
     var progress = Math.min(1, t / burstFx.duration);
+    var charge = Math.min(1, t / burstFx.releaseAt);
+    var released = t >= burstFx.releaseAt;
     ctx.clearRect(0, 0, w, h);
+
+    var halo = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(w, h) * 0.22);
+    halo.addColorStop(0, shade(hex, 44).replace('rgb', 'rgba').replace(')', ',' + (released ? 0.11 : 0.18 + charge * 0.12) + ')'));
+    halo.addColorStop(1, 'rgba(13,13,26,0)');
+    ctx.fillStyle = halo;
+    ctx.fillRect(0, 0, w, h);
+
+    if (!released) {
+      ctx.save();
+      ctx.globalAlpha = 0.28 + charge * 0.42;
+      ctx.strokeStyle = shade(hex, 36);
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 18 + charge * 28, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
 
     for (var p = 0; p < burstFx.particles.length; p++) {
       var part = burstFx.particles[p];
-      part.x += part.vx;
-      part.y += part.vy;
-      part.z += part.vz;
-      part.vy += part.gravity;
-      part.rot += part.vr;
-      part.alpha *= 0.988;
+      if (released) {
+        part.x += part.vx;
+        part.y += part.vy;
+        part.z += part.vz;
+        part.vy += part.gravity;
+        part.rot += part.vr;
+        part.alpha *= 0.991;
+      } else {
+        part.rot += part.vr * 0.15;
+      }
 
       var perspective = 1 + part.z * 3.2;
-      part.sx = cx + (part.x - cx) * perspective;
-      part.sy = cy + (part.y - cy) * perspective;
-      part.size = part.baseSize * perspective;
+      part.sx = released ? cx + (part.x - cx) * perspective : cx + Math.cos((p / burstFx.particles.length) * Math.PI * 2) * (8 + charge * 22);
+      part.sy = released ? cy + (part.y - cy) * perspective : cy + Math.sin((p / burstFx.particles.length) * Math.PI * 2) * (6 + charge * 14);
+      part.size = released ? part.baseSize * perspective : part.baseSize * (0.34 + charge * 0.16);
 
       if (part.alpha > 0.04) drawBurstShape(ctx, part, sig);
     }
 
     for (var s = 0; s < burstFx.streamers.length; s++) {
       var st = burstFx.streamers[s];
-      st.x += st.vx;
-      st.y += st.vy;
-      st.vy += 0.08;
-      st.phase += st.spin;
-      st.alpha *= 0.986;
+      if (released) {
+        st.x += st.vx;
+        st.y += st.vy;
+        st.vy += 0.08;
+        st.phase += st.spin;
+        st.alpha *= 0.989;
+      }
       if (st.alpha > 0.05) drawStreamer(ctx, st);
     }
 
