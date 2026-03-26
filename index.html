@@ -79,8 +79,18 @@
   /* Mobile piece — removed */
   #mobile-piece { display: none !important; }
 
-  /* Mobile background particles — hidden on desktop */
+  /* Mobile background particles (CSS fallback) — hidden on desktop */
   #mobile-bg-particles { display: none; }
+
+  /* Mobile Three.js chaos canvas — hidden on desktop, activated by JS */
+  #mobile-canvas {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    pointer-events: none;
+    mix-blend-mode: screen;
+  }
 
   /* ================================================
      HEADER
@@ -758,7 +768,9 @@
 
 <!-- Three.js canvas (fixed behind all content) -->
 <canvas id="chess-canvas"></canvas>
-<!-- Mobile background particles (mobile only, via CSS + JS) -->
+<!-- Mobile Three.js chaos canvas (attivato da JS su mobile con WebGL) -->
+<canvas id="mobile-canvas"></canvas>
+<!-- Mobile background particles (CSS fallback, attivo solo senza WebGL) -->
 <div id="mobile-bg-particles"></div>
 
 <!-- ================================================
@@ -1098,6 +1110,7 @@
   if (isMobile || !hasWebGL) {
     document.getElementById('chess-canvas').style.display = 'none';
     initMobileGlow();
+    if (isMobile && hasWebGL && !mobilePerf.reduced) initMobileCanvas();
   } else {
     initParticleSystem();
     initScrollAnimations();
@@ -1750,6 +1763,106 @@
       });
     }, { threshold: 0.45 });
     panels.forEach(function (p) { observer.observe(p); });
+  }
+
+  /* ------------------------------------------
+     MOBILE THREE.JS CHAOS PARTICLES
+  ------------------------------------------ */
+  function initMobileCanvas() {
+    if (typeof THREE === 'undefined') return;
+    var canvas = document.getElementById('mobile-canvas');
+    if (!canvas) return;
+
+    /* Nascondi CSS fallback — il canvas WebGL è superiore */
+    var bgFallback = document.getElementById('mobile-bg-particles');
+    if (bgFallback) bgFallback.style.display = 'none';
+
+    canvas.style.display = 'block';
+
+    /* Riduce conteggio su device lenti */
+    var LC = mobilePerf.slow ? 600 : 1200;
+
+    var mRen = new THREE.WebGLRenderer({ canvas: canvas, antialias: false, alpha: true });
+    mRen.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    mRen.setSize(window.innerWidth, window.innerHeight);
+
+    var mScene = new THREE.Scene();
+    var mCam = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+    mCam.position.set(0, 0, 10);
+    mCam.lookAt(0, 0, 0);
+
+    var mPos = new Float32Array(LC * 3);
+    var mSiz = new Float32Array(LC);
+    var mCol = new Float32Array(LC * 3);
+    var mVel = [];
+
+    for (var i = 0; i < LC; i++) {
+      var i3 = i * 3;
+      mPos[i3]   = (Math.random() - 0.5) * 14;
+      mPos[i3+1] = (Math.random() - 0.5) * 10;
+      mPos[i3+2] = (Math.random() - 0.5) * 4;
+
+      var vx = Math.random() - 0.5, vy = Math.random() - 0.5, vz = (Math.random() - 0.5) * 0.3;
+      var mag = Math.sqrt(vx*vx + vy*vy + vz*vz) || 1;
+      var spd = 0.08 + Math.random() * 0.22; /* velocità base: ~25% più lenta dell'archetipo */
+      mVel.push({ x: (vx/mag)*spd, y: (vy/mag)*spd, z: (vz/mag)*spd });
+
+      /* Gold con variazione di luminosità */
+      var bv = 0.65 + Math.random() * 0.50;
+      mCol[i3]   = Math.min(1, 1.000 * bv);  /* R */
+      mCol[i3+1] = Math.min(1, 0.843 * bv);  /* G */
+      mCol[i3+2] = 0;                          /* B */
+
+      mSiz[i] = 0.013 + Math.random() * 0.023;
+    }
+
+    var mGeo = new THREE.BufferGeometry();
+    mGeo.setAttribute('position', new THREE.BufferAttribute(mPos, 3));
+    mGeo.setAttribute('aSize',    new THREE.BufferAttribute(mSiz, 1));
+    mGeo.setAttribute('aColor',   new THREE.BufferAttribute(mCol, 3));
+
+    var mMat = new THREE.ShaderMaterial({
+      vertexShader:
+        'attribute float aSize;attribute vec3 aColor;varying vec3 vColor;' +
+        'void main(){vColor=aColor;vec4 mv=modelViewMatrix*vec4(position,1.0);' +
+        'gl_PointSize=aSize*(900.0/-mv.z);gl_Position=projectionMatrix*mv;}',
+      fragmentShader:
+        'varying vec3 vColor;void main(){vec2 uv=gl_PointCoord-0.5;' +
+        'if(length(uv)>0.5)discard;' +
+        'float alpha=smoothstep(0.5,0.1,length(uv));gl_FragColor=vec4(vColor,alpha*0.85);}',
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    });
+
+    var mGroup = new THREE.Group();
+    mGroup.add(new THREE.Points(mGeo, mMat));
+    mScene.add(mGroup);
+
+    window.addEventListener('resize', function () {
+      mCam.aspect = window.innerWidth / window.innerHeight;
+      mCam.updateProjectionMatrix();
+      mRen.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    /* Velocity multiplier 0.009 vs 0.012 dell'archetipo (~25% più lento)
+       Rotazione  0.003 vs 0.005 dell'archetipo (~40% più lento) */
+    (function mLoop() {
+      requestAnimationFrame(mLoop);
+      mGroup.rotation.y += 0.003;
+      for (var i = 0; i < LC; i++) {
+        var i3 = i * 3, v = mVel[i];
+        mPos[i3]   += v.x * 0.009;
+        mPos[i3+1] += v.y * 0.009;
+        mPos[i3+2] += v.z * 0.009;
+        if (mPos[i3]   >  8) mPos[i3]   = -8;
+        if (mPos[i3]   < -8) mPos[i3]   =  8;
+        if (mPos[i3+1] >  6) mPos[i3+1] = -6;
+        if (mPos[i3+1] < -6) mPos[i3+1] =  6;
+      }
+      mGeo.attributes.position.needsUpdate = true;
+      mRen.render(mScene, mCam);
+    }());
   }
 
   /* ------------------------------------------
