@@ -141,6 +141,18 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .calc-icon{font-size:3rem;color:var(--gold);animation:pulse 1.6s ease-in-out infinite;margin-bottom:1.5rem}
 .calc-msg{font-family:'Playfair Display',serif;font-style:italic;font-size:1.15rem;color:var(--text-secondary);animation:pulse 1.6s .3s ease-in-out infinite;text-align:center;max-width:280px;line-height:1.6}
 
+/* ── ARCHETYPE BURST ── */
+.burst-layer{
+  position:fixed;
+  inset:0;
+  z-index:80;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .18s ease;
+}
+.burst-layer.active{opacity:1}
+#burst-canvas{width:100%;height:100%;display:block}
+
 /* ── RESULT ── */
 #s-res{justify-content:flex-start;padding-top:calc(3.5rem + var(--safe-top))}
 
@@ -378,6 +390,9 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 <body>
 
 <div class="pbar"><div class="pfill" id="pf"></div></div>
+<div class="burst-layer" id="burst-layer" aria-hidden="true">
+  <canvas id="burst-canvas"></canvas>
+</div>
 <!-- INTRO -->
 <div class="screen active" id="s-intro">
   <div class="brand-badge">Scacchi Mentali</div>
@@ -637,6 +652,280 @@ const ARCH={
 const KEYS=['re','regina','torre','alfiere','cavallo','pedone'];
 
 let cur=0,sc=[0,0,0,0,0,0],busy=false;
+var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var burstFx = {
+  raf: 0,
+  particles: [],
+  streamers: [],
+  startedAt: 0,
+  duration: 1180
+};
+
+function shade(hex, amt){
+  var col = hex.replace('#','');
+  var num = parseInt(col, 16);
+  var r = Math.max(0, Math.min(255, (num >> 16) + amt));
+  var g = Math.max(0, Math.min(255, ((num >> 8) & 0x00FF) + amt));
+  var b = Math.max(0, Math.min(255, (num & 0x0000FF) + amt));
+  return 'rgb(' + r + ',' + g + ',' + b + ')';
+}
+
+function randomBetween(min, max){
+  return min + Math.random() * (max - min);
+}
+
+function buildBurstPalette(hex){
+  return [hex, shade(hex, 34), shade(hex, -28), 'rgba(248,249,250,0.9)'];
+}
+
+function buildBurstSignature(key, sym){
+  var map = {
+    re: ['cross','line','glyph'],
+    regina: ['star','diamond','glyph'],
+    torre: ['rook','rect','glyph'],
+    alfiere: ['lance','diamond','glyph'],
+    cavallo: ['slash','crescent','glyph'],
+    pedone: ['circle','diamond','glyph']
+  };
+  return { shapes: map[key] || ['diamond','rect','glyph'], glyph: sym || '♟' };
+}
+
+function drawBurstShape(ctx, p, sig){
+  ctx.save();
+  ctx.translate(p.sx, p.sy);
+  ctx.rotate(p.rot);
+  ctx.globalAlpha = p.alpha;
+  ctx.fillStyle = p.color;
+  ctx.strokeStyle = p.color;
+  ctx.lineWidth = Math.max(1, p.size * 0.12);
+
+  switch (p.shape) {
+    case 'rect':
+      ctx.fillRect(-p.size * 0.45, -p.size * 0.18, p.size * 0.9, p.size * 0.36);
+      break;
+    case 'diamond':
+      ctx.beginPath();
+      ctx.moveTo(0, -p.size * 0.55);
+      ctx.lineTo(p.size * 0.42, 0);
+      ctx.lineTo(0, p.size * 0.55);
+      ctx.lineTo(-p.size * 0.42, 0);
+      ctx.closePath();
+      ctx.fill();
+      break;
+    case 'star':
+      ctx.beginPath();
+      for (var i = 0; i < 8; i++) {
+        var ang = (Math.PI / 4) * i;
+        var rad = i % 2 === 0 ? p.size * 0.56 : p.size * 0.24;
+        var px = Math.cos(ang) * rad;
+        var py = Math.sin(ang) * rad;
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.fill();
+      break;
+    case 'cross':
+      ctx.fillRect(-p.size * 0.08, -p.size * 0.52, p.size * 0.16, p.size * 1.04);
+      ctx.fillRect(-p.size * 0.42, -p.size * 0.08, p.size * 0.84, p.size * 0.16);
+      break;
+    case 'lance':
+      ctx.beginPath();
+      ctx.moveTo(0, -p.size * 0.62);
+      ctx.lineTo(p.size * 0.18, -p.size * 0.08);
+      ctx.lineTo(p.size * 0.08, p.size * 0.62);
+      ctx.lineTo(-p.size * 0.08, p.size * 0.62);
+      ctx.lineTo(-p.size * 0.18, -p.size * 0.08);
+      ctx.closePath();
+      ctx.fill();
+      break;
+    case 'slash':
+      ctx.fillRect(-p.size * 0.08, -p.size * 0.6, p.size * 0.16, p.size * 1.2);
+      break;
+    case 'crescent':
+      ctx.beginPath();
+      ctx.arc(-p.size * 0.08, 0, p.size * 0.42, -Math.PI * 0.7, Math.PI * 0.7);
+      ctx.arc(p.size * 0.1, 0, p.size * 0.3, Math.PI * 0.7, -Math.PI * 0.7, true);
+      ctx.closePath();
+      ctx.fill();
+      break;
+    case 'rook':
+      ctx.beginPath();
+      ctx.moveTo(-p.size * 0.34, p.size * 0.44);
+      ctx.lineTo(-p.size * 0.34, -p.size * 0.08);
+      ctx.lineTo(-p.size * 0.24, -p.size * 0.08);
+      ctx.lineTo(-p.size * 0.24, -p.size * 0.42);
+      ctx.lineTo(-p.size * 0.1, -p.size * 0.42);
+      ctx.lineTo(-p.size * 0.1, -p.size * 0.16);
+      ctx.lineTo(p.size * 0.1, -p.size * 0.16);
+      ctx.lineTo(p.size * 0.1, -p.size * 0.42);
+      ctx.lineTo(p.size * 0.24, -p.size * 0.42);
+      ctx.lineTo(p.size * 0.24, -p.size * 0.08);
+      ctx.lineTo(p.size * 0.34, -p.size * 0.08);
+      ctx.lineTo(p.size * 0.34, p.size * 0.44);
+      ctx.closePath();
+      ctx.fill();
+      break;
+    case 'circle':
+      ctx.beginPath();
+      ctx.arc(0, 0, p.size * 0.34, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+    case 'line':
+      ctx.beginPath();
+      ctx.moveTo(0, -p.size * 0.62);
+      ctx.lineTo(0, p.size * 0.62);
+      ctx.stroke();
+      break;
+    case 'glyph':
+      ctx.font = '700 ' + Math.max(14, p.size) + 'px serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(sig.glyph, 0, 0);
+      break;
+  }
+  ctx.restore();
+}
+
+function drawStreamer(ctx, s){
+  ctx.save();
+  ctx.globalAlpha = s.alpha;
+  ctx.strokeStyle = s.color;
+  ctx.lineWidth = s.width;
+  ctx.beginPath();
+  ctx.moveTo(s.x, s.y);
+  for (var i = 1; i <= 4; i++) {
+    var px = s.x + s.vx * i * 0.9 + Math.sin(s.phase + i * 0.75) * s.amp;
+    var py = s.y + s.vy * i * 0.9 + i * s.seg;
+    ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+  ctx.restore();
+}
+
+function runArchetypeBurst(key, sym, hex, done){
+  if (prefersReducedMotion) {
+    done();
+    return;
+  }
+
+  var layer = document.getElementById('burst-layer');
+  var canvas = document.getElementById('burst-canvas');
+  if (!layer || !canvas) {
+    done();
+    return;
+  }
+
+  var ctx = canvas.getContext('2d');
+  if (!ctx) {
+    done();
+    return;
+  }
+
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var w = window.innerWidth;
+  var h = window.innerHeight;
+  canvas.width = Math.round(w * dpr);
+  canvas.height = Math.round(h * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  var cx = w * 0.5;
+  var cy = h * 0.42;
+  var palette = buildBurstPalette(hex);
+  var sig = buildBurstSignature(key, sym);
+
+  burstFx.particles = [];
+  burstFx.streamers = [];
+  burstFx.startedAt = performance.now();
+  burstFx.duration = 1180;
+
+  for (var i = 0; i < 56; i++) {
+    var ang = randomBetween(-Math.PI * 0.92, -Math.PI * 0.08);
+    var speed = randomBetween(4.8, 10.5);
+    var zSpeed = randomBetween(0.04, 0.14);
+    var shape = sig.shapes[Math.floor(Math.random() * sig.shapes.length)];
+    burstFx.particles.push({
+      x: cx,
+      y: cy,
+      z: 0,
+      vx: Math.cos(ang) * speed * randomBetween(0.55, 1.0),
+      vy: Math.sin(ang) * speed,
+      vz: zSpeed,
+      gravity: randomBetween(0.06, 0.12),
+      rot: randomBetween(0, Math.PI * 2),
+      vr: randomBetween(-0.18, 0.18),
+      size: randomBetween(8, 18),
+      baseSize: randomBetween(8, 18),
+      color: palette[Math.floor(Math.random() * palette.length)],
+      alpha: randomBetween(0.62, 0.98),
+      shape: shape,
+      sx: cx,
+      sy: cy
+    });
+  }
+
+  for (var j = 0; j < 11; j++) {
+    var sang = randomBetween(-Math.PI * 0.86, -Math.PI * 0.14);
+    var sSpeed = randomBetween(5.2, 8.4);
+    burstFx.streamers.push({
+      x: cx,
+      y: cy,
+      vx: Math.cos(sang) * sSpeed,
+      vy: Math.sin(sang) * sSpeed,
+      seg: randomBetween(10, 16),
+      amp: randomBetween(6, 12),
+      phase: randomBetween(0, Math.PI * 2),
+      spin: randomBetween(0.12, 0.24),
+      alpha: randomBetween(0.45, 0.8),
+      width: randomBetween(1.8, 2.8),
+      color: palette[Math.floor(Math.random() * palette.length)]
+    });
+  }
+
+  layer.classList.add('active');
+
+  function frame(now){
+    var t = now - burstFx.startedAt;
+    var progress = Math.min(1, t / burstFx.duration);
+    ctx.clearRect(0, 0, w, h);
+
+    for (var p = 0; p < burstFx.particles.length; p++) {
+      var part = burstFx.particles[p];
+      part.x += part.vx;
+      part.y += part.vy;
+      part.z += part.vz;
+      part.vy += part.gravity;
+      part.rot += part.vr;
+      part.alpha *= 0.988;
+
+      var perspective = 1 + part.z * 3.2;
+      part.sx = cx + (part.x - cx) * perspective;
+      part.sy = cy + (part.y - cy) * perspective;
+      part.size = part.baseSize * perspective;
+
+      if (part.alpha > 0.04) drawBurstShape(ctx, part, sig);
+    }
+
+    for (var s = 0; s < burstFx.streamers.length; s++) {
+      var st = burstFx.streamers[s];
+      st.x += st.vx;
+      st.y += st.vy;
+      st.vy += 0.08;
+      st.phase += st.spin;
+      st.alpha *= 0.986;
+      if (st.alpha > 0.05) drawStreamer(ctx, st);
+    }
+
+    if (progress < 1) {
+      burstFx.raf = requestAnimationFrame(frame);
+    } else {
+      layer.classList.remove('active');
+      ctx.clearRect(0, 0, w, h);
+      done();
+    }
+  }
+
+  burstFx.raf = requestAnimationFrame(frame);
+}
 
 function show(id){
   document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.classList.add('gone')});
@@ -721,8 +1010,10 @@ function result(){
     if (captureBox) {
       captureBox.classList.toggle('capture-overlap', window.innerWidth <= 480);
     }
-    show('s-res');
-    busy=false;
+    runArchetypeBurst(key, a.sym, a.col, function(){
+      show('s-res');
+      busy=false;
+    });
   },2400);
 }
 
