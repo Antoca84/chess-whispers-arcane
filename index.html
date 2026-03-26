@@ -454,21 +454,9 @@
     position: relative;
     z-index: 2;
     background: var(--bg);
-    padding: 130px 20px;
+    padding: 100px 20px;
     text-align: center;
-    /* chessboard texture overlay */
-    background-image:
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Crect width='24' height='24' fill='white'/%3E%3Crect x='24' y='24' width='24' height='24' fill='white'/%3E%3C/svg%3E");
-    background-size: 48px 48px;
   }
-  #cta-finale::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: var(--bg);
-    opacity: 0.962;
-    pointer-events: none;
-  }
-  #cta-finale > * { position: relative; z-index: 1; }
   .urgency-badge {
     display: inline-block;
     padding: 8px 22px;
@@ -505,6 +493,7 @@
      ================================================ */
   .site-footer {
     position: relative; z-index: 2;
+    background: var(--bg);
     border-top: 1px solid rgba(255,215,0,0.15);
     padding: 30px 40px;
     display: flex;
@@ -512,19 +501,7 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 14px;
-    /* chess texture quasi-invisibile */
-    background-color: #0d0d0d;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Crect width='12' height='12' fill='white'/%3E%3Crect x='12' y='12' width='12' height='12' fill='white'/%3E%3C/svg%3E");
-    background-size: 24px 24px;
   }
-  .site-footer::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(to bottom, #0d0d0d, #080808);
-    opacity: 0.962;
-    pointer-events: none;
-  }
-  .site-footer > * { position: relative; z-index: 1; }
   .site-footer p { color: var(--text-2); font-size: 0.85rem; }
   .footer-links { display: flex; gap: 24px; }
   .footer-links a {
@@ -545,15 +522,10 @@
     #hero {
       min-height: 58vh;
       justify-content: center;
-      background: radial-gradient(ellipse 85% 110% at 50% 50%,
-        rgba(13,13,13,0.93) 0%,
-        rgba(13,13,13,0.75) 52%,
-        rgba(13,13,13,0.22) 78%,
-        transparent 100%
-      );
+      background: none;
     }
     .hero-inner {
-      padding-top: 50px;
+      padding-top: 0;
       max-width: 660px;
       text-align: center;
     }
@@ -963,23 +935,19 @@
      CTA FINALE
      ================================================ -->
 <section id="cta-finale">
-  <div class="urgency-badge">⚡ Offerta Early Adopters: 4,99€ invece di 9€</div>
   <h2>Pronto a muovere<br>la tua prima mossa?</h2>
   <a href="https://antoca84.github.io/chess-whispers-arcane/quiz.html" target="_blank"
      class="cta-glass large"
      onclick="gtag('event','quiz_started',{event_category:'conversion'})">
     Inizia il Quiz Gratuito
   </a>
-  <p class="countdown-note">
-    Offerta valida ancora per <strong id="countdown2">...</strong>
-  </p>
 </section>
 
 <!-- ================================================
      FOOTER
      ================================================ -->
 <footer class="site-footer">
-  <p>© 2025 Scacchi Mentali · La vita è una partita.</p>
+  <p>© 2026 Scacchi Mentali · La vita è una partita.</p>
 </footer>
 
 <!-- ================================================
@@ -1278,7 +1246,6 @@
   }
 
   initGSAPAnimations(isMobile || !hasWebGL);
-  initCountdown();
 
   /* ------------------------------------------
      PARTICLE SYSTEM
@@ -1828,7 +1795,7 @@
 
       /* CTA finale entrance */
       gsap.fromTo(
-        ['#cta-finale .urgency-badge', '#cta-finale h2', '#cta-finale .cta-glass', '#cta-finale .countdown-note'],
+        ['#cta-finale h2', '#cta-finale .cta-glass'],
         { opacity: 0, y: 28 },
         {
           opacity: 1, y: 0,
@@ -2283,25 +2250,6 @@
   /* ------------------------------------------
      COUNTDOWN
   ------------------------------------------ */
-  function initCountdown() {
-    var el = document.getElementById('countdown2');
-    if (!el) return;
-    var deadline = new Date('2026-04-10T23:59:59');
-    function tick() {
-      var diff = deadline - new Date();
-      if (diff <= 0) { el.textContent = 'scaduta'; return; }
-      var d = Math.floor(diff / 86400000);
-      var h = Math.floor((diff % 86400000) / 3600000);
-      var m = Math.floor((diff % 3600000)  / 60000);
-      var s = Math.floor((diff % 60000)    / 1000);
-      el.textContent = d + 'g ' +
-        String(h).padStart(2,'0') + ':' +
-        String(m).padStart(2,'0') + ':' +
-        String(s).padStart(2,'0');
-    }
-    tick();
-    setInterval(tick, 1000);
-  }
 
 }());
 </script>
