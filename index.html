@@ -637,14 +637,15 @@
   @media (max-width: 768px) {
     #chess-canvas { display: none; }
 
-    /* Mobile background particles */
+    /* Mobile background particles — overlay con mix-blend-mode per visibilità sui panel scuri */
     #mobile-bg-particles {
       display: block;
       position: fixed;
       inset: 0;
-      z-index: 0;
+      z-index: 20;
       pointer-events: none;
       overflow: hidden;
+      mix-blend-mode: screen;
     }
     #mobile-bg-particles span {
       position: absolute;
@@ -658,24 +659,34 @@
 
     #hero {
       min-height: auto;
-      padding: 100px 6% 60px;
+      padding: 90px 5% 40px;
       background: rgba(13,13,13,0.96);
       flex-direction: column;
       align-items: flex-start;
     }
     .hero-inner { max-width: 100%; padding-top: 0; }
-    .hero-sub { max-width: 100%; }
+    .hero-sub { max-width: 100%; font-size: 0.92rem; }
+    .hero-h1 { font-size: clamp(1.55rem, 7vw, 2.2rem) !important; }
     .scroll-cue { display: none; }
+
+    /* Journey — compatto, zero gap tra schede */
+    #journey {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      padding: 0;
+    }
 
     .arch-panel {
       height: auto;
-      min-height: 86vh;
-      padding: 60px 5% 50px;
-      background: rgba(10,10,10,0.97);
+      min-height: auto;
+      padding: 28px 5% 24px;
+      background: rgba(10,10,10,0.95);
       flex-direction: column;
       align-items: flex-start;
       position: relative;
       overflow: hidden;
+      border-top: 1px solid rgba(255,255,255,0.04);
     }
     .arch-panel::before {
       content: '';
@@ -687,13 +698,13 @@
       pointer-events: none;
       z-index: 0;
     }
-    .arch-panel.glow-active::before { opacity: 0.15; }
+    .arch-panel.glow-active::before { opacity: 0.18; }
     .arch-panel.glow-fade::before {
       opacity: 0;
       transition: opacity 1.7s ease-out;
     }
     .arch-panel.glow-resident::before {
-      opacity: 0.06;
+      opacity: 0.08;
       transition: opacity 0.8s ease;
     }
     .arch-panel > * {
@@ -703,23 +714,35 @@
     .arch-bg-glyph { display: none; }
     .arch-card-wrap {
       margin: 0; width: 100%;
-      /* Disable GSAP initial state on mobile */
       opacity: 1 !important; transform: none !important;
     }
 
-    #come-funziona, #cta-finale { padding: 80px 20px; }
+    /* Card interna compatta */
+    .arch-card-inner {
+      padding: 22px 18px 20px;
+      border-radius: 14px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .arch-ordinal { font-size: 0.6rem; letter-spacing: 2px; margin-bottom: 8px; }
+    .arch-glyph   { font-size: 2rem; margin-bottom: 8px; }
+    .arch-name    { font-size: 1.25rem; margin-bottom: 8px; }
+    .arch-desc    { font-size: 0.86rem; line-height: 1.6; margin-bottom: 16px; }
+    .arch-mini-cta { font-size: 0.72rem; letter-spacing: 1px; }
+
+    #come-funziona, #cta-finale { padding: 60px 20px; }
     .section-wrap { padding: 0 16px; }
-    .steps-grid { gap: 16px; }
-    .step-card { opacity: 1 !important; } /* no GSAP on mobile */
+    .steps-grid { gap: 12px; }
+    .step-card { opacity: 1 !important; }
 
     .site-footer { flex-direction: column; text-align: center; padding: 24px 20px; }
   }
 
   @keyframes mbgDrift {
     0%   { opacity: 0;    transform: translate(0, 0); }
-    15%  { opacity: 0.12; }
-    85%  { opacity: 0.07; }
-    100% { opacity: 0;    transform: translate(10px, -35px); }
+    15%  { opacity: 0.55; }
+    80%  { opacity: 0.38; }
+    100% { opacity: 0;    transform: translate(12px, -40px); }
   }
 
   /* prefers-reduced-motion */
@@ -1659,17 +1682,17 @@
      MOBILE GLOW + BACKGROUND PARTICLES
   ------------------------------------------ */
   function initMobileGlow() {
-    // Minimal background particle dust (CSS-driven, ~18 dots)
+    // Background particle dust (CSS-driven)
     var bg = document.getElementById('mobile-bg-particles');
     if (bg) {
-      var count = 18;
+      var count = 28;
       for (var i = 0; i < count; i++) {
         var s = document.createElement('span');
-        var size = (1.4 + Math.random() * 2.2).toFixed(1);
+        var size = (2.5 + Math.random() * 3.5).toFixed(1);
         var left = (Math.random() * 100).toFixed(1);
         var top  = (Math.random() * 100).toFixed(1);
-        var dur  = (20 + Math.random() * 24).toFixed(1);
-        var delay = (-Math.random() * 28).toFixed(1);
+        var dur  = (16 + Math.random() * 20).toFixed(1);
+        var delay = (-Math.random() * 24).toFixed(1);
         s.style.cssText =
           'width:' + size + 'px;height:' + size + 'px;' +
           'left:' + left + '%;top:' + top + '%;' +
