@@ -6,6 +6,13 @@
 <meta name="theme-color" content="#07070f">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XE6BJT3222"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XE6BJT3222');
+  </script>
   <link rel="icon" type="image/x-icon" href="./favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="./favicon.png">
@@ -1000,6 +1007,13 @@ function show(id){
   if(!el||!INTRO_HEADLINES.length)return;
   var idx=Math.floor(Math.random()*INTRO_HEADLINES.length);
   el.textContent=INTRO_HEADLINES[idx];
+  if(typeof gtag==='function'){
+    gtag('event','quiz_headline_viewed',{
+      event_category:'engagement',
+      headline_index:idx,
+      headline_text:INTRO_HEADLINES[idx]
+    });
+  }
 }());
 
 function startQuiz(){show('s-quiz');render()}
