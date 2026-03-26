@@ -33,7 +33,7 @@
 }
 
 html{height:100%;-webkit-text-size-adjust:100%}
-body{min-height:100%;min-height:-webkit-fill-available;background:var(--bg);color:var(--text-primary);font-family:'Lato',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+body{min-height:100%;min-height:-webkit-fill-available;background:var(--surface);color:var(--text-primary);font-family:'Lato',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 
 body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");pointer-events:none;z-index:1;opacity:0.35}
 
@@ -53,7 +53,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .screen.gone{display:none}
 
 #s-intro{
-  background:var(--surface);
+  background:transparent;
 }
 
 /* Mobile intro particles */
@@ -637,6 +637,8 @@ var quizParticleState = {
   tiltVY: 0,
   lastBeta: null,
   lastGamma: null,
+  lastAX: null,
+  lastAY: null,
   permissionAsked: false
 };
 
@@ -728,20 +730,54 @@ function onQuizOrientation(ev){
   quizParticleState.tiltVY += impulseY;
 }
 
-function bindQuizOrientation(){
-  if (!window.DeviceOrientationEvent) return;
+function onQuizMotion(ev){
+  var acc = ev.accelerationIncludingGravity || ev.acceleration;
+  if (!acc) return;
+  if (typeof acc.x !== 'number' || typeof acc.y !== 'number') return;
 
-  function attachListener(){
-    window.addEventListener('deviceorientation', onQuizOrientation, true);
+  if (quizParticleState.lastAX === null || quizParticleState.lastAY === null) {
+    quizParticleState.lastAX = acc.x;
+    quizParticleState.lastAY = acc.y;
+    return;
   }
 
-  if (typeof window.DeviceOrientationEvent.requestPermission === 'function') {
+  var dAX = acc.x - quizParticleState.lastAX;
+  var dAY = acc.y - quizParticleState.lastAY;
+
+  quizParticleState.lastAX = acc.x;
+  quizParticleState.lastAY = acc.y;
+
+  var impulseX = Math.max(-0.22, Math.min(0.22, dAX * 0.035));
+  var impulseY = Math.max(-0.22, Math.min(0.22, dAY * 0.035));
+
+  quizParticleState.tiltVX += impulseX;
+  quizParticleState.tiltVY -= impulseY;
+}
+
+function bindQuizOrientation(){
+  var hasOrientation = !!window.DeviceOrientationEvent;
+  var hasMotion = !!window.DeviceMotionEvent;
+  if (!hasOrientation && !hasMotion) return;
+
+  function attachListener(){
+    if (hasOrientation) window.addEventListener('deviceorientation', onQuizOrientation, true);
+    if (hasMotion) window.addEventListener('devicemotion', onQuizMotion, true);
+  }
+
+  var orientationNeedsPermission = hasOrientation && typeof window.DeviceOrientationEvent.requestPermission === 'function';
+  var motionNeedsPermission = hasMotion && typeof window.DeviceMotionEvent.requestPermission === 'function';
+
+  if (orientationNeedsPermission || motionNeedsPermission) {
     var ask = function(){
       if (quizParticleState.permissionAsked) return;
       quizParticleState.permissionAsked = true;
-      window.DeviceOrientationEvent.requestPermission()
-        .then(function(state){
-          if (state === 'granted') attachListener();
+      var requests = [];
+      if (orientationNeedsPermission) requests.push(window.DeviceOrientationEvent.requestPermission());
+      if (motionNeedsPermission) requests.push(window.DeviceMotionEvent.requestPermission());
+      Promise.all(requests)
+        .then(function(states){
+          var granted = states.some(function(state){ return state === 'granted'; });
+          if (granted) attachListener();
         })
         .catch(function(){});
       window.removeEventListener('touchstart', ask);
