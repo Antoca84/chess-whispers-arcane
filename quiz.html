@@ -387,7 +387,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <div class="capture-error" id="capture-error"></div>
     <div class="plan-row">
       <label class="plan-opt">
-        <input type="radio" name="plan" value="monthly" checked>
+        <input type="radio" name="plan" value="monthly">
         <div class="plan-card">
           <div class="plan-name">Mensile</div>
           <div class="plan-price">€7,00<span>/mese</span></div>
@@ -404,7 +404,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
         </div>
       </label>
       <label class="plan-opt">
-        <input type="radio" name="plan" value="founder">
+        <input type="radio" name="plan" value="founder" checked>
         <div class="plan-card plan-founder" id="plan-founder-card">
           <div class="plan-badge plan-badge-founder" id="plan-founder-badge">Fondatori</div>
           <div class="plan-name">Per sempre</div>
@@ -687,7 +687,7 @@ async function submitEmail(){
   const btn=document.getElementById('btn-qr');
   const label=document.getElementById('btn-qr-label');
   const planInput=document.querySelector('input[name="plan"]:checked');
-  const plan=planInput ? planInput.value : 'monthly';
+  const plan=planInput ? planInput.value : 'founder';
 
   errEl.textContent='';
   if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
