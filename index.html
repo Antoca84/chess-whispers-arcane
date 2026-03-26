@@ -12,9 +12,10 @@
   <meta property="og:description" content="Scopri il tuo archetipo degli scacchi mentali e ricevi messaggi quotidiani personalizzati.">
   <meta property="og:url" content="https://scacchimentali.it/">
   <meta property="og:image" content="https://scacchimentali.it/images/logo.png">
-  <link rel="icon" type="image/x-icon" href="favicon.ico?v=2">
-  <link rel="icon" type="image/png" href="favicon.png?v=2">
-  <link rel="apple-touch-icon" href="favicon.png?v=2">
+  <link rel="icon" type="image/x-icon" href="./favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./favicon.png">
+  <link rel="apple-touch-icon" href="./favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -460,7 +461,7 @@
   #cta-finale::before {
     content: '';
     position: absolute; inset: 0;
-    background: linear-gradient(to bottom, transparent 0%, #0d0d0d 40%);
+    background: linear-gradient(to bottom, rgba(13,13,13,0.3) 0%, #0d0d0d 40%);
     pointer-events: none;
     z-index: 0;
   }
@@ -540,12 +541,8 @@
     .hero-h1 {
       font-size: clamp(1.76rem, 4.4vw, 3.36rem);
       text-shadow:
-        0 0 20px rgba(0,0,0,0.8),
-        0 0 40px rgba(0,0,0,0.6),
-        1px  1px 0 rgba(0,0,0,0.9),
-        -1px -1px 0 rgba(0,0,0,0.9),
-        1px -1px 0 rgba(0,0,0,0.9),
-        -1px  1px 0 rgba(0,0,0,0.9);
+        0 0 8px rgba(0,0,0,0.9),
+        0 0 2px rgba(0,0,0,1);
     }
     .hero-stats { margin-top: 16px; justify-content: center; }
     .hero-sub { margin-bottom: 24px; max-width: 100%; }
