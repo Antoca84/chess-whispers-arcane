@@ -659,7 +659,8 @@ var burstFx = {
   streamers: [],
   startedAt: 0,
   duration: 1560,
-  releaseAt: 240
+  releaseAt: 240,
+  revealAt: 520
 };
 
 function shade(hex, amt){
@@ -803,8 +804,9 @@ function drawStreamer(ctx, s){
   ctx.restore();
 }
 
-function runArchetypeBurst(key, sym, hex, done){
+function runArchetypeBurst(key, sym, hex, onReveal, done){
   if (prefersReducedMotion) {
+    if (typeof onReveal === 'function') onReveal();
     done();
     return;
   }
@@ -812,12 +814,14 @@ function runArchetypeBurst(key, sym, hex, done){
   var layer = document.getElementById('burst-layer');
   var canvas = document.getElementById('burst-canvas');
   if (!layer || !canvas) {
+    if (typeof onReveal === 'function') onReveal();
     done();
     return;
   }
 
   var ctx = canvas.getContext('2d');
   if (!ctx) {
+    if (typeof onReveal === 'function') onReveal();
     done();
     return;
   }
@@ -839,6 +843,8 @@ function runArchetypeBurst(key, sym, hex, done){
   burstFx.startedAt = performance.now();
   burstFx.duration = 1560;
   burstFx.releaseAt = 240;
+  burstFx.revealAt = 520;
+  var revealTriggered = false;
 
   for (var i = 0; i < 72; i++) {
     var ang = randomBetween(-Math.PI * 0.92, -Math.PI * 0.08);
@@ -890,6 +896,10 @@ function runArchetypeBurst(key, sym, hex, done){
     var progress = Math.min(1, t / burstFx.duration);
     var charge = Math.min(1, t / burstFx.releaseAt);
     var released = t >= burstFx.releaseAt;
+    if (!revealTriggered && t >= burstFx.revealAt) {
+      revealTriggered = true;
+      if (typeof onReveal === 'function') onReveal();
+    }
     ctx.clearRect(0, 0, w, h);
 
     var halo = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(w, h) * 0.22);
@@ -945,6 +955,7 @@ function runArchetypeBurst(key, sym, hex, done){
     if (progress < 1) {
       burstFx.raf = requestAnimationFrame(frame);
     } else {
+      if (!revealTriggered && typeof onReveal === 'function') onReveal();
       layer.classList.remove('active');
       ctx.clearRect(0, 0, w, h);
       done();
@@ -1039,6 +1050,7 @@ function result(){
     }
     runArchetypeBurst(key, a.sym, a.col, function(){
       show('s-res');
+    }, function(){
       busy=false;
     });
   },2400);
