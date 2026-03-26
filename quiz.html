@@ -263,6 +263,9 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   border-radius:4px;
   padding:22px 20px;
   margin-bottom:1.2rem;
+  position:relative;
+  z-index:4;
+  transition:margin-top .38s ease, transform .38s ease, box-shadow .38s ease, opacity .6s ease;
   opacity:0;animation:fadeUp .6s 1.9s forwards
 }
 .capture-title{font-size:.95rem;font-weight:700;color:var(--text-primary);margin-bottom:.3rem;text-align:center}
@@ -293,6 +296,10 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 
 @media (max-width: 480px){
   .capture-box{padding:22px 16px}
+  .capture-box.capture-overlap{
+    margin-top:-68px;
+    box-shadow:0 22px 44px rgba(0,0,0,0.34);
+  }
   .capture-title{font-size:1rem;line-height:1.35}
   .capture-sub{font-size:.8rem;line-height:1.6;margin-bottom:1rem}
   .capture-row{flex-direction:column;gap:10px}
@@ -689,6 +696,10 @@ function result(){
     if(founderBanner){founderBanner.style.borderColor=a.col;founderBanner.style.background=`rgba(${hexToRgb(a.col)},0.08)`}
     const founderBadge=document.getElementById('plan-founder-badge');
     if(founderBadge){founderBadge.style.color=a.col}
+    var captureBox = document.getElementById('capture-box');
+    if (captureBox) {
+      captureBox.classList.toggle('capture-overlap', window.innerWidth <= 480);
+    }
     show('s-res');
     busy=false;
   },2400);
@@ -746,9 +757,13 @@ async function submitEmail(){
     qrImg.onload=()=>qrBox.classList.add('revealed');
     qrImg.onerror=()=>qrBox.classList.add('revealed');
 
+    const captureBox=document.getElementById('capture-box');
+    if(captureBox) captureBox.classList.remove('capture-overlap');
     document.getElementById('res-locked').classList.add('unlocked');
-    document.getElementById('capture-box').style.display='none';
-    document.querySelector('.btn-restart').classList.add('visible');
+    setTimeout(function(){
+      document.getElementById('capture-box').style.display='none';
+      document.querySelector('.btn-restart').classList.add('visible');
+    }, 360);
 
   }catch(err){
     errEl.textContent='Errore di connessione. Riprova tra poco.';
