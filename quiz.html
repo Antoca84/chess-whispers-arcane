@@ -326,11 +326,11 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 <!-- INTRO -->
 <div class="screen active" id="s-intro">
   <div class="brand-badge">Scacchi Mentali</div>
-  <div class="intro-title">Qual è il tuo pezzo sulla scacchiera della vita?</div>
+  <div class="intro-title">Stai guidando la tua partita o la stai solo subendo?</div>
   <div class="chess-divider"><span>♟</span></div>
-  <div class="intro-sub">Non esiste risposta giusta.<br>Esistono solo la tua mossa e ciò che rivela.</div>
+  <div class="intro-sub">Questo quiz ti dice quale archetipo ti muove davvero<br>e cosa ti sta bloccando.</div>
   <button class="btn-start" onclick="startQuiz()">Inizia la partita <span class="arr">→</span></button>
-  <div class="intro-note">12 domande · ~4 minuti</div>
+  <div class="intro-note">12 domande · 4 minuti · risultato immediato</div>
 </div>
 
 <!-- QUIZ -->
@@ -374,14 +374,14 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <!-- Banner fondatori — rimuovi dopo 30 giorni -->
     <div class="founder-banner" id="founder-banner">
       <div class="founder-badge">Offerta Fondatori</div>
-      <div class="founder-text">Entra adesso e blocca il prezzo per sempre.<br>Solo per i primi 30 giorni.</div>
+      <div class="founder-text">Chi entra ora non paga meno per un mese.<br>Paga meno per sempre.</div>
     </div>
-    <div class="capture-title" id="capture-title">La tua ferita. Il tuo percorso.</div>
-    <div class="capture-sub">Inserisci la tua email per sbloccare il profilo completo<br>e attivare il trial gratuito.</div>
+    <div class="capture-title" id="capture-title">Hai visto il simbolo. Ora sblocca la lettura completa.</div>
+    <div class="capture-sub">Ricevi il profilo completo, il tuo QR personale<br>e 7 giorni gratuiti dei messaggi del tuo archetipo.</div>
     <div class="capture-row">
       <input type="email" id="email-input" placeholder="la-tua@email.it" autocomplete="email" inputmode="email">
       <button class="btn-qr" id="btn-qr" onclick="submitEmail()">
-        <span id="btn-qr-label">Sblocca →</span>
+        <span id="btn-qr-label">Sblocca profilo e trial →</span>
       </button>
     </div>
     <div class="capture-error" id="capture-error"></div>
@@ -413,7 +413,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
         </div>
       </label>
     </div>
-    <div class="capture-privacy">Nessuna carta richiesta durante il trial.</div>
+    <div class="capture-privacy">7 giorni gratuiti. Nessun addebito oggi. Nessuna carta richiesta durante il trial.</div>
   </div>
 
   <!-- QR RESULT (hidden until response) -->
@@ -652,7 +652,7 @@ function result(){
     document.getElementById('rqtext').textContent=`"${a.quote}"`;
     document.getElementById('capture-box').style.borderColor=a.col;
     document.getElementById('btn-qr').style.background=a.col;
-    document.getElementById('capture-title').textContent=`La ferita de ${a.nome}. Il tuo percorso.`;
+    document.getElementById('capture-title').textContent='Hai visto il simbolo. Ora sblocca la lettura completa.';
     const badge=document.getElementById('plan-annual-badge');
     if(badge){badge.style.color=a.col}
     const annualCard=document.getElementById('plan-annual-card');
@@ -705,7 +705,7 @@ async function submitEmail(){
 
     if(data.error){
       errEl.textContent=data.error;
-      btn.disabled=false;label.textContent='Sblocca →';
+      btn.disabled=false;label.textContent='Sblocca profilo e trial →';
       return;
     }
 
@@ -724,7 +724,7 @@ async function submitEmail(){
 
   }catch(err){
     errEl.textContent='Errore di connessione. Riprova tra poco.';
-    btn.disabled=false;label.textContent='Sblocca →';
+    btn.disabled=false;label.textContent='Sblocca profilo e trial →';
   }
 }
 </script>
