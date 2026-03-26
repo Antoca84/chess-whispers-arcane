@@ -76,8 +76,11 @@
     pointer-events: none;
   }
 
-  /* Mobile piece — hidden on desktop */
-  #mobile-piece { display: none; }
+  /* Mobile piece — removed */
+  #mobile-piece { display: none !important; }
+
+  /* Mobile background particles — hidden on desktop */
+  #mobile-bg-particles { display: none; }
 
   /* ================================================
      HEADER
@@ -634,70 +637,21 @@
   @media (max-width: 768px) {
     #chess-canvas { display: none; }
 
-    /* Mobile piece — sticky above cards during journey scroll */
-    #mobile-piece {
-      display: flex;
-      justify-content: center;
-      width: 100%;
-      position: sticky;
-      top: 88px;
-      z-index: 5;
-      pointer-events: none;
-      padding: 18px 0 10px;
-    }
-    .mp-float {
-      perspective: 400px;
-      position: relative;
-      width: 200px;
-      height: 320px;
-      animation: mobilePieceFloat 3s ease-in-out infinite;
-    }
-    .mp-spin {
-      width: 200px;
-      height: 320px;
-      position: relative;
-      transform-style: preserve-3d;
-    }
-    .mp-layer {
-      position: absolute;
+    /* Mobile background particles */
+    #mobile-bg-particles {
+      display: block;
+      position: fixed;
       inset: 0;
-      transform-style: preserve-3d;
-      animation-name: mobilePieceSpin;
-      animation-timing-function: linear;
-      animation-iteration-count: infinite;
-      animation-duration: 10s;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
     }
-    .mp-back {
-      opacity: 0.35;
-      transform: scale(0.88) translateZ(-8px);
-      animation-duration: 14s;
-    }
-    .mp-mid {
-      opacity: 1;
-      transform: scale(1) translateZ(0);
-      animation-duration: 10s;
-    }
-    .mp-front {
-      opacity: 0.5;
-      transform: scale(1.06) translateZ(8px);
-      animation-duration: 8.5s;
-    }
-    body.slow-device .mp-back,
-    body.slow-device .mp-front {
-      display: none;
-    }
-    .mp-layer span {
+    #mobile-bg-particles span {
       position: absolute;
       border-radius: 50%;
-      transform: translate3d(-50%, -50%, 0);
-      transition:
-        left 0.8s cubic-bezier(0.23, 1, 0.32, 1),
-        top 0.8s cubic-bezier(0.23, 1, 0.32, 1),
-        background-color 0.6s ease,
-        box-shadow 0.6s ease,
-        opacity 0.6s ease,
-        width 0.6s ease,
-        height 0.6s ease;
+      background: #FFD700;
+      opacity: 0;
+      animation: mbgDrift linear infinite;
     }
 
     .site-header { padding: 14px 20px; }
@@ -716,7 +670,7 @@
     .arch-panel {
       height: auto;
       min-height: 86vh;
-      padding: 280px 5% 50px;
+      padding: 60px 5% 50px;
       background: rgba(10,10,10,0.97);
       flex-direction: column;
       align-items: flex-start;
@@ -761,13 +715,11 @@
     .site-footer { flex-direction: column; text-align: center; padding: 24px 20px; }
   }
 
-  @keyframes mobilePieceFloat {
-    0%, 100% { transform: translateY(0px); }
-    50%       { transform: translateY(-8px); }
-  }
-  @keyframes mobilePieceSpin {
-    from { transform: rotateY(0deg); }
-    to   { transform: rotateY(360deg); }
+  @keyframes mbgDrift {
+    0%   { opacity: 0;    transform: translate(0, 0); }
+    15%  { opacity: 0.12; }
+    85%  { opacity: 0.07; }
+    100% { opacity: 0;    transform: translate(10px, -35px); }
   }
 
   /* prefers-reduced-motion */
@@ -783,6 +735,8 @@
 
 <!-- Three.js canvas (fixed behind all content) -->
 <canvas id="chess-canvas"></canvas>
+<!-- Mobile background particles (mobile only, via CSS + JS) -->
+<div id="mobile-bg-particles"></div>
 
 <!-- ================================================
      HEADER
@@ -827,17 +781,6 @@
      JOURNEY — 6 archetype panels
      ================================================ -->
 <section id="journey">
-
-<!-- Mobile particle piece — sticky, visible only on mobile via CSS -->
-<div id="mobile-piece">
-  <div class="mp-float">
-    <div class="mp-spin">
-      <div class="mp-layer mp-back"></div>
-      <div class="mp-layer mp-mid"></div>
-      <div class="mp-layer mp-front"></div>
-    </div>
-  </div>
-</div>
 
   <div class="arch-panel" data-arch="re" style="--arch-color: #FFD700">
     <div class="arch-bg-glyph">♔</div>
@@ -1072,145 +1015,6 @@
   }
 
   /* ------------------------------------------
-     MOBILE PIECE SHAPES
-  ------------------------------------------ */
-  var MOBILE_SILHOUETTES = {
-    re: {
-      boundary: [
-        [-0.9,0],[-0.7,0.05],[-0.4,0.1],[-0.25,0.2],[-0.3,0.35],[-0.35,0.5],[-0.3,0.6],
-        [-0.45,0.65],[-0.5,0.7],[-0.3,0.72],[-0.2,0.75],[-0.18,0.82],[-0.2,0.9],
-        [-0.32,0.95],[-0.35,1.05],[-0.25,1.1],[-0.15,1.15],[-0.05,1.2],[0,1.25],
-        [0.05,1.2],[0.15,1.15],[0.25,1.1],[0.35,1.05],[0.32,0.95],[0.2,0.9],
-        [0.18,0.82],[0.2,0.75],[0.3,0.72],[0.45,0.65],[0.5,0.7],[0.3,0.72],
-        [0.35,0.5],[0.3,0.6],[0.25,0.2],[0.4,0.1],[0.7,0.05],[0.9,0],
-        [-0.15,1.3],[0.15,1.3],[0,1.28],[0,1.45],[0,1.35],[-0.1,1.38],[0.1,1.38]
-      ],
-      fill: [
-        [-0.9,0],[-0.7,0.05],[-0.4,0.1],[-0.25,0.2],[-0.3,0.35],[-0.35,0.5],[-0.3,0.6],
-        [-0.45,0.65],[-0.5,0.7],[-0.3,0.72],[-0.2,0.75],[-0.18,0.82],[-0.2,0.9],
-        [-0.32,0.95],[-0.35,1.05],[-0.25,1.1],[-0.15,1.15],[-0.05,1.2],[0,1.25],
-        [0.05,1.2],[0.15,1.15],[0.25,1.1],[0.35,1.05],[0.32,0.95],[0.2,0.9],
-        [0.18,0.82],[0.2,0.75],[0.3,0.72],[0.45,0.65],[0.5,0.7],[0.3,0.72],
-        [0.35,0.5],[0.3,0.6],[0.25,0.2],[0.4,0.1],[0.7,0.05],[0.9,0]
-      ]
-    },
-    regina: {
-      boundary: [
-        [-0.9,0],[-0.7,0.05],[-0.4,0.1],[-0.25,0.2],[-0.3,0.4],[-0.28,0.55],[-0.35,0.65],
-        [-0.55,0.7],[-0.6,0.75],[-0.45,0.72],[-0.3,0.75],[-0.22,0.82],[-0.25,0.92],
-        [-0.35,0.98],[-0.3,1.05],[-0.2,1.1],[-0.1,1.12],[0,1.15],
-        [0.1,1.12],[0.2,1.1],[0.3,1.05],[0.35,0.98],[0.25,0.92],[0.22,0.82],
-        [0.3,0.75],[0.45,0.72],[0.6,0.75],[0.55,0.7],[0.35,0.65],[0.28,0.55],
-        [0.3,0.4],[0.25,0.2],[0.4,0.1],[0.7,0.05],[0.9,0],
-        [-0.5,1.2],[-0.35,1.35],[-0.15,1.25],[0,1.38],[0.15,1.25],[0.35,1.35],[0.5,1.2]
-      ],
-      fill: [
-        [-0.9,0],[-0.7,0.05],[-0.4,0.1],[-0.25,0.2],[-0.3,0.4],[-0.28,0.55],[-0.35,0.65],
-        [-0.55,0.7],[-0.6,0.75],[-0.45,0.72],[-0.3,0.75],[-0.22,0.82],[-0.25,0.92],
-        [-0.35,0.98],[-0.3,1.05],[-0.2,1.1],[-0.1,1.12],[0,1.15],
-        [0.1,1.12],[0.2,1.1],[0.3,1.05],[0.35,0.98],[0.25,0.92],[0.22,0.82],
-        [0.3,0.75],[0.45,0.72],[0.6,0.75],[0.55,0.7],[0.35,0.65],[0.28,0.55],
-        [0.3,0.4],[0.25,0.2],[0.4,0.1],[0.7,0.05],[0.9,0]
-      ]
-    },
-    torre: {
-      boundary: [
-        [-0.8,0],[-0.6,0.05],[-0.4,0.1],[-0.35,0.2],[-0.32,0.8],[-0.45,0.82],
-        [-0.45,0.88],[-0.48,0.9],[-0.48,1.15],[-0.35,1.15],[-0.35,0.95],
-        [-0.15,0.95],[-0.15,1.15],[0.15,1.15],[0.15,0.95],[0.35,0.95],
-        [0.35,1.15],[0.48,1.15],[0.48,0.9],[0.45,0.88],[0.45,0.82],
-        [0.32,0.8],[0.35,0.2],[0.4,0.1],[0.6,0.05],[0.8,0],
-        [-0.3,0.35],[-0.3,0.5],[-0.3,0.65],[0.3,0.35],[0.3,0.5],[0.3,0.65]
-      ],
-      fill: [
-        [-0.8,0],[-0.6,0.05],[-0.4,0.1],[-0.35,0.2],[-0.32,0.8],[-0.45,0.82],
-        [-0.45,0.88],[-0.48,0.9],[-0.48,1.15],[-0.35,1.15],[-0.35,0.95],
-        [-0.15,0.95],[-0.15,1.15],[0.15,1.15],[0.15,0.95],[0.35,0.95],
-        [0.35,1.15],[0.48,1.15],[0.48,0.9],[0.45,0.88],[0.45,0.82],
-        [0.32,0.8],[0.35,0.2],[0.4,0.1],[0.6,0.05],[0.8,0]
-      ]
-    },
-    alfiere: {
-      boundary: [
-        [-0.7,0],[-0.5,0.05],[-0.35,0.12],[-0.25,0.22],[-0.28,0.4],[-0.3,0.55],
-        [-0.28,0.65],[-0.35,0.72],[-0.38,0.8],[-0.3,0.85],[-0.22,0.9],
-        [-0.18,0.98],[-0.2,1.05],[-0.25,1.12],[-0.2,1.18],[-0.1,1.22],
-        [0,1.25],[0.1,1.22],[0.2,1.18],[0.25,1.12],[0.2,1.05],
-        [0.18,0.98],[0.22,0.9],[0.3,0.85],[0.38,0.8],[0.35,0.72],[0.28,0.65],
-        [0.3,0.55],[0.28,0.4],[0.25,0.22],[0.35,0.12],[0.5,0.05],[0.7,0],
-        [0,1.38],[-0.05,1.32],[0.05,1.32],[0,1.45]
-      ],
-      fill: [
-        [-0.7,0],[-0.5,0.05],[-0.35,0.12],[-0.25,0.22],[-0.28,0.4],[-0.3,0.55],
-        [-0.28,0.65],[-0.35,0.72],[-0.38,0.8],[-0.3,0.85],[-0.22,0.9],
-        [-0.18,0.98],[-0.2,1.05],[-0.25,1.12],[-0.2,1.18],[-0.1,1.22],
-        [0,1.25],[0.1,1.22],[0.2,1.18],[0.25,1.12],[0.2,1.05],
-        [0.18,0.98],[0.22,0.9],[0.3,0.85],[0.38,0.8],[0.35,0.72],[0.28,0.65],
-        [0.3,0.55],[0.28,0.4],[0.25,0.22],[0.35,0.12],[0.5,0.05],[0.7,0]
-      ]
-    },
-    cavallo: {
-      boundary: [
-        [-0.7,0],[-0.5,0.05],[-0.35,0.1],[-0.3,0.2],[-0.32,0.4],[-0.28,0.55],
-        [-0.15,0.65],[-0.05,0.72],[-0.18,0.8],[-0.35,0.88],[-0.4,0.96],
-        [-0.38,1.05],[-0.25,1.12],[-0.15,1.18],[-0.05,1.22],
-        [0.05,1.25],[0.2,1.28],[0.35,1.25],[0.45,1.18],[0.5,1.08],
-        [0.48,0.98],[0.4,0.88],[0.3,0.82],[0.25,0.75],[0.35,0.7],
-        [0.45,0.65],[0.4,0.55],[0.25,0.45],[0.15,0.35],[0.2,0.2],
-        [0.3,0.1],[0.5,0.05],[0.7,0],
-        [0.2,1.35],[0.3,1.42],[0.4,1.38],[0.35,1.28],
-        [-0.1,1.28],[-0.05,1.38],[0.08,1.42],[0.12,1.32],
-        [0.3,0.95],[0.35,1.0],[0.28,1.02]
-      ],
-      fill: [
-        [-0.7,0],[-0.5,0.05],[-0.35,0.1],[-0.3,0.2],[-0.32,0.4],[-0.28,0.55],
-        [-0.15,0.65],[-0.05,0.72],[-0.18,0.8],[-0.35,0.88],[-0.4,0.96],
-        [-0.38,1.05],[-0.25,1.12],[-0.15,1.18],[-0.05,1.22],
-        [0.05,1.25],[0.2,1.28],[0.35,1.25],[0.45,1.18],[0.5,1.08],
-        [0.48,0.98],[0.4,0.88],[0.3,0.82],[0.25,0.75],[0.35,0.7],
-        [0.45,0.65],[0.4,0.55],[0.25,0.45],[0.15,0.35],[0.2,0.2],
-        [0.3,0.1],[0.5,0.05],[0.7,0]
-      ]
-    },
-    pedone: {
-      boundary: [
-        [-0.6,0],[-0.45,0.05],[-0.3,0.1],[-0.22,0.18],[-0.2,0.28],
-        [-0.18,0.38],[-0.2,0.48],[-0.22,0.55],[-0.28,0.6],[-0.32,0.68],
-        [-0.38,0.75],[-0.35,0.82],[-0.25,0.88],[-0.2,0.95],[-0.22,1.02],
-        [-0.3,1.08],[-0.32,1.15],[-0.25,1.2],[-0.15,1.25],
-        [0,1.28],[0.15,1.25],[0.25,1.2],[0.32,1.15],
-        [0.3,1.08],[0.22,1.02],[0.2,0.95],[0.25,0.88],[0.35,0.82],
-        [0.38,0.75],[0.32,0.68],[0.28,0.6],[0.22,0.55],[0.2,0.48],
-        [0.18,0.38],[0.2,0.28],[0.22,0.18],[0.3,0.1],[0.45,0.05],[0.6,0]
-      ],
-      fill: [
-        [-0.6,0],[-0.45,0.05],[-0.3,0.1],[-0.22,0.18],[-0.2,0.28],
-        [-0.18,0.38],[-0.2,0.48],[-0.22,0.55],[-0.28,0.6],[-0.32,0.68],
-        [-0.38,0.75],[-0.35,0.82],[-0.25,0.88],[-0.2,0.95],[-0.22,1.02],
-        [-0.3,1.08],[-0.32,1.15],[-0.25,1.2],[-0.15,1.25],
-        [0,1.28],[0.15,1.25],[0.25,1.2],[0.32,1.15],
-        [0.3,1.08],[0.22,1.02],[0.2,0.95],[0.25,0.88],[0.35,0.82],
-        [0.38,0.75],[0.32,0.68],[0.28,0.6],[0.22,0.55],[0.2,0.48],
-        [0.18,0.38],[0.2,0.28],[0.22,0.18],[0.3,0.1],[0.45,0.05],[0.6,0]
-      ]
-    }
-  };
-
-  function pointInPolygon(point, polygon) {
-    var x = point[0];
-    var y = point[1];
-    var inside = false;
-    for (var i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
-      var xi = polygon[i][0], yi = polygon[i][1];
-      var xj = polygon[j][0], yj = polygon[j][1];
-      var intersect = ((yi > y) !== (yj > y)) &&
-        (x < (xj - xi) * (y - yi) / (yj - yi + 0.000001) + xi);
-      if (intersect) inside = !inside;
-    }
-    return inside;
-  }
-
-  /* ------------------------------------------
      CAPABILITY DETECTION
   ------------------------------------------ */
   var isMobile = window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent);
@@ -1270,7 +1074,7 @@
 
   if (isMobile || !hasWebGL) {
     document.getElementById('chess-canvas').style.display = 'none';
-    initMobilePiece();
+    initMobileGlow();
   } else {
     initParticleSystem();
     initScrollAnimations();
@@ -1852,228 +1656,34 @@
   }
 
   /* ------------------------------------------
-     MOBILE PARTICLE PIECE
+     MOBILE GLOW + BACKGROUND PARTICLES
   ------------------------------------------ */
-  function initMobilePiece() {
-    var spin = document.querySelector('.mp-spin');
-    if (!spin) return;
-    var layerBack = spin.querySelector('.mp-back');
-    var layerMid = spin.querySelector('.mp-mid');
-    var layerFront = spin.querySelector('.mp-front');
-    var activeTrailClone = null;
-    var trailCleanupTimeout = null;
-    var activeAberrationClones = [];
-    var aberrationCleanupTimeout = null;
-    var phaseBTimeout = null;
-    var willChangeTimeout = null;
+  function initMobileGlow() {
+    // Minimal background particle dust (CSS-driven, ~18 dots)
+    var bg = document.getElementById('mobile-bg-particles');
+    if (bg) {
+      var count = 18;
+      for (var i = 0; i < count; i++) {
+        var s = document.createElement('span');
+        var size = (1.4 + Math.random() * 2.2).toFixed(1);
+        var left = (Math.random() * 100).toFixed(1);
+        var top  = (Math.random() * 100).toFixed(1);
+        var dur  = (20 + Math.random() * 24).toFixed(1);
+        var delay = (-Math.random() * 28).toFixed(1);
+        s.style.cssText =
+          'width:' + size + 'px;height:' + size + 'px;' +
+          'left:' + left + '%;top:' + top + '%;' +
+          'animation-duration:' + dur + 's;' +
+          'animation-delay:' + delay + 's;';
+        bg.appendChild(s);
+      }
+    }
+
+    // Glow panel observer
     var activeGlowPanel = null;
     var glowRiseTimeout = null;
     var glowClearTimeout = null;
     var visiblePanels = new Set();
-
-    var BASE_POINT_SIZE_MIN = 3;
-    var BASE_POINT_SIZE_MAX = 4;
-    var INNER_POINT_SIZE_MIN = 2;
-    var INNER_POINT_SIZE_MAX = 3;
-    var JITTER_RANGE = 10;
-    var MIN_INNER_POINTS = 30;
-    var MAX_INNER_POINTS = 40;
-    var activeLayerKeys = mobilePerf.slow ? ['mid'] : ['back', 'mid', 'front'];
-    var layerMap = {
-      back: layerBack,
-      mid: layerMid,
-      front: layerFront
-    };
-
-    function mapCoord(point, jitter) {
-      return {
-        left: (point[0] * 80 + 100 + jitter.x).toFixed(1) + 'px',
-        top: (300 - point[1] * 120 + jitter.y).toFixed(1) + 'px'
-      };
-    }
-
-    function randomJitter() {
-      return {
-        x: (Math.random() * 2 - 1) * JITTER_RANGE,
-        y: (Math.random() * 2 - 1) * JITTER_RANGE
-      };
-    }
-
-    function randomInRange(min, max) {
-      return min + Math.random() * (max - min);
-    }
-
-    function clampChannel(v) {
-      return Math.max(0, Math.min(255, Math.round(v)));
-    }
-
-    function adjustHexBrightness(hex, factor) {
-      var normalized = hex.replace('#', '');
-      var r = parseInt(normalized.slice(0, 2), 16);
-      var g = parseInt(normalized.slice(2, 4), 16);
-      var b = parseInt(normalized.slice(4, 6), 16);
-      return '#' +
-        clampChannel(r * factor).toString(16).padStart(2, '0') +
-        clampChannel(g * factor).toString(16).padStart(2, '0') +
-        clampChannel(b * factor).toString(16).padStart(2, '0');
-    }
-
-    function createRandomInteriorPoint(fillPolygon) {
-      var minX = Infinity;
-      var maxX = -Infinity;
-      var minY = Infinity;
-      var maxY = -Infinity;
-      for (var i = 0; i < fillPolygon.length; i++) {
-        minX = Math.min(minX, fillPolygon[i][0]);
-        maxX = Math.max(maxX, fillPolygon[i][0]);
-        minY = Math.min(minY, fillPolygon[i][1]);
-        maxY = Math.max(maxY, fillPolygon[i][1]);
-      }
-
-      for (var attempts = 0; attempts < 250; attempts++) {
-        var candidate = [
-          randomInRange(minX, maxX),
-          randomInRange(minY, maxY)
-        ];
-        if (pointInPolygon(candidate, fillPolygon)) return candidate;
-      }
-      return [0, 0.65];
-    }
-
-    function buildMorphTargets(shapeId) {
-      var model = MOBILE_SILHOUETTES[shapeId] || MOBILE_SILHOUETTES.re;
-      var boundary = model.boundary.slice();
-      var fillPolygon = model.fill;
-      var interiorCount = Math.floor(randomInRange(MIN_INNER_POINTS, MAX_INNER_POINTS + 1));
-      var interior = [];
-
-      for (var i = 0; i < interiorCount; i++) {
-        interior.push(createRandomInteriorPoint(fillPolygon));
-      }
-
-      return {
-        boundary: boundary,
-        interior: interior
-      };
-    }
-
-    function removeTrailClone() {
-      if (!activeTrailClone) return;
-      if (window.gsap && typeof window.gsap.killTweensOf === 'function') {
-        window.gsap.killTweensOf(activeTrailClone);
-      }
-      if (activeTrailClone.parentNode) {
-        activeTrailClone.parentNode.removeChild(activeTrailClone);
-      }
-      activeTrailClone = null;
-      if (trailCleanupTimeout) {
-        clearTimeout(trailCleanupTimeout);
-        trailCleanupTimeout = null;
-      }
-    }
-
-    function clearAberrationClones() {
-      if (aberrationCleanupTimeout) {
-        clearTimeout(aberrationCleanupTimeout);
-        aberrationCleanupTimeout = null;
-      }
-      activeAberrationClones.forEach(function (clone) {
-        if (window.gsap && typeof window.gsap.killTweensOf === 'function') {
-          window.gsap.killTweensOf(clone);
-        }
-        if (clone.parentNode) clone.parentNode.removeChild(clone);
-      });
-      activeAberrationClones = [];
-    }
-
-    function emitAberrationClones() {
-      if (!mobilePerf.full) return;
-      clearAberrationClones();
-      var parent = spin.parentNode;
-      if (!parent) return;
-
-      function makeClone(config) {
-        var clone = spin.cloneNode(true);
-        clone.style.position = 'absolute';
-        clone.style.top = '0';
-        clone.style.left = '0';
-        clone.style.pointerEvents = 'none';
-        clone.style.opacity = config.opacity;
-        clone.style.zIndex = config.zIndex;
-        clone.style.animation = 'none';
-        clone.style.filter = config.filter;
-        clone.style.transform = config.transform;
-        clone.style.mixBlendMode = 'screen';
-        parent.appendChild(clone);
-        activeAberrationClones.push(clone);
-      }
-
-      makeClone({
-        opacity: '0.35',
-        zIndex: '3',
-        filter: 'hue-rotate(30deg) brightness(1.2)',
-        transform: 'translateX(4px) translateY(-2px)'
-      });
-      makeClone({
-        opacity: '0.25',
-        zIndex: '2',
-        filter: 'hue-rotate(-30deg) brightness(0.8)',
-        transform: 'translateX(-4px) translateY(2px)'
-      });
-
-      if (window.gsap && typeof window.gsap.to === 'function') {
-        activeAberrationClones.forEach(function (clone) {
-          window.gsap.to(clone, {
-            opacity: 0,
-            duration: 0.38,
-            ease: 'power2.out',
-            onComplete: function () {
-              if (clone.parentNode) clone.parentNode.removeChild(clone);
-              activeAberrationClones = activeAberrationClones.filter(function (c) { return c !== clone; });
-            }
-          });
-        });
-      } else {
-        activeAberrationClones.forEach(function (clone) {
-          clone.style.transition = 'opacity 380ms ease-out';
-          requestAnimationFrame(function () {
-            clone.style.opacity = '0';
-          });
-        });
-        aberrationCleanupTimeout = setTimeout(clearAberrationClones, 420);
-      }
-    }
-
-    function emitMorphTrail() {
-      removeTrailClone();
-      var parent = spin.parentNode;
-      if (!parent) return;
-
-      activeTrailClone = spin.cloneNode(true);
-      activeTrailClone.style.position = 'absolute';
-      activeTrailClone.style.top = '0';
-      activeTrailClone.style.left = '0';
-      activeTrailClone.style.pointerEvents = 'none';
-      activeTrailClone.style.opacity = '0.6';
-      activeTrailClone.style.zIndex = '1';
-      activeTrailClone.style.animation = 'none';
-      parent.appendChild(activeTrailClone);
-
-      if (window.gsap && typeof window.gsap.to === 'function') {
-        window.gsap.to(activeTrailClone, {
-          opacity: 0,
-          duration: 1.5,
-          ease: 'power2.out',
-          onComplete: removeTrailClone
-        });
-      } else {
-        activeTrailClone.style.transition = 'opacity 1.5s ease-out';
-        requestAnimationFrame(function () {
-          if (activeTrailClone) activeTrailClone.style.opacity = '0';
-        });
-        trailCleanupTimeout = setTimeout(removeTrailClone, 1600);
-      }
-    }
 
     function pulsePanelGlow(panel, colorHex) {
       if (!panel) return;
@@ -2102,172 +1712,6 @@
       }, 2000);
     }
 
-    var maxBoundaryPoints = 0;
-    Object.keys(MOBILE_SILHOUETTES).forEach(function (key) {
-      maxBoundaryPoints = Math.max(maxBoundaryPoints, MOBILE_SILHOUETTES[key].boundary.length);
-    });
-    var totalSlots = maxBoundaryPoints + MAX_INNER_POINTS;
-    var spansByLayer = { back: [], mid: [], front: [] };
-    activeLayerKeys.forEach(function (layerKey) {
-      var layer = layerMap[layerKey];
-      if (!layer) return;
-      for (var s = 0; s < totalSlots; s++) {
-        var span = document.createElement('span');
-        span.style.left = '100px';
-        span.style.top = '300px';
-        span.style.opacity = '0';
-        layer.appendChild(span);
-        spansByLayer[layerKey].push(span);
-      }
-    });
-
-    function applyTargets(shapeId, colorHex, immediate) {
-      var targets = buildMorphTargets(shapeId);
-      var boundaryCount = targets.boundary.length;
-      var interiorCount = targets.interior.length;
-      var activeCount = boundaryCount + interiorCount;
-      var colorByLayer = {
-        back: adjustHexBrightness(colorHex, 0.6),
-        mid: colorHex,
-        front: adjustHexBrightness(colorHex, 1.3)
-      };
-      var glowByLayer = { back: 6, mid: 6, front: 8.4 };
-      var MORPH_DUR = 1300;
-      var MORPH_COLOR_DUR = 700;
-      var MORPH_DELAY_MAX = 260;
-
-      function setSpanWillChange(enabled) {
-        activeLayerKeys.forEach(function (layerKey) {
-          spansByLayer[layerKey].forEach(function (span, i) {
-            if (enabled && i >= activeCount) return;
-            span.style.willChange = enabled ? 'transform, opacity' : '';
-          });
-        });
-      }
-
-      if (phaseBTimeout) { clearTimeout(phaseBTimeout); phaseBTimeout = null; }
-      if (willChangeTimeout) { clearTimeout(willChangeTimeout); willChangeTimeout = null; }
-
-      setSpanWillChange(true);
-
-      if (!immediate && !mobilePerf.reduced) {
-        emitMorphTrail();
-        if (!mobilePerf.slow) emitAberrationClones();
-      }
-
-      /* ---------------------------------------------------
-         Nearest-neighbor matching:
-         ogni span va al target più vicino alla sua posizione
-         corrente — minimizza le distanze di viaggio.
-         Pass 1: span attivi → target attivi.
-         Pass 2: span rimanenti → slot rimasti.
-      --------------------------------------------------- */
-      var repLayer = spansByLayer['mid'] || spansByLayer[activeLayerKeys[0]];
-      var totalSlots = repLayer.length;
-
-      // Pre-calcola tutti i target slot
-      var slotData = [];
-      for (var t = 0; t < totalSlots; t++) {
-        if (t < activeCount) {
-          var isBnd = t < boundaryCount;
-          var pt = isBnd ? targets.boundary[t] : targets.interior[t - boundaryCount];
-          var mp = mapCoord(pt, randomJitter());
-          slotData.push({
-            left: mp.left, top: mp.top,
-            lv: parseFloat(mp.left), tv: parseFloat(mp.top),
-            size: isBnd ? randomInRange(BASE_POINT_SIZE_MIN, BASE_POINT_SIZE_MAX)
-                        : randomInRange(INNER_POINT_SIZE_MIN, INNER_POINT_SIZE_MAX),
-            opacity: isBnd ? randomInRange(0.65, 1.0) : randomInRange(0.3, 0.5),
-            active: true
-          });
-        } else {
-          slotData.push({ active: false });
-        }
-      }
-
-      // Greedy nearest-neighbor (O(n²), n≈84 — trascurabile)
-      var usedSlot = new Array(totalSlots).fill(false);
-      var assignment = new Array(totalSlots);
-
-      // Pass 1: span visibili (opacity > 0.05) → slot attivi
-      // Pass 2: span rimanenti → slot rimanenti
-      for (var pass = 0; pass < 2; pass++) {
-        for (var s = 0; s < totalSlots; s++) {
-          if (assignment[s] !== undefined) continue;
-          var curSpan = repLayer[s];
-          var curVisible = parseFloat(curSpan.style.opacity || '0') > 0.05;
-          if (pass === 0 && !curVisible) continue; // rimanda al pass 2
-          var cx = parseFloat(curSpan.style.left) || 100;
-          var cy = parseFloat(curSpan.style.top)  || 150;
-          var bestDist = Infinity;
-          var bestIdx  = 0;
-          for (var t2 = 0; t2 < totalSlots; t2++) {
-            if (usedSlot[t2]) continue;
-            var slot = slotData[t2];
-            // pass 1: solo slot attivi; pass 2: tutto
-            if (pass === 0 && !slot.active) continue;
-            var dist = slot.active
-              ? (cx - slot.lv) * (cx - slot.lv) + (cy - slot.tv) * (cy - slot.tv)
-              : 0; // inattivo → costo zero in pass 2
-            if (dist < bestDist) { bestDist = dist; bestIdx = t2; }
-          }
-          usedSlot[bestIdx] = true;
-          assignment[s] = bestIdx;
-        }
-      }
-
-      // Applica a tutti i layer
-      activeLayerKeys.forEach(function (layerKey) {
-        var spans = spansByLayer[layerKey];
-        var layerColor = colorByLayer[layerKey];
-        var layerGlow = glowByLayer[layerKey];
-        for (var i = 0; i < spans.length; i++) {
-          var span = spans[i];
-          var slot = slotData[assignment[i]];
-
-          if (immediate) {
-            span.style.transition = 'none';
-            span.style.transitionDelay = '';
-          } else {
-            var delay = Math.round(Math.random() * MORPH_DELAY_MAX);
-            span.style.transitionDelay = delay + 'ms';
-            span.style.transition =
-              'left '             + MORPH_DUR       + 'ms cubic-bezier(0.42, 0, 0.58, 1),' +
-              'top '              + MORPH_DUR       + 'ms cubic-bezier(0.42, 0, 0.58, 1),' +
-              'opacity 380ms ease-out,'                                                      +
-              'background-color ' + MORPH_COLOR_DUR + 'ms ease,'                            +
-              'box-shadow '       + MORPH_COLOR_DUR + 'ms ease,'                            +
-              'width 350ms ease, height 350ms ease';
-          }
-
-          span.style.backgroundColor = layerColor;
-          span.style.boxShadow = '0 0 ' + layerGlow.toFixed(1) + 'px ' + layerColor;
-
-          if (slot.active) {
-            span.style.left    = slot.left;
-            span.style.top     = slot.top;
-            span.style.width   = slot.size.toFixed(2) + 'px';
-            span.style.height  = slot.size.toFixed(2) + 'px';
-            span.style.opacity = slot.opacity.toFixed(2);
-          } else {
-            span.style.opacity = '0';
-          }
-
-          if (immediate) {
-            span.offsetHeight;
-            span.style.transition = '';
-            span.style.transitionDelay = '';
-          }
-        }
-      });
-
-      willChangeTimeout = setTimeout(function () {
-        setSpanWillChange(false);
-      }, immediate ? 0 : MORPH_DUR + MORPH_DELAY_MAX + 80);
-    }
-
-    applyTargets('re', '#FFD700', true);
-
     var panels = document.querySelectorAll('.arch-panel');
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
@@ -2280,7 +1724,6 @@
         var found = ARCH.find(function (a) { return a.id === e.target.dataset.arch; });
         if (!found) return;
         pulsePanelGlow(e.target, found.hex);
-        applyTargets(found.id, found.hex, false);
       });
     }, { threshold: 0.45 });
     panels.forEach(function (p) { observer.observe(p); });
