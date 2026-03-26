@@ -12,9 +12,9 @@
   <meta property="og:description" content="Scopri il tuo archetipo degli scacchi mentali e ricevi messaggi quotidiani personalizzati.">
   <meta property="og:url" content="https://scacchimentali.it/">
   <meta property="og:image" content="https://scacchimentali.it/images/logo.png">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="icon" type="image/png" href="favicon.png">
-  <link rel="apple-touch-icon" href="favicon.png">
+  <link rel="icon" type="image/x-icon" href="favicon.ico?v=2">
+  <link rel="icon" type="image/png" href="favicon.png?v=2">
+  <link rel="apple-touch-icon" href="favicon.png?v=2">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -505,19 +505,30 @@
      ================================================ */
   .site-footer {
     position: relative; z-index: 2;
-    background: var(--bg);
-    border-top: 1px solid var(--border);
+    border-top: 1px solid rgba(255,215,0,0.15);
     padding: 30px 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
     gap: 14px;
+    /* chess texture quasi-invisibile */
+    background-color: #0d0d0d;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Crect width='12' height='12' fill='white'/%3E%3Crect x='12' y='12' width='12' height='12' fill='white'/%3E%3C/svg%3E");
+    background-size: 24px 24px;
   }
-  .site-footer p { color: var(--text-3); font-size: 0.85rem; }
+  .site-footer::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, #0d0d0d, #080808);
+    opacity: 0.962;
+    pointer-events: none;
+  }
+  .site-footer > * { position: relative; z-index: 1; }
+  .site-footer p { color: var(--text-2); font-size: 0.85rem; }
   .footer-links { display: flex; gap: 24px; }
   .footer-links a {
-    color: var(--text-3);
+    color: var(--text-2);
     text-decoration: none;
     font-size: 0.85rem;
     font-weight: 300;
@@ -530,11 +541,25 @@
      ================================================ */
   @media (min-width: 769px) {
 
-    /* Hero compatto: tutto above the fold su 1080p */
-    #hero { min-height: 58vh; }
-    .hero-inner { padding-top: 50px; }
-    .hero-stats { margin-top: 16px; }
-    .hero-sub { margin-bottom: 24px; }
+    /* Hero compatto e centrato su 1080p */
+    #hero {
+      min-height: 58vh;
+      justify-content: center;
+      background: radial-gradient(ellipse 85% 110% at 50% 50%,
+        rgba(13,13,13,0.93) 0%,
+        rgba(13,13,13,0.75) 52%,
+        rgba(13,13,13,0.22) 78%,
+        transparent 100%
+      );
+    }
+    .hero-inner {
+      padding-top: 50px;
+      max-width: 660px;
+      text-align: center;
+    }
+    .hero-h1 { font-size: clamp(1.76rem, 4.4vw, 3.36rem); }
+    .hero-stats { margin-top: 16px; justify-content: center; }
+    .hero-sub { margin-bottom: 24px; max-width: 100%; }
 
     /* Journey: da 6 × 100vh a grid 3×2 */
     #journey {
@@ -770,12 +795,8 @@
      ================================================ -->
 <section id="hero">
   <div class="hero-inner">
-    <p class="hero-eyebrow">Kairos ti parla</p>
-    <h1 class="hero-h1">La Scacchiera<br>della Mente</h1>
-    <p class="hero-sub">
-      Ogni persona nasconde la strategia di un pezzo degli scacchi.<br>
-      Scopri quale sei e ricevi messaggi quotidiani costruiti su di te.
-    </p>
+    <h1 class="hero-h1">La tua prossima mossa<br>verso il successo</h1>
+    <p class="hero-sub">Scopri il tuo archetipo scacchistico e ricevi<br>ogni giorno la mossa giusta per te.</p>
     <a href="https://antoca84.github.io/chess-whispers-arcane/quiz.html" target="_blank"
        class="cta-glass"
        onclick="gtag('event','quiz_started',{event_category:'conversion'})">
@@ -1558,7 +1579,7 @@
         for (var si = 0; si < SPLASH_COUNT; si++) {
           var sv = splashVelocities[si];
           var si3 = si * 3;
-          sv.theta += sv.angularSpeed;
+          sv.theta -= sv.angularSpeed;
           splashPositionsArr[si3]     = Math.cos(sv.theta) * sv.radius;
           splashPositionsArr[si3 + 2] = Math.sin(sv.theta) * sv.radius;
           splashPositionsArr[si3 + 1] += sv.vy * 0.01;
