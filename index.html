@@ -530,9 +530,15 @@
      ================================================ */
   @media (min-width: 769px) {
 
+    /* Hero compatto: tutto above the fold su 1080p */
+    #hero { min-height: 58vh; }
+    .hero-inner { padding-top: 50px; }
+    .hero-stats { margin-top: 16px; }
+    .hero-sub { margin-bottom: 24px; }
+
     /* Journey: da 6 × 100vh a grid 3×2 */
     #journey {
-      padding: 90px 5% 80px;
+      padding: 20px 5% 40px;
       background: linear-gradient(to bottom, rgba(13,13,13,0.35) 0%, rgba(13,13,13,0.72) 100%);
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -563,7 +569,7 @@
     }
     .arch-panel:hover {
       transform: translateY(-5px);
-      box-shadow: 0 28px 56px rgba(0,0,0,0.7), 0 0 30px rgba(255,255,255,0.03);
+      box-shadow: 0 28px 56px rgba(0,0,0,0.7), 0 0 22px var(--arch-color);
     }
     .arch-panel::after { display: none; }
 
@@ -777,8 +783,8 @@
     </a>
     <div class="hero-stats">
       <div class="hero-stat">
-        <span class="num">2.847</span>
-        <span class="lbl">Utenti attivi</span>
+        <span class="num">200+</span>
+        <span class="lbl">persone ne fanno parte</span>
       </div>
       <div class="hero-stat">
         <span class="num">4.9/5</span>
@@ -1214,6 +1220,7 @@
   var particleSizes, particleColors;
   var baseSizes, brightnessVariations;
   var particlePositions;
+  var nebulaPositions = null;
   var targetPositionsByArch = {};
   var particleSeedYNorm, particleSeedRadius, particleSeedAngle;
   var morphTween = null;
@@ -1246,6 +1253,7 @@
     initScrollAnimations();
     initMouseTracking();
     startRenderLoop();
+    initPanelHover();
   }
 
   initGSAPAnimations(isMobile || !hasWebGL);
@@ -1290,14 +1298,32 @@
       targetPositionsByArch[a.id] = buildTargetPositions(a.id);
     });
 
-    /* Chaos iniziale — il Re si forma solo entrando nella sezione journey */
+    /* Distribuzione nebulosa — nessuna forma sferica, densità disomogenea */
+    nebulaPositions = new Float32Array(PARTICLE_COUNT * 3);
     for (var ci = 0; ci < PARTICLE_COUNT; ci++) {
-      var theta = Math.random() * Math.PI * 2;
-      var phi   = Math.acos(2 * Math.random() - 1);
-      var r     = 0.3 + Math.random() * 2.2;
-      positions[ci * 3]     = r * Math.sin(phi) * Math.cos(theta);
-      positions[ci * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
-      positions[ci * 3 + 2] = r * Math.cos(phi);
+      var ni = ci * 3;
+      var nx, ny, nz, nr = Math.random();
+      if (nr < 0.52) {
+        /* Core denso — distribuzione piatta tipo disco */
+        var na = Math.random() * Math.PI * 2;
+        var nrad = Math.pow(Math.random(), 0.45) * 2.2;
+        nx = Math.cos(na) * nrad * (0.8 + Math.random() * 0.5);
+        ny = (Math.random() - 0.5) * nrad * 0.45;
+        nz = Math.sin(na) * nrad * (0.8 + Math.random() * 0.5);
+      } else if (nr < 0.82) {
+        /* Zona intermedia — irregolare */
+        nx = (Math.random() - 0.5) * 6.0;
+        ny = (Math.random() - 0.5) * 1.8;
+        nz = (Math.random() - 0.5) * 6.0;
+      } else {
+        /* Outlier sparsi */
+        nx = (Math.random() - 0.5) * 9.5;
+        ny = (Math.random() - 0.5) * 3.0;
+        nz = (Math.random() - 0.5) * 9.5;
+      }
+      nebulaPositions[ni]     = positions[ni]     = nx;
+      nebulaPositions[ni + 1] = positions[ni + 1] = ny;
+      nebulaPositions[ni + 2] = positions[ni + 2] = nz;
     }
 
     for (var i = 0; i < PARTICLE_COUNT; i++) {
@@ -1644,6 +1670,75 @@
   }
 
   /* ------------------------------------------
+     RESET PARTICELLE A NEBULOSA
+  ------------------------------------------ */
+  function resetToNebula() {
+    currentArchIdx = -1;
+    var gold = { r: 1, g: 0.843, b: 0 };
+    gsap.to(baseRGB, {
+      r: gold.r, g: gold.g, b: gold.b,
+      duration: 1.0,
+      ease: 'power2.inOut',
+      onUpdate: function () {
+        for (var i = 0; i < PARTICLE_COUNT; i++) {
+          var bv = 1.0 + brightnessVariations[i];
+          particleColors[i * 3]     = Math.min(1, baseRGB.r * bv);
+          particleColors[i * 3 + 1] = Math.min(1, baseRGB.g * bv);
+          particleColors[i * 3 + 2] = Math.min(1, baseRGB.b * bv);
+        }
+        particleGeo.attributes.aColor.needsUpdate = true;
+        if (splashColorsArr) {
+          for (var si = 0; si < SPLASH_COUNT; si++) {
+            var sb = splashVelocities[si].bright;
+            splashColorsArr[si * 3]     = Math.min(1, baseRGB.r * sb);
+            splashColorsArr[si * 3 + 1] = Math.min(1, baseRGB.g * sb);
+            splashColorsArr[si * 3 + 2] = Math.min(1, baseRGB.b * sb);
+          }
+          splashGeo.attributes.aColor.needsUpdate = true;
+        }
+      },
+    });
+    if (!nebulaPositions || !particlePositions) return;
+    if (morphTween) morphTween.kill();
+    var mp = { value: 0.0 };
+    morphTween = gsap.to(mp, {
+      value: 1.0,
+      duration: 1.4,
+      ease: 'power2.inOut',
+      onUpdate: function () {
+        for (var i = 0; i < PARTICLE_COUNT; i++) {
+          var i3 = i * 3;
+          particlePositions[i3]     += (nebulaPositions[i3]     - particlePositions[i3])     * mp.value * 0.15;
+          particlePositions[i3 + 1] += (nebulaPositions[i3 + 1] - particlePositions[i3 + 1]) * mp.value * 0.15;
+          particlePositions[i3 + 2] += (nebulaPositions[i3 + 2] - particlePositions[i3 + 2]) * mp.value * 0.15;
+        }
+        particleGeo.attributes.position.needsUpdate = true;
+      },
+      onComplete: function () {
+        for (var p = 0; p < nebulaPositions.length; p++) {
+          particlePositions[p] = nebulaPositions[p];
+        }
+        particleGeo.attributes.position.needsUpdate = true;
+        morphTween = null;
+      },
+    });
+  }
+
+  /* ------------------------------------------
+     HOVER CARD → MORPH ARCHETIPO
+  ------------------------------------------ */
+  function initPanelHover() {
+    document.querySelectorAll('.arch-panel').forEach(function (panel, idx) {
+      panel.addEventListener('mouseenter', function () {
+        setArchetypeColor(idx);
+      });
+      panel.addEventListener('mouseleave', function () {
+        resetToNebula();
+      });
+    });
+  }
+
+    /* ------------------------------------------
      SCROLL ANIMATIONS
   ------------------------------------------ */
   function initScrollAnimations() {
@@ -1660,29 +1755,7 @@
       },
     });
 
-    /* Piece shifts left when journey grid comes into view */
-    ScrollTrigger.create({
-      trigger: '#journey',
-      start: 'top 85%',
-      onEnter: function () {
-        gsap.to(particleGroup.position, { x: -2.8, duration: 0.65, ease: 'power3.inOut' });
-        gsap.to(camera.position,        { x: -0.8, duration: 0.65, ease: 'power3.inOut' });
-      },
-      onLeaveBack: function () {
-        gsap.to(particleGroup.position, { x: 0, duration: 0.6, ease: 'power3.inOut' });
-        gsap.to(camera.position,        { x: 0, duration: 0.6, ease: 'power3.inOut' });
-      },
-    });
-
-    /* Piece returns to center after journey grid */
-    ScrollTrigger.create({
-      trigger: '#come-funziona',
-      start: 'top 70%',
-      onEnter: function () {
-        gsap.to(particleGroup.position, { x: 0, duration: 0.7, ease: 'power3.inOut' });
-        gsap.to(camera.position,        { x: 0, duration: 0.7, ease: 'power3.inOut' });
-      },
-    });
+    /* Piece stays centered — morph triggered on card hover */
   }
 
   /* ------------------------------------------
