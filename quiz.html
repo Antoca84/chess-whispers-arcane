@@ -61,7 +61,21 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .intro-title{font-family:'Playfair Display',serif;font-size:clamp(1.65rem,6vw,3rem);font-weight:700;text-align:center;line-height:1.25;color:var(--text-primary);max-width:600px;margin-bottom:1.2rem;opacity:0;animation:fadeUp .7s .4s forwards}
 .intro-sub{font-size:.95rem;color:var(--text-secondary);text-align:center;line-height:1.8;font-weight:300;margin-bottom:2.5rem;opacity:0;animation:fadeUp .7s .6s forwards}
 .chess-divider{display:flex;align-items:center;gap:16px;margin-bottom:2.5rem;width:100%;max-width:320px;opacity:0;animation:fadeUp .7s .5s forwards}
-.chess-divider span{font-size:1.4rem;color:var(--gold);opacity:0.4}
+.chess-divider span{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:48px;
+  height:48px;
+  font-size:1.45rem;
+  color:var(--gold);
+  opacity:1;
+  border:1px solid rgba(255,215,0,0.28);
+  border-radius:999px;
+  background:radial-gradient(circle at 50% 50%, rgba(255,215,0,0.22) 0%, rgba(255,215,0,0.07) 48%, rgba(255,215,0,0.02) 100%);
+  box-shadow:0 0 24px rgba(255,215,0,0.12), inset 0 0 18px rgba(255,215,0,0.08);
+  text-shadow:0 0 16px rgba(255,215,0,0.34);
+}
 .chess-divider::before,.chess-divider::after{content:'';flex:1;height:1px;background:var(--border)}
 
 /* Touch-friendly CTA */
@@ -396,7 +410,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 <!-- INTRO -->
 <div class="screen active" id="s-intro">
   <div class="brand-badge">Scacchi Mentali</div>
-  <div class="intro-title">Stai guidando la tua partita o la stai solo subendo?</div>
+  <div class="intro-title" id="intro-title">Quale archetipo muove davvero le tue scelte?</div>
   <div class="chess-divider"><span>♟</span></div>
   <div class="intro-sub">Questo quiz ti dice quale archetipo ti muove davvero<br>e cosa ti sta bloccando.</div>
   <button class="btn-start" onclick="startQuiz()">Inizia la partita <span class="arr">→</span></button>
@@ -650,6 +664,15 @@ const ARCH={
     quote:"Non sei indietro. Sei in movimento. E la scacchiera è lunga."}
 };
 const KEYS=['re','regina','torre','alfiere','cavallo','pedone'];
+const INTRO_HEADLINES=[
+  'Quale archetipo muove davvero le tue scelte?',
+  'Quale archetipo guida davvero le tue mosse?',
+  'Ogni scelta rivela un archetipo. Il tuo quale è?',
+  'Il tuo problema non è scegliere. È capire chi sta scegliendo dentro di te.',
+  'C’è un pezzo dominante nella tua scacchiera interiore. Scopri quale.',
+  'Non tutte le tue scelte sono davvero tue. Quale archetipo le muove?',
+  'C’è un archetipo che guida le tue mosse. Scoprilo prima che continui a farlo da solo.'
+];
 
 let cur=0,sc=[0,0,0,0,0,0],busy=false;
 var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -971,6 +994,13 @@ function show(id){
   el.classList.remove('gone');
   requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('active')));
 }
+
+(function applyRandomIntroHeadline(){
+  var el=document.getElementById('intro-title');
+  if(!el||!INTRO_HEADLINES.length)return;
+  var idx=Math.floor(Math.random()*INTRO_HEADLINES.length);
+  el.textContent=INTRO_HEADLINES[idx];
+}());
 
 function startQuiz(){show('s-quiz');render()}
 
