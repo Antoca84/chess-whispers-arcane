@@ -403,12 +403,12 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       <div class="founder-badge">Offerta Fondatori</div>
       <div class="founder-text">Entri ora. Paghi meno per sempre.</div>
     </div>
-    <div class="capture-title" id="capture-title">Hai visto il simbolo. Ora sblocca il tuo profilo completo.</div>
+    <div class="capture-title" id="capture-title">Hai visto il simbolo. Ora sblocca il profilo completo.</div>
     <div class="capture-sub">Ricevi il tuo QR personale: una scansione al giorno,<br>un messaggio diverso ogni volta.</div>
     <div class="capture-row">
       <input type="email" id="email-input" placeholder="la-tua@email.it" autocomplete="email" inputmode="email">
       <button class="btn-qr" id="btn-qr" onclick="submitEmail()">
-        <span id="btn-qr-label">Sblocca profilo e trial →</span>
+        <span id="btn-qr-label">Sblocca il profilo →</span>
       </button>
     </div>
     <div class="capture-error" id="capture-error"></div>
@@ -441,7 +441,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
         </div>
       </label>
     </div>
-    <div class="capture-privacy">7 giorni gratuiti. Nessun addebito oggi. Nessuna carta richiesta durante il trial.</div>
+    <div class="capture-privacy">7 giorni gratuiti. Nessuna carta richiesta.</div>
   </div>
 
   <!-- QR RESULT (hidden until response) -->
@@ -450,7 +450,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <div class="qr-img-wrap">
       <img id="qr-img" src="" alt="QR Code" width="180" height="180">
     </div>
-    <div class="qr-note">Salvalo sul telefono. Scansionalo ogni giorno per il tuo messaggio.</div>
+    <div class="qr-note">Salvalo o stampalo. Una scansione al giorno, una nuova mossa ogni volta.</div>
     <div class="qr-email-note">Abbiamo inviato il link anche alla tua email.</div>
   </div>
 
@@ -680,7 +680,7 @@ function result(){
     document.getElementById('rqtext').textContent=`"${a.quote}"`;
     document.getElementById('capture-box').style.borderColor=a.col;
     document.getElementById('btn-qr').style.background=a.col;
-    document.getElementById('capture-title').textContent='Hai visto il simbolo. Ora sblocca il tuo profilo completo.';
+    document.getElementById('capture-title').textContent='Hai visto il simbolo. Ora sblocca il profilo completo.';
     const badge=document.getElementById('plan-annual-badge');
     if(badge){badge.style.color=a.col}
     const annualCard=document.getElementById('plan-annual-card');
@@ -733,7 +733,7 @@ async function submitEmail(){
 
     if(data.error){
       errEl.textContent=data.error;
-      btn.disabled=false;label.textContent='Sblocca profilo e trial →';
+      btn.disabled=false;label.textContent='Sblocca il profilo →';
       return;
     }
 
@@ -752,7 +752,7 @@ async function submitEmail(){
 
   }catch(err){
     errEl.textContent='Errore di connessione. Riprova tra poco.';
-    btn.disabled=false;label.textContent='Sblocca profilo e trial →';
+    btn.disabled=false;label.textContent='Sblocca il profilo →';
   }
 }
 </script>
