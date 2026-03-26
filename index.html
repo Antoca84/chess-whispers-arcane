@@ -453,10 +453,18 @@
   #cta-finale {
     position: relative;
     z-index: 2;
-    background: var(--bg);
+    background: transparent;
     padding: 100px 20px;
     text-align: center;
   }
+  #cta-finale::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, transparent 0%, #0d0d0d 40%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  #cta-finale > * { position: relative; z-index: 1; }
   .urgency-badge {
     display: inline-block;
     padding: 8px 22px;
@@ -529,9 +537,32 @@
       max-width: 660px;
       text-align: center;
     }
-    .hero-h1 { font-size: clamp(1.76rem, 4.4vw, 3.36rem); }
+    .hero-h1 {
+      font-size: clamp(1.76rem, 4.4vw, 3.36rem);
+      text-shadow:
+        0 0 20px rgba(0,0,0,0.8),
+        0 0 40px rgba(0,0,0,0.6),
+        1px  1px 0 rgba(0,0,0,0.9),
+        -1px -1px 0 rgba(0,0,0,0.9),
+        1px -1px 0 rgba(0,0,0,0.9),
+        -1px  1px 0 rgba(0,0,0,0.9);
+    }
     .hero-stats { margin-top: 16px; justify-content: center; }
     .hero-sub { margin-bottom: 24px; max-width: 100%; }
+    .hero-body {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .hero-body::before {
+      content: '';
+      position: absolute;
+      inset: -40px -100px;
+      background: radial-gradient(ellipse at center, rgba(0,0,0,0.50) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: -1;
+    }
 
     /* Journey: da 6 × 100vh a grid 3×2 */
     #journey {
@@ -768,12 +799,14 @@
 <section id="hero">
   <div class="hero-inner">
     <h1 class="hero-h1">La tua prossima mossa<br>verso il successo</h1>
-    <p class="hero-sub">Scopri il tuo archetipo scacchistico e ricevi<br>ogni giorno la mossa giusta per te.</p>
-    <a href="https://antoca84.github.io/chess-whispers-arcane/quiz.html" target="_blank"
-       class="cta-glass"
-       onclick="gtag('event','quiz_started',{event_category:'conversion'})">
-      Scopri il Tuo Archetipo — Gratuito
-    </a>
+    <div class="hero-body">
+      <p class="hero-sub">Scopri il tuo archetipo scacchistico e ricevi<br>ogni giorno la mossa giusta per te.</p>
+      <a href="https://antoca84.github.io/chess-whispers-arcane/quiz.html" target="_blank"
+         class="cta-glass"
+         onclick="gtag('event','quiz_started',{event_category:'conversion'})">
+        Scopri il Tuo Archetipo — Gratuito
+      </a>
+    </div>
     <div class="hero-stats">
       <div class="hero-stat">
         <span class="num">200+</span>
@@ -1224,6 +1257,8 @@
   var scrollRot = 0;
   var animTime = 0;
   var currentArchIdx = -1;
+  var isHovering = false;
+  var colorTween = null;
 
   /* ------------------------------------------
      INIT ROUTER
@@ -1583,7 +1618,8 @@
     var target = ARCH[idx].rgb;
     var targetId = ARCH[idx].id;
 
-    gsap.to(baseRGB, {
+    if (colorTween) colorTween.kill();
+    colorTween = gsap.to(baseRGB, {
       r: target.r, g: target.g, b: target.b,
       duration: 0.85,
       ease: 'power2.inOut',
@@ -1661,9 +1697,11 @@
      RESET PARTICELLE A NEBULOSA
   ------------------------------------------ */
   function resetToNebula() {
+    if (isHovering) return;
     currentArchIdx = -1;
     var gold = { r: 1, g: 0.843, b: 0 };
-    gsap.to(baseRGB, {
+    if (colorTween) colorTween.kill();
+    colorTween = gsap.to(baseRGB, {
       r: gold.r, g: gold.g, b: gold.b,
       duration: 1.0,
       ease: 'power2.inOut',
@@ -1718,9 +1756,11 @@
   function initPanelHover() {
     document.querySelectorAll('.arch-panel').forEach(function (panel, idx) {
       panel.addEventListener('mouseenter', function () {
+        isHovering = true;
         setArchetypeColor(idx);
       });
       panel.addEventListener('mouseleave', function () {
+        isHovering = false;
         resetToNebula();
       });
     });
