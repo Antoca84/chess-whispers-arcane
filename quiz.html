@@ -56,11 +56,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   background:transparent;
 }
 
-/* Mobile intro particles */
-#quiz-mobile-particles{
-  display:none;
-}
-
 /* ── INTRO ── */
 .brand-badge{font-size:10px;font-weight:700;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:2rem;opacity:0;animation:fadeUp .7s .2s forwards}
 .intro-title{font-family:'Playfair Display',serif;font-size:clamp(1.65rem,6vw,3rem);font-weight:700;text-align:center;line-height:1.25;color:var(--text-primary);max-width:600px;margin-bottom:1.2rem;opacity:0;animation:fadeUp .7s .4s forwards}
@@ -295,42 +290,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .btn-qr:active:not(:disabled){opacity:.75}
 .capture-error{font-size:.75rem;color:#e05555;margin-top:.6rem;min-height:1rem;text-align:center}
 
-@media (max-width: 768px){
-  #quiz-mobile-particles{
-    display:block;
-    position:fixed;
-    inset:0;
-    z-index:2;
-    pointer-events:none;
-    overflow:hidden;
-    mix-blend-mode:screen;
-    opacity:0;
-    transition:opacity .35s ease;
-  }
-  body.intro-particles-active #quiz-mobile-particles{opacity:1}
-  #quiz-mobile-particles span{
-    position:absolute;
-    border-radius:50%;
-    background:rgba(255,215,0,0.96);
-    box-shadow:0 0 14px rgba(255,215,0,0.22);
-    opacity:0.34;
-    transform:translate3d(0,0,0);
-    will-change:transform;
-  }
-  #s-intro,
-  #s-quiz,
-  #s-calc,
-  #s-res{
-    z-index:3;
-  }
-}
-
-@media (prefers-reduced-motion: reduce){
-  #quiz-mobile-particles span{
-    transition:none !important;
-  }
-}
-
 /* ── QR BOX ── */
 .qr-box{
   width:100%;max-width:500px;
@@ -367,8 +326,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 <body>
 
 <div class="pbar"><div class="pfill" id="pf"></div></div>
-<div id="quiz-mobile-particles" aria-hidden="true"></div>
-
 <!-- INTRO -->
 <div class="screen active" id="s-intro">
   <div class="brand-badge">Scacchi Mentali</div>
@@ -627,174 +584,11 @@ const ARCH={
 const KEYS=['re','regina','torre','alfiere','cavallo','pedone'];
 
 let cur=0,sc=[0,0,0,0,0,0],busy=false;
-var quizIsMobile = window.innerWidth < 768 || /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-var quizReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-var quizParticleState = {
-  enabled: false,
-  particles: [],
-  raf: 0,
-  tiltVX: 0,
-  tiltVY: 0,
-  lastBeta: null,
-  lastGamma: null,
-  lastAX: null,
-  lastAY: null,
-  permissionAsked: false
-};
-
-function initQuizMobileParticles(){
-  if (!quizIsMobile || quizReducedMotion) return;
-  var host = document.getElementById('quiz-mobile-particles');
-  if (!host) return;
-
-  var count = 26;
-  for (var i = 0; i < count; i++) {
-    var el = document.createElement('span');
-    var size = 2.2 + Math.random() * 3.2;
-    var x = Math.random() * window.innerWidth;
-    var y = Math.random() * window.innerHeight;
-    var depth = 0.55 + Math.random() * 0.9;
-    el.style.width = size.toFixed(1) + 'px';
-    el.style.height = size.toFixed(1) + 'px';
-    el.style.left = x.toFixed(1) + 'px';
-    el.style.top = y.toFixed(1) + 'px';
-    el.style.opacity = (0.18 + Math.random() * 0.28).toFixed(2);
-    host.appendChild(el);
-    quizParticleState.particles.push({
-      el: el,
-      x: x,
-      y: y,
-      ox: 0,
-      oy: 0,
-      depth: depth
-    });
-  }
-
-  quizParticleState.enabled = true;
-  animateQuizParticles();
-  bindQuizOrientation();
-}
-
-function animateQuizParticles(){
-  if (!quizParticleState.enabled) return;
-  var w = window.innerWidth;
-  var h = window.innerHeight;
-
-  quizParticleState.tiltVX *= 0.96;
-  quizParticleState.tiltVY *= 0.96;
-
-  for (var i = 0; i < quizParticleState.particles.length; i++) {
-    var p = quizParticleState.particles[i];
-    p.ox += quizParticleState.tiltVX * p.depth;
-    p.oy += quizParticleState.tiltVY * p.depth;
-    p.ox *= 0.96;
-    p.oy *= 0.96;
-
-    if (p.ox > 22) p.ox = 22;
-    if (p.ox < -22) p.ox = -22;
-    if (p.oy > 22) p.oy = 22;
-    if (p.oy < -22) p.oy = -22;
-
-    var tx = p.ox;
-    var ty = p.oy;
-    if (p.x + tx < -20) tx = -p.x - 20;
-    if (p.x + tx > w + 20) tx = w - p.x + 20;
-    if (p.y + ty < -20) ty = -p.y - 20;
-    if (p.y + ty > h + 20) ty = h - p.y + 20;
-
-    p.el.style.transform = 'translate3d(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px,0)';
-  }
-
-  quizParticleState.raf = requestAnimationFrame(animateQuizParticles);
-}
-
-function onQuizOrientation(ev){
-  if (typeof ev.beta !== 'number' || typeof ev.gamma !== 'number') return;
-
-  if (quizParticleState.lastBeta === null || quizParticleState.lastGamma === null) {
-    quizParticleState.lastBeta = ev.beta;
-    quizParticleState.lastGamma = ev.gamma;
-    return;
-  }
-
-  var dBeta = ev.beta - quizParticleState.lastBeta;
-  var dGamma = ev.gamma - quizParticleState.lastGamma;
-
-  quizParticleState.lastBeta = ev.beta;
-  quizParticleState.lastGamma = ev.gamma;
-
-  var impulseX = Math.max(-0.32, Math.min(0.32, dGamma * 0.03));
-  var impulseY = Math.max(-0.32, Math.min(0.32, dBeta * 0.03));
-
-  quizParticleState.tiltVX += impulseX;
-  quizParticleState.tiltVY += impulseY;
-}
-
-function onQuizMotion(ev){
-  var acc = ev.accelerationIncludingGravity || ev.acceleration;
-  if (!acc) return;
-  if (typeof acc.x !== 'number' || typeof acc.y !== 'number') return;
-
-  if (quizParticleState.lastAX === null || quizParticleState.lastAY === null) {
-    quizParticleState.lastAX = acc.x;
-    quizParticleState.lastAY = acc.y;
-    return;
-  }
-
-  var dAX = acc.x - quizParticleState.lastAX;
-  var dAY = acc.y - quizParticleState.lastAY;
-
-  quizParticleState.lastAX = acc.x;
-  quizParticleState.lastAY = acc.y;
-
-  var impulseX = Math.max(-0.22, Math.min(0.22, dAX * 0.035));
-  var impulseY = Math.max(-0.22, Math.min(0.22, dAY * 0.035));
-
-  quizParticleState.tiltVX += impulseX;
-  quizParticleState.tiltVY -= impulseY;
-}
-
-function bindQuizOrientation(){
-  var hasOrientation = !!window.DeviceOrientationEvent;
-  var hasMotion = !!window.DeviceMotionEvent;
-  if (!hasOrientation && !hasMotion) return;
-
-  function attachListener(){
-    if (hasOrientation) window.addEventListener('deviceorientation', onQuizOrientation, true);
-    if (hasMotion) window.addEventListener('devicemotion', onQuizMotion, true);
-  }
-
-  var orientationNeedsPermission = hasOrientation && typeof window.DeviceOrientationEvent.requestPermission === 'function';
-  var motionNeedsPermission = hasMotion && typeof window.DeviceMotionEvent.requestPermission === 'function';
-
-  if (orientationNeedsPermission || motionNeedsPermission) {
-    var ask = function(){
-      if (quizParticleState.permissionAsked) return;
-      quizParticleState.permissionAsked = true;
-      var requests = [];
-      if (orientationNeedsPermission) requests.push(window.DeviceOrientationEvent.requestPermission());
-      if (motionNeedsPermission) requests.push(window.DeviceMotionEvent.requestPermission());
-      Promise.all(requests)
-        .then(function(states){
-          var granted = states.some(function(state){ return state === 'granted'; });
-          if (granted) attachListener();
-        })
-        .catch(function(){});
-      window.removeEventListener('touchstart', ask);
-      window.removeEventListener('pointerdown', ask);
-    };
-    window.addEventListener('touchstart', ask, { passive: true });
-    window.addEventListener('pointerdown', ask, { passive: true });
-  } else {
-    attachListener();
-  }
-}
 
 function show(id){
   document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.classList.add('gone')});
   const el=document.getElementById(id);
   el.classList.remove('gone');
-  document.body.classList.toggle('intro-particles-active', id === 's-intro');
   requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('active')));
 }
 
@@ -876,9 +670,6 @@ function result(){
 }
 
 function restart(){cur=0;sc=[0,0,0,0,0,0];busy=false;document.getElementById('pf').style.width='0%';show('s-intro')}
-
-initQuizMobileParticles();
-document.body.classList.toggle('intro-particles-active', quizIsMobile);
 
 /* ── GAS INTEGRATION ── */
 // TODO: sostituisci con l'URL della tua Web App GAS dopo il deploy
