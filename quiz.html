@@ -376,8 +376,8 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       <div class="founder-badge">Offerta Fondatori</div>
       <div class="founder-text">Entri ora. Paghi meno per sempre.</div>
     </div>
-    <div class="capture-title" id="capture-title">Hai visto il simbolo. Ora sblocca la lettura completa.</div>
-    <div class="capture-sub">Ricevi il profilo completo, il tuo QR personale<br>e 7 giorni gratuiti dei messaggi del tuo archetipo.</div>
+    <div class="capture-title" id="capture-title">Hai visto il simbolo. Ora sblocca il tuo profilo completo.</div>
+    <div class="capture-sub">Ricevi il tuo QR personale: lo scansioni ogni giorno<br>e ogni giorno trovi un messaggio diverso per il tuo archetipo.</div>
     <div class="capture-row">
       <input type="email" id="email-input" placeholder="la-tua@email.it" autocomplete="email" inputmode="email">
       <button class="btn-qr" id="btn-qr" onclick="submitEmail()">
@@ -652,7 +652,7 @@ function result(){
     document.getElementById('rqtext').textContent=`"${a.quote}"`;
     document.getElementById('capture-box').style.borderColor=a.col;
     document.getElementById('btn-qr').style.background=a.col;
-    document.getElementById('capture-title').textContent='Hai visto il simbolo. Ora sblocca la lettura completa.';
+    document.getElementById('capture-title').textContent='Hai visto il simbolo. Ora sblocca il tuo profilo completo.';
     const badge=document.getElementById('plan-annual-badge');
     if(badge){badge.style.color=a.col}
     const annualCard=document.getElementById('plan-annual-card');
