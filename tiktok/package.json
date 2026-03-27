@@ -1,0 +1,25 @@
+{
+  "name": "scacchi-mentali-tiktok",
+  "version": "1.0.0",
+  "description": "Video TikTok per Scacchi Mentali — creati con Remotion",
+  "scripts": {
+    "start": "remotion studio",
+    "render": "remotion render ScacchiMentali5Segni out/5-segni.mp4 --codec=h264"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.287",
+    "@remotion/google-fonts": "4.0.287",
+    "@remotion/transitions": "4.0.287",
+    "remotion": "4.0.287",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "typescript": "^5.5.3"
+  },
+  "remotion": {
+    "entryPoint": "src/index.ts"
+  }
+}
