@@ -927,12 +927,40 @@
     pedone:  { symbol: '♙', color: '#DC143C', rgb: '220,20,60',
                headline: 'Ogni passo che hai fatto finora ha un peso.<br>Non buttarlo via fermandoti adesso.' },
   };
+  const DEFAULT_HEADLINES = [
+    'La partita non finisce quando smetti di giocare.<br>Finisce quando smetti di imparare.',
+    'Il punto non è leggere di più.<br>È ricevere la mossa giusta ogni giorno.',
+    'Non ti serve altra motivazione.<br>Ti serve una direzione quotidiana.',
+    'Un messaggio al giorno.<br>Una mossa concreta per cambiare la tua partita.',
+    'La crescita non è teoria.<br>È il gesto che ripeti ogni giorno.',
+    'Scansioni il QR. Leggi. Agisci.<br>Il cambiamento inizia così.',
+    'Ogni giorno hai due scelte:<br>restare fermo o fare la tua mossa.'
+  ];
+  let currentDefaultHeadline = '';
+  let currentDefaultHeadlineIndex = -1;
 
   /* ── URL PARAMS ───────────────────────────────────────────────*/
   const params    = new URLSearchParams(window.location.search);
   const archetipo = params.get('archetipo') || '';
   const planParam = params.get('plan') || '';
   const emailParam= params.get('email') || '';
+
+  /* ── RANDOM DEFAULT HEADLINE ─────────────────────────────────*/
+  (function applyDefaultHeadline() {
+    if (archetipo || !DEFAULT_HEADLINES.length) return;
+    const idx = Math.floor(Math.random() * DEFAULT_HEADLINES.length);
+    currentDefaultHeadlineIndex = idx;
+    currentDefaultHeadline = DEFAULT_HEADLINES[idx];
+    document.getElementById('hero-headline').innerHTML = currentDefaultHeadline;
+    if (typeof gtag === 'function') {
+      gtag('event', 'subscribe_headline_viewed', {
+        event_category: 'engagement',
+        headline_index: idx,
+        headline_text: currentDefaultHeadline,
+        variant_scope: 'generic'
+      });
+    }
+  })();
 
   /* ── APPLY ARCHETYPE COLOR + COPY ────────────────────────────*/
   (function applyArchetype() {
