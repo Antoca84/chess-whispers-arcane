@@ -695,7 +695,7 @@
       una mossa specifica per chi sei tu.<br><br>
       Scansioni il QR. Leggi. Agisci.
     </p>
-    <a href="#pricing" class="hero-cta">Scegli il tuo piano</a>
+    <a href="#pricing" class="hero-cta" id="hero-cta">Scegli il tuo piano</a>
   </section>
 
   <!-- ================================================
@@ -1000,11 +1000,70 @@
       document.getElementById('card-annual').classList.remove('featured');
     }
     document.getElementById(cardId).classList.add('active-plan');
+    if (planParam === 'founder' && typeof gtag === 'function') {
+      gtag('event', 'subscribe_founder_selected', {
+        event_category: 'conversion',
+        headline_index: currentDefaultHeadlineIndex,
+        headline_text: currentDefaultHeadline,
+        variant_scope: archetipo ? 'archetype' : 'generic',
+        archetipo: archetipo || 'generic',
+        source: 'url_param'
+      });
+    }
 
     // Scorri la sezione prezzi dopo un attimo
     setTimeout(function() {
       document.getElementById('prezzi').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 600);
+  })();
+
+  (function bindHeadlinePerformanceTracking() {
+    var heroCta = document.getElementById('hero-cta');
+    if (heroCta) {
+      heroCta.addEventListener('click', function() {
+        if (typeof gtag === 'function') {
+          gtag('event', 'subscribe_pricing_cta_clicked', {
+            event_category: 'conversion',
+            cta_position: 'hero',
+            headline_index: currentDefaultHeadlineIndex,
+            headline_text: currentDefaultHeadline,
+            variant_scope: archetipo ? 'archetype' : 'generic',
+            archetipo: archetipo || 'generic'
+          });
+        }
+      });
+    }
+
+    var finalCta = document.getElementById('link-final');
+    if (finalCta) {
+      finalCta.addEventListener('click', function() {
+        if (typeof gtag === 'function') {
+          gtag('event', 'subscribe_pricing_cta_clicked', {
+            event_category: 'conversion',
+            cta_position: 'final',
+            headline_index: currentDefaultHeadlineIndex,
+            headline_text: currentDefaultHeadline,
+            variant_scope: archetipo ? 'archetype' : 'generic',
+            archetipo: archetipo || 'generic'
+          });
+        }
+      });
+    }
+
+    var founderLink = document.getElementById('link-founder');
+    if (founderLink) {
+      founderLink.addEventListener('click', function() {
+        if (typeof gtag === 'function') {
+          gtag('event', 'subscribe_founder_clicked', {
+            event_category: 'conversion',
+            headline_index: currentDefaultHeadlineIndex,
+            headline_text: currentDefaultHeadline,
+            variant_scope: archetipo ? 'archetype' : 'generic',
+            archetipo: archetipo || 'generic'
+          });
+        }
+      });
+    }
   })();
 
   /* ── FAQ ACCORDION ────────────────────────────────────────────*/
