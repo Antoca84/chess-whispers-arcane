@@ -1,0 +1,1009 @@
+/* ===========================================
+   SCACCHI MENTALI - CSS DESIGN SYSTEM
+   Stile misterioso ispirato a Queen's Gambit
+   =========================================== */
+
+/* CSS Custom Properties - Archetipi Colors */
+:root {
+    --color-background: #0d0d0d;
+    --color-surface: #1c1c1c;
+    --color-text-primary: #f8f9fa;
+    --color-text-secondary: #b8bcc0;
+    
+    /* Archetipi Colors */
+    --color-re: #FFD700;        /* Oro */
+    --color-regina: #8A2BE2;    /* Viola regale */
+    --color-torre: #32CD32;     /* Verde visione */
+    --color-alfiere: #FF4500;   /* Rosso potenza */
+    --color-cavallo: #00CED1;   /* Turchese */
+    --color-pedone: #DC143C;    /* Cremisi */
+    
+    /* Gradients */
+    --gradient-cta: linear-gradient(135deg, #FFD700, #FF8C00, #FF4500);
+    --gradient-card: linear-gradient(145deg, #1c1c1c, #2a2a2a);
+    
+    /* Shadows */
+    --shadow-deep: 0 20px 40px rgba(0, 0, 0, 0.8);
+    --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.6);
+    --shadow-glow: 0 0 20px rgba(255, 215, 0, 0.3);
+    
+    /* Extended Shadows */
+    --shadow-glow-strong: 0 0 40px rgba(255, 215, 0, 0.5);
+
+    /* Extended Gradients */
+    --gradient-hero: radial-gradient(circle at center, #1a1a1a 0%, #0d0d0d 100%);
+    --gradient-glow: radial-gradient(circle, rgba(255, 215, 0, 0.10) 0%, transparent 65%);
+
+    /* Text Muted */
+    --color-text-3: #6b7280;
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-glow: all 0.4s ease;
+}
+
+/* Reset e Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Animazioni */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes glow {
+    0%, 100% {
+        box-shadow: var(--shadow-card);
+    }
+    50% {
+        box-shadow: var(--shadow-card), var(--shadow-glow);
+    }
+}
+
+/* Header */
+.header {
+    padding: 20px 0;
+    background: var(--color-surface);
+    border-bottom: 1px solid #333;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+}
+
+.header-title {
+    font-size: clamp(1.3rem, 3.5vw, 1.8rem);
+    font-weight: 700;
+    font-family: 'Cinzel', serif;
+    color: var(--color-re);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    letter-spacing: 0.5px;
+}
+
+/* Hero Section */
+.hero {
+    padding: 130px 0 110px;
+    background: var(--gradient-hero);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Ambient gold glow — sottile, non distrae */
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    height: 70%;
+    background: var(--gradient-glow);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.hero-title {
+    font-size: clamp(1.9rem, 5vw, 3.5rem);
+    font-weight: 700;
+    font-family: 'Cinzel', serif;
+    margin-bottom: 24px;
+    background: linear-gradient(135deg, var(--color-text-primary) 40%, var(--color-re));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.15;
+    letter-spacing: 0.3px;
+}
+
+.hero-description {
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    color: var(--color-text-secondary);
+    margin-bottom: 40px;
+    font-weight: 300;
+    line-height: 1.75;
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cta-button {
+    display: inline-block;
+    background: var(--gradient-cta);
+    color: var(--color-background);
+    padding: 18px 40px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-deep);
+    border: none;
+    cursor: pointer;
+    text-transform: none;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+    transition: left 0.5s ease;
+}
+
+/* Shimmer automatico ogni 4s quando non in hover */
+.cta-button.pulse-on-load::before {
+    animation: shimmerAuto 4s ease-in-out 1s infinite;
+}
+
+.cta-button:hover::before {
+    left: 100%;
+    animation: none;
+}
+
+.cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-deep), 0 0 35px rgba(255, 215, 0, 0.5);
+}
+
+/* Archetipi Section */
+.archetipi {
+    padding: 100px 0;
+    background: var(--color-background);
+}
+
+.section-title {
+    text-align: center;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 700;
+    margin-bottom: 60px;
+    color: var(--color-text-primary);
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: var(--gradient-cta);
+    border-radius: 2px;
+}
+
+.archetipi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+    margin-top: 60px;
+}
+
+.archetipo-card:hover .archetipo-icon {
+    transform: scale(1.1) rotateY(10deg);
+    text-shadow: 0 0 30px currentColor;
+}
+
+.archetipo-card:hover .archetipo-name {
+    color: var(--color-re);
+}
+
+.archetipo-card.locked {
+    position: relative;
+    overflow: hidden;
+}
+
+.archetipo-card.locked::before {
+    content: '🔒';
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 1.5rem;
+    color: var(--color-text-secondary);
+    z-index: 2;
+}
+
+.archetipo-card.locked::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(1px);
+    z-index: 1;
+}
+
+.archetipo-card {
+    background: var(--gradient-card);
+    padding: 40px 30px;
+    border-radius: 20px;
+    text-align: center;
+    transition: var(--transition-smooth);
+    cursor: pointer;
+    border-top: 4px solid transparent;
+    box-shadow: var(--shadow-card);
+    animation: fadeInUp 0.6s ease-out;
+    animation-fill-mode: both;
+}
+
+/* Colori specifici per ogni archetipo */
+.archetipo-card[data-archetipo="re"] {
+    border-top-color: var(--color-re);
+}
+
+.archetipo-card[data-archetipo="regina"] {
+    border-top-color: var(--color-regina);
+}
+
+.archetipo-card[data-archetipo="torre"] {
+    border-top-color: var(--color-torre);
+}
+
+.archetipo-card[data-archetipo="alfiere"] {
+    border-top-color: var(--color-alfiere);
+}
+
+.archetipo-card[data-archetipo="cavallo"] {
+    border-top-color: var(--color-cavallo);
+}
+
+.archetipo-card[data-archetipo="pedone"] {
+    border-top-color: var(--color-pedone);
+}
+
+.archetipo-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-deep), 0 0 25px rgba(255, 215, 0, 0.2);
+}
+
+/* Hover glow specifico per archetipo */
+.archetipo-card[data-archetipo="re"]:hover {
+    box-shadow: var(--shadow-deep), 0 0 28px rgba(255, 215, 0, 0.35);
+}
+.archetipo-card[data-archetipo="regina"]:hover {
+    box-shadow: var(--shadow-deep), 0 0 28px rgba(138, 43, 226, 0.35);
+}
+.archetipo-card[data-archetipo="torre"]:hover {
+    box-shadow: var(--shadow-deep), 0 0 28px rgba(50, 205, 50, 0.35);
+}
+.archetipo-card[data-archetipo="alfiere"]:hover {
+    box-shadow: var(--shadow-deep), 0 0 28px rgba(255, 69, 0, 0.35);
+}
+.archetipo-card[data-archetipo="cavallo"]:hover {
+    box-shadow: var(--shadow-deep), 0 0 28px rgba(0, 206, 209, 0.35);
+}
+.archetipo-card[data-archetipo="pedone"]:hover {
+    box-shadow: var(--shadow-deep), 0 0 28px rgba(220, 20, 60, 0.35);
+}
+
+/* Stili per card cliccabili */
+.archetipo-card.clickable {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.archetipo-card.clickable:hover {
+    transform: translateY(-15px) scale(1.02);
+}
+
+/* Stili per card bloccate */
+.archetipo-card.locked {
+    opacity: 0.7;
+    cursor: not-allowed;
+    position: relative;
+}
+
+.archetipo-card.locked:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.archetipo-card.locked::after {
+    content: "🔒";
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 18px;
+    opacity: 0.8;
+}
+
+/* Animazione flash per il pulsante CTA */
+@keyframes flash {
+    0%, 50%, 100% { transform: scale(1); }
+    25%, 75% { transform: scale(1.05); }
+}
+
+.archetipo-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+}
+
+.archetipo-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--color-text-primary);
+}
+
+.archetipo-description {
+    color: var(--color-text-secondary);
+    font-weight: 300;
+    line-height: 1.6;
+}
+
+/* Come Funziona Section */
+.come-funziona {
+    padding: 100px 0;
+    background: var(--color-surface);
+}
+
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    margin-top: 60px;
+}
+
+.step {
+    text-align: center;
+    padding: 40px 20px;
+    animation: scaleIn 0.6s ease-out;
+    animation-fill-mode: both;
+}
+
+.step:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.step:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+.step-number {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--gradient-cta);
+    color: var(--color-background);
+    font-size: 2rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    box-shadow: var(--shadow-card);
+}
+
+.step-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--color-text-primary);
+}
+
+.step-description {
+    color: var(--color-text-secondary);
+    font-weight: 300;
+    line-height: 1.6;
+}
+
+/* Footer */
+.footer {
+    padding: 40px 0;
+    background: var(--color-background);
+    border-top: 1px solid #333;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.footer-links {
+    display: flex;
+    gap: 30px;
+}
+
+.footer-links a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-weight: 300;
+    transition: var(--transition-smooth);
+}
+
+.footer-links a:hover {
+    color: var(--color-re);
+}
+
+/* ===========================================
+   STILI PAGINE ARCHETIPI
+   =========================================== */
+
+.archetipo-subtitle {
+    font-size: 1.2rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 30px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.current-date {
+    background: var(--color-surface);
+    padding: 15px 25px;
+    border-radius: 25px;
+    display: inline-block;
+    margin-top: 20px;
+    border: 1px solid #333;
+    font-weight: 500;
+}
+
+.messaggio-quotidiano {
+    padding: 80px 0;
+    background: var(--color-background);
+}
+
+.message-card {
+    background: var(--gradient-card);
+    border-radius: 20px;
+    padding: 50px;
+    max-width: 800px;
+    margin: 0 auto;
+    box-shadow: var(--shadow-deep);
+    border-top: 4px solid var(--color-re);
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.message-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.message-header h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+.archetipo-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 15px;
+    object-fit: cover;
+    border: 2px solid var(--archetipo-color);
+    box-shadow: var(--shadow-card);
+}
+
+.daily-message {
+    font-size: 1.3rem;
+    line-height: 1.8;
+    color: var(--color-text-primary);
+    font-weight: 300;
+    text-align: justify;
+    margin-bottom: 40px;
+    position: relative;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 15px;
+    border-left: 4px solid var(--archetipo-color);
+}
+
+.daily-message::before {
+    content: '"';
+    font-size: 4rem;
+    color: var(--archetipo-color);
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    font-family: serif;
+    opacity: 0.3;
+}
+
+.message-actions {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.action-button {
+    padding: 15px 30px;
+    border: none;
+    border-radius: 50px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    min-width: 200px;
+}
+
+.action-button.primary {
+    background: var(--gradient-cta);
+    color: var(--color-background);
+    box-shadow: var(--shadow-card);
+}
+
+.action-button.secondary {
+    background: transparent;
+    color: var(--color-text-primary);
+    border: 2px solid var(--color-text-secondary);
+}
+
+.action-button:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-deep);
+}
+
+.action-button.primary:hover {
+    box-shadow: var(--shadow-deep), var(--shadow-glow);
+}
+
+.action-button.secondary:hover {
+    border-color: var(--archetipo-color);
+    color: var(--archetipo-color);
+}
+
+/* Subscription CTA nelle pagine archetipi */
+.subscription-cta {
+    padding: 80px 0;
+    background: var(--color-surface);
+    text-align: center;
+}
+
+.cta-content {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.cta-content h2 {
+    font-size: 2.2rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: var(--color-text-primary);
+}
+
+.cta-content p {
+    font-size: 1.1rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 40px;
+    font-weight: 300;
+    line-height: 1.6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    /* hero-title, hero-description, section-title usano clamp — nessun override necessario */
+
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .container {
+        padding: 0 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero {
+        padding: 70px 0 60px;
+    }
+
+    .archetipi, .come-funziona {
+        padding: 60px 0;
+    }
+    
+    .cta-button {
+        padding: 15px 30px;
+        font-size: 1rem;
+    }
+    
+    /* Responsive per pagine archetipi */
+    .message-card {
+        padding: 30px 20px;
+    }
+    
+    .daily-message {
+        font-size: 1.1rem;
+        padding: 20px;
+    }
+    
+    .message-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .action-button {
+        min-width: 250px;
+        padding: 12px 25px;
+    }
+    
+    .message-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .archetipo-image {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+/* =======================================
+   ACCESS CONTROL STYLES
+   ======================================= */
+
+/* Access Badges */
+.access-badge {
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.access-badge.private {
+    background: linear-gradient(135deg, #10B981, #059669);
+    color: white;
+    border: 1px solid #10B981;
+}
+
+.access-badge.public {
+    background: linear-gradient(135deg, #F59E0B, #D97706);
+    color: white;
+    border: 1px solid #F59E0B;
+}
+
+/* Limited Content Styling */
+.limited-content {
+    background: linear-gradient(135deg, #374151, #4B5563);
+    padding: 30px;
+    border-radius: 12px;
+    border-left: 4px solid #F59E0B;
+    font-style: italic;
+    text-align: center;
+    color: #E5E7EB;
+}
+
+/* Public CTA Section */
+.public-cta {
+    background: linear-gradient(135deg, #1F2937, #374151);
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    margin-top: 30px;
+    border: 1px solid #4B5563;
+}
+
+.public-cta h3 {
+    color: #F59E0B;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.public-cta p {
+    color: #D1D5DB;
+    margin-bottom: 20px;
+}
+
+/* Help Section */
+.help-section {
+    padding: 80px 0;
+    background: #0a0a0a;
+}
+
+.help-content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.help-content h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: 50px;
+}
+
+.help-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    margin-top: 50px;
+}
+
+.step {
+    background: linear-gradient(145deg, #1c1c1c, #242424);
+    padding: 40px 30px;
+    border-radius: 20px;
+    border: 1px solid #333;
+    transition: var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Sottile glow gold in alto alla card */
+.step::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.4), transparent);
+}
+
+.step:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-card), 0 0 20px rgba(255, 215, 0, 0.08);
+    border-color: rgba(255, 215, 0, 0.2);
+}
+
+.step-number {
+    background: var(--gradient-cta);
+    color: #0d0d0d;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.6rem;
+    margin: 0 auto 24px;
+    box-shadow: 0 4px 16px rgba(255, 165, 0, 0.35);
+}
+
+.step h3 {
+    color: var(--color-text-primary);
+    font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.step p {
+    color: var(--color-text-secondary);
+    line-height: 1.65;
+    font-weight: 300;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 30px;
+}
+
+.cta-button.secondary {
+    background: linear-gradient(135deg, #374151, #4B5563);
+    border: 1px solid #6B7280;
+}
+
+.cta-button.secondary:hover {
+    background: linear-gradient(135deg, #4B5563, #6B7280);
+    box-shadow: 0 0 30px rgba(107, 114, 128, 0.3);
+}
+
+/* Hero Stats e miglioramenti sales */
+.hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin: 30px 0;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    min-width: 120px;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.15);
+    border-color: rgba(255, 215, 0, 0.4);
+}
+
+.stat-number {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--color-re);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    margin-top: 5px;
+}
+
+.hero-urgency {
+    margin-top: 20px;
+    font-size: 1.1rem;
+    color: var(--color-torre);
+    font-weight: 600;
+    animation: pulse 2s infinite;
+}
+
+.pulse-on-load {
+    animation: pulseGlow 3s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+    0%, 100% {
+        box-shadow: var(--shadow-deep), 0 0 15px rgba(255, 215, 0, 0.25);
+    }
+    50% {
+        box-shadow: var(--shadow-deep), 0 0 35px rgba(255, 215, 0, 0.55);
+    }
+}
+
+/* Shimmer che scorre automaticamente ogni ~4s */
+@keyframes shimmerAuto {
+    0%, 60%, 100% { left: -100%; }
+    30%            { left: 100%; }
+}
+
+/* Pulse per testo urgency */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.7; }
+}
+
+/* Responsive Design Migliorato */
+@media (max-width: 768px) {
+    .hero {
+        padding: 80px 0 70px;
+    }
+
+    .archetipi-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .steps-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    /* hero-title usa clamp — nessun override necessario */
+
+    .hero-stats {
+        gap: 16px;
+        margin: 24px 0;
+    }
+
+    .stat-item {
+        min-width: 100px;
+        padding: 10px;
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+    }
+
+    .cta-button {
+        padding: 15px 30px;
+        font-size: 1rem;
+    }
+
+    .hero-urgency {
+        font-size: 0.95rem;
+        margin-top: 15px;
+    }
+}
+
+/* Accessibilità — rispetta preferenza utente per ridurre movimento */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

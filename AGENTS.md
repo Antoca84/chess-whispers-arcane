@@ -54,7 +54,7 @@ Quiz Google Form (forms.gle) → email con QR code token
     ↓
 Pagina archetipo privata (archetipi/[nome]/index.html)
     ↓
-Subscribe (subscribe/index.html) → Stripe (link reali collegati)
+Subscribe (subscribe/index.html) → Stripe (da implementare)
 ```
 
 **Logica accesso archetipi:** token via URL param → verifica Google Apps Script → localStorage.quiz_completed
@@ -88,21 +88,13 @@ Subscribe (subscribe/index.html) → Stripe (link reali collegati)
 
 ### 🔴 Critici
 - [ ] **Messaggi JSON vuoti** — logica fallback da implementare. In attesa di validare i messaggi generati da Manus prima di popolare i JSON. Non urgente: nessun iscritto attivo al momento.
+- [ ] **Stripe non collegato** — `activateSubscription()` mostra solo un `alert()`. Nessun pagamento reale possibile.
 
 ### ✅ Risolti
 - [x] **GA4 configurato** — `G-XE6BJT3222` in tutti gli HTML + evento `quiz_started` sul CTA
 - [x] **Countdown resettato** — nuova scadenza 10/04/2026
-- [x] **Stripe collegato** — link reali in `subscribe/index.html` (mensile, annuale, fondatori)
-- [x] **subscribe/index.html** — landing page di vendita completa con pricing dinamico per archetipo, paywall archetipi → subscribe, FAQ, CTA, mobile responsive
-- [x] **Paywall archetipi** — token scaduto punta a `/subscribe/?archetipo=X&plan=Y` invece che a Stripe diretto; email prefillata se disponibile
-- [x] **Template archetipo unificato** — unico `index.html` per tutti e 6 gli archetipi, rileva archetipo da URL path, CSS vars dinamiche per colore
 
 ### 🟡 Importanti
-- [ ] index2.html desktop: prima ondata particelle forma il Re anche prima della sezione archetipi — doppia ripetizione. Soluzioni: a) hero inizia con particelle non ancora in forma (chaos puro), b) il Re appare solo quando si entra nella sezione journey
-- [ ] index2.html desktop: verificare coerenza silhouette particelle con icone reali dei pezzi — attualmente basate su profili matematici approssimati
-- [ ] index2.html desktop: aumentare luminosità luce volumetrica o brightness particelle — centro troppo poco luminoso rispetto al potenziale
-- [ ] Step 2 sequenza loading: orbita lenta invece di chaos, convergenza simbolo più leggibile
-- [ ] Step 4: validare messaggi Manus e implementare logica fallback ciclica JSON
 - [ ] **Open Graph mancante** — nessuna preview su WhatsApp/Telegram/social per nessuna pagina
 - [ ] **sitemap.xml** — non presente
 - [ ] **robots.txt** — non presente
@@ -120,10 +112,6 @@ Subscribe (subscribe/index.html) → Stripe (link reali collegati)
 - [ ] Rimuovere o usare package.json React/Vite
 - [ ] Valutare upgrade font Cinzel per H1/H2 (già in design-system/MASTER.md §3)
 - [ ] Creare pagine override design-system/pages/ per homepage, archetipo, subscribe
-- [ ] index2.html desktop: profilo Re troppo semplice — migliorare silhouette (corona più dettagliata)
-- [ ] index2.html: implementare modelli GLB/GLTF per pezzi 3D reali (dopo validazione index2)
-- [ ] index2.html mobile: Idea 1 (dissoluzione al tap) e Idea 4 (respiro scroll velocity) da implementare
-- [ ] Valutare se promuovere index2.html a index.html quando matura
 
 ---
 
@@ -133,37 +121,16 @@ Subscribe (subscribe/index.html) → Stripe (link reali collegati)
 |------|-----|--------|
 | 11/03/2026 | GA4 `G-XE6BJT3222` configurato in tutti gli HTML + evento `quiz_started` | `bb3b149` |
 | 11/03/2026 | Countdown resettato al 10/04/2026 (era scaduto al 18/08/2025) | `bb3b149` |
-| 11/03/2026 | CLAUDE.md aggiunto al progetto (in .gitignore) | `4a8087c` |
+| 11/03/2026 | AGENTS.md aggiunto al progetto (in .gitignore) | `4a8087c` |
 | 11/03/2026 | SSH configurato su GitHub, push funzionante | — |
-| 11/03/2026 | .gitignore aggiornato per escludere CLAUDE.md | `5666d9d` |
+| 11/03/2026 | .gitignore aggiornato per escludere AGENTS.md | `5666d9d` |
 | 12/03/2026 | design-system/MASTER.md generato con ui-ux-pro-max | — |
-| 12/03/2026 | ui-ux-pro-max skill installata (.claude/skills/) | — |
+| 12/03/2026 | ui-ux-pro-max skill installata (.Codex/skills/) | — |
 | 12/03/2026 | design-system/ aggiunto a .gitignore | — |
-| 15/03/2026 | index2.html creata — versione sperimentale con Three.js particles | `76faeba` |
-| 15/03/2026 | Mobile: CSS particle silhouette per 6 archetipi con morph | — |
-| 15/03/2026 | Mobile: glow ambientale panel + traccia residua morph | `6b16a89` |
-| 16/03/2026 | Mobile: nearest-neighbor matching per transizioni più armoniose | `3af3fd7` |
-| 16/03/2026 | Desktop: refactor "polvere cosmica" — 18k/30k particelle, dimensioni 5× ridotte | `5cc2c3f` |
-| 16/03/2026 | Desktop: luce volumetrica (centro 2× più luminoso), DoF simulato in shader | `5cc2c3f` |
-| 16/03/2026 | Desktop: splashSystem — 1.5k/3k particelle orbitanti periferiche | `5cc2c3f` |
-| 16/03/2026 | Desktop: fix fog eccessiva (fogNear 7.2→3.0, fogFar 13.6→22.0, rimosso pow) | `fd0016d` |
-| 16/03/2026 | Desktop: splash fix — dimensioni visibili, colori 50-80% baseRGB, orbita reale, raggio corretto | `3ff337e` |
-| 16/03/2026 | archetipi/alfiere/index.html ridisegnata — particelle CSS, hero Cinzel, glass card | `fd1b2e6` |
-| 16/03/2026 | Sequenza loading Three.js con auth token — chaos → convergenza → reveal/errore | `955e7c8` |
-| 16/03/2026 | Mobile fullscreen / desktop parziale durante loading | `2224737` |
-| 16/03/2026 | Footer nascosto durante loading, fade in con contenuto | `792be6a` |
-| 22/03/2026 | subscribe/index.html creata — landing vendita con pricing dinamico per archetipo | `043267d` |
-| 22/03/2026 | Paywall archetipi collegato a /subscribe/ con ?archetipo= e ?plan= | `1edd9cb` |
-| 22/03/2026 | Link Stripe reali inseriti (mensile, annuale, fondatori) | `b4f9b10` |
-| 22/03/2026 | Testimonianza Re aggiornata con testo reale; rimossa FAQ 30 messaggi | `48827ba` |
-| 22/03/2026 | CTA finale scrolla a sezione prezzi invece di linkare Stripe | `8ca79bd` |
-| 22/03/2026 | Testo bottoni card prezzi con prezzo esplicito (€7/mese, €49/anno) | `491ed39` |
-| 22/03/2026 | Hero description con spaziatura migliorata; overflow-x bloccato su html/body | `29ea64c` |
-| 22/03/2026 | FAQ: sostituita domanda carta con "Perché non è gratis?" voce Kairos | `12b9a3a` |
 
 ---
 
-## Regole operative per Claude Code
+## Regole operative per Codex
 
 1. **Lingua:** italiano con l'utente, sempre
 2. **Non toccare** `js/auth.js` senza istruzioni esplicite — gestisce l'autenticazione
