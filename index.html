@@ -667,15 +667,15 @@
       mix-blend-mode: overlay;
     }
 
-    /* Mobile canvas — visibile ma sotto i panel del contenuto */
-    #mobile-canvas { z-index: 1; mix-blend-mode: screen; }
+    /* Mobile canvas e particles — z-index medio, visibili nel "vuoto" */
+    #mobile-canvas { z-index: 5; mix-blend-mode: screen; }
 
     /* Mobile background particles */
     #mobile-bg-particles {
       display: block;
       position: fixed;
       inset: 0;
-      z-index: 1;
+      z-index: 5;
       pointer-events: none;
       overflow: hidden;
       mix-blend-mode: screen;
@@ -693,7 +693,8 @@
     #hero {
       min-height: auto;
       padding: 90px 5% 40px;
-      background: rgba(7,7,15,0.90);
+      background: transparent;   /* sezione trasparente: particelle visibili */
+      z-index: auto;             /* nessun stacking context: figli in root context */
       flex-direction: column;
       align-items: center;
     }
@@ -707,7 +708,7 @@
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       position: relative;
-      z-index: 2;
+      z-index: 10;               /* sopra le particelle (z-5) */
       text-align: center;
     }
     .hero-body { align-items: center; }
@@ -724,13 +725,15 @@
       flex-direction: column;
       gap: 0;
       padding: 0;
+      z-index: auto;             /* nessun stacking context */
     }
 
     .arch-panel {
       height: auto;
       min-height: auto;
       padding: 28px 5% 24px;
-      background: rgba(7,7,15,0.92);
+      background: transparent;   /* trasparente: particelle visibili attorno alla card */
+      z-index: auto;             /* nessun stacking context */
       flex-direction: column;
       align-items: flex-start;
       position: relative;
@@ -758,7 +761,7 @@
     }
     .arch-panel > * {
       position: relative;
-      z-index: 1;
+      z-index: 10;               /* figli del panel sopra le particelle (z-5) */
     }
     .arch-bg-glyph { display: none; }
     .arch-card-wrap {
@@ -775,7 +778,7 @@
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       position: relative;
-      z-index: 2;
+      z-index: 10;
     }
     .arch-ordinal { font-size: 0.6rem; letter-spacing: 2px; margin-bottom: 8px; }
     .arch-glyph   { font-size: 2rem; margin-bottom: 8px; }
