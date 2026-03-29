@@ -11,6 +11,9 @@ import {
   Slide5List,
   Slide6CTA,
 } from "./slides/SlideshowNonSaiQuPezzo";
+import { S1Slide1Cover, S1Slide2Concept, S1Slide3List, S1Slide4List, S1Slide5List, S1Slide6Close } from "./slides/Slideshow1Partita";
+import { S2Slide1Cover, S2Slide2Concept, S2Slide3List, S2Slide4List, S2Slide5List, S2Slide6Close } from "./slides/Slideshow2Identita";
+import { S3Slide1Cover, S3Slide2Concept, S3Slide3List, S3Slide4List, S3Slide5List, S3Slide6Close } from "./slides/Slideshow3Paura";
 
 const SLIDE_DEFAULTS = { bgUrl: "https://images.unsplash.com/photo-1528716321680-815a8cdb8cbe?w=1080" };
 
@@ -45,6 +48,33 @@ export const RemotionRoot = () => {
           width={1080}
           height={1920}
         />
+      </Folder>
+
+      <Folder name="Slideshow-Partita">
+        <Composition id="S1Slide1Cover"   component={S1Slide1Cover}   durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S1Slide2Concept" component={S1Slide2Concept} durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S1Slide3List"    component={S1Slide3List}    durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S1Slide4List"    component={S1Slide4List}    durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S1Slide5List"    component={S1Slide5List}    durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S1Slide6Close"   component={S1Slide6Close}   durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+      </Folder>
+
+      <Folder name="Slideshow-Identita">
+        <Composition id="S2Slide1Cover"   component={S2Slide1Cover}   durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S2Slide2Concept" component={S2Slide2Concept} durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S2Slide3List"    component={S2Slide3List}    durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S2Slide4List"    component={S2Slide4List}    durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S2Slide5List"    component={S2Slide5List}    durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S2Slide6Close"   component={S2Slide6Close}   durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+      </Folder>
+
+      <Folder name="Slideshow-Paura">
+        <Composition id="S3Slide1Cover"   component={S3Slide1Cover}   durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S3Slide2Concept" component={S3Slide2Concept} durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S3Slide3List"    component={S3Slide3List}    durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S3Slide4List"    component={S3Slide4List}    durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S3Slide5List"    component={S3Slide5List}    durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S3Slide6Close"   component={S3Slide6Close}   durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
       </Folder>
 
       <Folder name="Slideshow-NonSaiQualePezzo">
