@@ -667,17 +667,18 @@
       mix-blend-mode: overlay;
     }
 
-    /* Mobile canvas — sotto il contenuto (override z-index globale) */
-    #mobile-canvas { z-index: 0; mix-blend-mode: normal; }
+    /* Mobile canvas — visibile ma sotto i panel del contenuto */
+    #mobile-canvas { z-index: 1; mix-blend-mode: screen; }
 
-    /* Mobile background particles — sotto il contenuto */
+    /* Mobile background particles */
     #mobile-bg-particles {
       display: block;
       position: fixed;
       inset: 0;
-      z-index: 0;
+      z-index: 1;
       pointer-events: none;
       overflow: hidden;
+      mix-blend-mode: screen;
     }
     #mobile-bg-particles span {
       position: absolute;
@@ -699,13 +700,14 @@
     .hero-inner {
       max-width: 100%;
       padding-top: 0;
-      background: rgba(7,7,15,0.82);
+      background: rgba(7,7,15,0.92);
       border: 1px solid rgba(255,215,0,0.10);
       border-radius: 4px;
       padding: 22px 18px 20px;
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      isolation: isolate;
+      position: relative;
+      z-index: 2;
       text-align: center;
     }
     .hero-body { align-items: center; }
@@ -768,10 +770,12 @@
     .arch-card-inner {
       padding: 22px 18px 20px;
       border-radius: 4px;
-      background: rgba(7,7,15,0.72);
+      background: rgba(7,7,15,0.92);
       border: 1px solid rgba(255,215,0,0.10);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
+      position: relative;
+      z-index: 2;
     }
     .arch-ordinal { font-size: 0.6rem; letter-spacing: 2px; margin-bottom: 8px; }
     .arch-glyph   { font-size: 2rem; margin-bottom: 8px; }
