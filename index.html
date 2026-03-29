@@ -697,17 +697,19 @@
     .hero-inner {
       max-width: 100%;
       padding-top: 0;
-      background: rgba(7,7,15,0.65);
+      background: rgba(7,7,15,0.82);
       border: 1px solid rgba(255,215,0,0.10);
       border-radius: 4px;
       padding: 22px 18px 20px;
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
+      isolation: isolate;
     }
     .hero-sub { max-width: 100%; font-size: 0.92rem; display: none; }
     .hero-sub-m { display: block; }
     .hero-h1 { font-size: clamp(1.55rem, 7vw, 2.2rem) !important; }
     .scroll-cue { display: none; }
+    .cta-glass { text-align: center; font-weight: 700; display: flex; justify-content: center; }
 
     /* Journey — compatto, zero gap tra schede */
     #journey {
@@ -782,8 +784,8 @@
 
   @keyframes mbgDrift {
     0%   { opacity: 0;    transform: translate(0, 0); }
-    15%  { opacity: 0.55; }
-    80%  { opacity: 0.38; }
+    15%  { opacity: 0.22; }
+    80%  { opacity: 0.14; }
     100% { opacity: 0;    transform: translate(12px, -40px); }
   }
 
@@ -825,7 +827,7 @@
       <a href="https://antoca84.github.io/chess-whispers-arcane/quiz.html" target="_blank"
          class="cta-glass"
          onclick="gtag('event','quiz_started',{event_category:'conversion'})">
-        Scopri il Tuo Archetipo — Gratuito
+        Scopri il Tuo Archetipo
       </a>
     </div>
     <div class="hero-stats">
