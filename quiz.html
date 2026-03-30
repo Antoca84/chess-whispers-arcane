@@ -463,9 +463,10 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   <!-- EMAIL CAPTURE — obbligatorio per ottenere il QR -->
   <div class="capture-box" id="capture-box">
     <!-- Banner fondatori — rimuovi dopo 30 giorni -->
-    <div class="founder-banner" id="founder-banner">
+    <div class="founder-banner fondatori-offer-block" id="founder-banner">
       <div class="founder-badge">Offerta Fondatori</div>
       <div class="founder-text">Entri ora. Paghi meno per sempre.</div>
+      <span class="fondatori-timer" style="font-size:0.8em; opacity:0.85; display:block; margin-top:4px;"></span>
     </div>
     <div class="capture-title" id="capture-title">Hai visto il simbolo. Ora sblocca il profilo completo.</div>
     <div class="capture-sub">Ricevi il tuo QR personale: una scansione al giorno,<br>un messaggio diverso ogni volta.</div>
@@ -497,11 +498,12 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       </label>
       <label class="plan-opt">
         <input type="radio" name="plan" value="founder" checked>
-        <div class="plan-card plan-founder" id="plan-founder-card">
+        <div class="plan-card plan-founder fondatori-offer-block" id="plan-founder-card">
           <div class="plan-badge plan-badge-founder" id="plan-founder-badge">Fondatori</div>
           <div class="plan-name">Per sempre</div>
           <div class="plan-price">€39,00<span>/anno</span></div>
           <div class="plan-trial">7 giorni gratuiti · bloccato</div>
+          <div class="fondatori-timer" style="font-size:0.75em; margin-top:4px;"></div>
         </div>
       </label>
     </div>
@@ -1189,5 +1191,8 @@ async function submitEmail(){
   }
 }
 </script>
+
+  <script src="/components/fondatori-timer.js"></script>
+  <script>initFondatoriTimer();</script>
 </body>
 </html>
