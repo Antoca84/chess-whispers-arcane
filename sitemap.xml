@@ -2,26 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://scacchimentali.it/</loc>
+    <lastmod>2026-03-30</lastmod>
+    <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://scacchimentali.it/subscribe/</loc>
-  </url>
-  <url>
-    <loc>https://scacchimentali.it/archetipi/re/</loc>
-  </url>
-  <url>
-    <loc>https://scacchimentali.it/archetipi/regina/</loc>
-  </url>
-  <url>
-    <loc>https://scacchimentali.it/archetipi/torre/</loc>
-  </url>
-  <url>
-    <loc>https://scacchimentali.it/archetipi/alfiere/</loc>
-  </url>
-  <url>
-    <loc>https://scacchimentali.it/archetipi/cavallo/</loc>
-  </url>
-  <url>
-    <loc>https://scacchimentali.it/archetipi/pedone/</loc>
+    <loc>https://scacchimentali.it/quiz.html</loc>
+    <lastmod>2026-03-30</lastmod>
+    <priority>0.9</priority>
   </url>
 </urlset>
