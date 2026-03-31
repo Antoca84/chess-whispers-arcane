@@ -14,6 +14,7 @@ import {
 import { S1Slide1Cover, S1Slide2Concept, S1Slide3List, S1Slide4List, S1Slide5List, S1Slide6Close } from "./slides/Slideshow1Partita";
 import { S2Slide1Cover, S2Slide2Concept, S2Slide3List, S2Slide4List, S2Slide5List, S2Slide6Close } from "./slides/Slideshow2Identita";
 import { S3Slide1Cover, S3Slide2Concept, S3Slide3List, S3Slide4List, S3Slide5List, S3Slide6Close } from "./slides/Slideshow3Paura";
+import { S4Slide1Cover, S4Slide2Concept, S4Slide3List, S4Slide4List, S4Slide5List, S4Slide6CTA } from "./slides/Slideshow4Mosse";
 
 const SLIDE_DEFAULTS = { bgUrl: "https://images.unsplash.com/photo-1528716321680-815a8cdb8cbe?w=1080" };
 
@@ -75,6 +76,15 @@ export const RemotionRoot = () => {
         <Composition id="S3Slide4List"    component={S3Slide4List}    durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
         <Composition id="S3Slide5List"    component={S3Slide5List}    durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
         <Composition id="S3Slide6Close"   component={S3Slide6Close}   durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+      </Folder>
+
+      <Folder name="Slideshow-Mosse">
+        <Composition id="S4Slide1Cover"   component={S4Slide1Cover}   durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S4Slide2Concept" component={S4Slide2Concept} durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S4Slide3List"    component={S4Slide3List}    durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S4Slide4List"    component={S4Slide4List}    durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S4Slide5List"    component={S4Slide5List}    durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S4Slide6CTA"     component={S4Slide6CTA}     durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
       </Folder>
 
       <Folder name="Slideshow-NonSaiQualePezzo">
