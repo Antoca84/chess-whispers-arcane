@@ -17,15 +17,15 @@ import { SlideStill } from "./SlideStill";
 
 type BgProps = { bgUrl: string };
 
-// ── SLIDE 1 — COVER ──────────────────────────────────────────────
+// ── SLIDE 1 — COVER HERO ─────────────────────────────────────────
 export const S4Slide1Cover = ({ bgUrl }: BgProps) => (
   <SlideStill
     bgUrl={bgUrl}
-    type="cover"
-    overlayOpacity={0.44}
-    mainText={"4 mosse che fai\nogni giorno.."}
-    accentWords={["4"]}
-    subText={"E ti tengono\nfermo."}
+    type="cover-hero"
+    overlayOpacity={0.35}
+    heroNumber="4"
+    mainText={"mosse che fai\nogni giorno.."}
+    subText={"E ti tengono fermo."}
   />
 );
 

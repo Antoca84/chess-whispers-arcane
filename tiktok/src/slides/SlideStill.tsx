@@ -22,7 +22,7 @@ export type SlideStillProps = {
   /** Opacità overlay scuro sopra l'immagine (0–1) */
   overlayOpacity?: number;
   /** Tipo di slide — cambia layout e dimensioni testo */
-  type: "cover" | "concept" | "list" | "cta";
+  type: "cover" | "cover-hero" | "concept" | "list" | "cta";
   /** Testo principale grande (cover/cta: headline, list: item) */
   mainText: string;
   /** Parole da evidenziare in arancio (esatta corrispondenza substring) */
@@ -31,6 +31,8 @@ export type SlideStillProps = {
   subText?: string;
   /** Numero progressivo per le slide lista ("1.", "2.", "3.") */
   listNumber?: string;
+  /** cover-hero: numero/percentuale gigante che domina la slide (es. "4", "3%") */
+  heroNumber?: string;
 };
 
 const ORANGE = "#FF6600";
@@ -59,9 +61,11 @@ export const SlideStill = ({
   accentWords = [],
   subText,
   listNumber,
+  heroNumber,
 }: SlideStillProps) => {
 
   const isCover = type === "cover";
+  const isCoverHero = type === "cover-hero";
   const isList = type === "list";
   const isCta = type === "cta";
   const isConcept = type === "concept";
@@ -123,6 +127,69 @@ export const SlideStill = ({
               {subText}
             </p>
           )}
+        </AbsoluteFill>
+      )}
+
+      {/* ── COVER-HERO ── numero gigante in alto + titolo + sottotitolo in basso */}
+      {isCoverHero && (
+        <AbsoluteFill
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: `${SAFE.TOP + 60}px ${SAFE.SIDE}px ${SAFE.BOTTOM + 100}px`,
+          }}
+        >
+          {/* Numero/percentuale hero — occupa metà schermo */}
+          {heroNumber && (
+            <p style={{
+              fontSize: 380,
+              fontWeight: 900,
+              color: WHITE,
+              textTransform: "uppercase",
+              textAlign: "center",
+              lineHeight: 0.9,
+              letterSpacing: -8,
+              margin: 0,
+              opacity: 0.92,
+              textShadow: `0 0 120px rgba(255,102,0,0.5), 0 8px 40px rgba(0,0,0,0.8)`,
+            }}>
+              <span style={{ color: ORANGE }}>{heroNumber}</span>
+            </p>
+          )}
+
+          {/* Testo inferiore */}
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 20 }}>
+            <p style={{
+              fontSize: 72,
+              fontWeight: 900,
+              color: WHITE,
+              textTransform: "uppercase",
+              textAlign: "center",
+              lineHeight: 1.1,
+              letterSpacing: 2,
+              margin: 0,
+            }}>
+              {renderWithAccent(mainText, accentWords)}
+            </p>
+            {subText && (
+              <p style={{
+                fontSize: 50,
+                fontWeight: 600,
+                color: WHITE,
+                fontStyle: "italic",
+                textTransform: "uppercase",
+                textAlign: "center",
+                lineHeight: 1.2,
+                letterSpacing: 3,
+                margin: 0,
+                opacity: 0.85,
+              }}>
+                {subText}
+              </p>
+            )}
+          </div>
         </AbsoluteFill>
       )}
 
