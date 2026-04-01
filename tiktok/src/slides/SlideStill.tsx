@@ -298,7 +298,7 @@ export const SlideStill = ({
           flexDirection: "column",
           justifyContent: "flex-end",
           alignItems: "center",
-          paddingBottom: SAFE.BOTTOM - 20,
+          paddingBottom: SAFE.BOTTOM + 120,
         }}
       >
         <p style={{
