@@ -139,7 +139,7 @@ export const SlideStill = ({
             flexDirection: "column",
             justifyContent: "space-between",
             alignItems: "center",
-            padding: `${SAFE.TOP + 240}px ${SAFE.SIDE}px ${SAFE.BOTTOM + 100}px`,
+            padding: `${SAFE.TOP + 240}px ${SAFE.SIDE}px ${SAFE.BOTTOM + 220}px`,
           }}
         >
           {/* Numero/percentuale hero — occupa metà schermo */}
