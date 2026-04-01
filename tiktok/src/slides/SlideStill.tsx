@@ -94,8 +94,9 @@ export const SlideStill = ({
             flexDirection: "column",
             justifyContent: "flex-end",
             alignItems: "center",
-            padding: `${SAFE.TOP}px ${SAFE.SIDE}px ${SAFE.BOTTOM + 220}px`,
+            padding: `${SAFE.TOP}px ${SAFE.SIDE}px`,
             gap: 0,
+            justifyContent: "center",
           }}
         >
           <p style={{
@@ -138,7 +139,7 @@ export const SlideStill = ({
             flexDirection: "column",
             justifyContent: "space-between",
             alignItems: "center",
-            padding: `${SAFE.TOP + 160}px ${SAFE.SIDE}px ${SAFE.BOTTOM + 100}px`,
+            padding: `${SAFE.TOP + 240}px ${SAFE.SIDE}px ${SAFE.BOTTOM + 100}px`,
           }}
         >
           {/* Numero/percentuale hero — occupa metà schermo */}
