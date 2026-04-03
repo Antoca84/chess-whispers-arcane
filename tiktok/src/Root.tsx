@@ -17,6 +17,7 @@ import { S3Slide1Cover, S3Slide2Concept, S3Slide3List, S3Slide4List, S3Slide5Lis
 import { S4Slide1Cover, S4Slide2Concept, S4Slide3List, S4Slide4List, S4Slide5List, S4Slide6CTA } from "./slides/Slideshow4Mosse";
 import { S5Slide1Cover, S5Slide2Concept, S5Slide3List, S5Slide4List, S5Slide5List, S5Slide6CTA } from "./slides/Slideshow5Segnali";
 import { S6Slide1Cover, S6Slide2Concept, S6Slide3List, S6Slide4List, S6Slide5List, S6Slide6CTA } from "./slides/Slideshow6Tipi";
+import { S7Slide1Cover, S7Slide2Concept, S7Slide3List, S7Slide4List, S7Slide5List, S7Slide6List, S7Slide7CTA } from "./slides/Slideshow7Smettila";
 
 const SLIDE_DEFAULTS = { bgUrl: "https://images.unsplash.com/photo-1528716321680-815a8cdb8cbe?w=1080" };
 
@@ -78,6 +79,16 @@ export const RemotionRoot = () => {
         <Composition id="S3Slide4List"    component={S3Slide4List}    durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
         <Composition id="S3Slide5List"    component={S3Slide5List}    durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
         <Composition id="S3Slide6Close"   component={S3Slide6Close}   durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+      </Folder>
+
+      <Folder name="Slideshow-Smettila">
+        <Composition id="S7Slide1Cover"   component={S7Slide1Cover}   durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S7Slide2Concept" component={S7Slide2Concept} durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S7Slide3List"    component={S7Slide3List}    durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S7Slide4List"    component={S7Slide4List}    durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S7Slide5List"    component={S7Slide5List}    durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S7Slide6List"    component={S7Slide6List}    durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S7Slide7CTA"     component={S7Slide7CTA}     durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
       </Folder>
 
       <Folder name="Slideshow-Tipi">
