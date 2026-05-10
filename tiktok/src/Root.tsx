@@ -21,6 +21,8 @@ import { S7Slide1Cover, S7Slide2Concept, S7Slide3List, S7Slide4List, S7Slide5Lis
 import { S8Slide1Cover, S8Slide2Concept, S8Slide3List, S8Slide4List, S8Slide5List, S8Slide6CTA } from "./slides/Slideshow8Pasqua";
 import { S9Slide1Cover, S9Slide2Concept, S9Slide3List, S9Slide4List, S9Slide5List, S9Slide6List, S9Slide7List, S9Slide8CTA } from "./slides/Slideshow9Intelligenti";
 import { S10Slide1Cover, S10Slide2Concept, S10Slide3List, S10Slide4List, S10Slide5CTA } from "./slides/Slideshow10Torre";
+import { S11Slide1Cover, S11Slide2Concept, S11Slide3List, S11Slide4List, S11Slide5CTA } from "./slides/Slideshow11Pedone";
+import { S12Slide1Cover, S12Slide2Concept, S12Slide3List, S12Slide4List, S12Slide5CTA } from "./slides/Slideshow12Cavallo";
 
 const SLIDE_DEFAULTS = { bgUrl: "https://images.unsplash.com/photo-1528716321680-815a8cdb8cbe?w=1080" };
 
@@ -139,6 +141,22 @@ export const RemotionRoot = () => {
         <Composition id="S4Slide4List"    component={S4Slide4List}    durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
         <Composition id="S4Slide5List"    component={S4Slide5List}    durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
         <Composition id="S4Slide6CTA"     component={S4Slide6CTA}     durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+      </Folder>
+
+      <Folder name="Slideshow-Pedone">
+        <Composition id="S11Slide1Cover"   component={S11Slide1Cover}   durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S11Slide2Concept" component={S11Slide2Concept} durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S11Slide3List"    component={S11Slide3List}    durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S11Slide4List"    component={S11Slide4List}    durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S11Slide5CTA"     component={S11Slide5CTA}     durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+      </Folder>
+
+      <Folder name="Slideshow-Cavallo">
+        <Composition id="S12Slide1Cover"   component={S12Slide1Cover}   durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S12Slide2Concept" component={S12Slide2Concept} durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S12Slide3List"    component={S12Slide3List}    durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S12Slide4List"    component={S12Slide4List}    durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
+        <Composition id="S12Slide5CTA"     component={S12Slide5CTA}     durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={SLIDE_DEFAULTS} />
       </Folder>
 
       <Folder name="Slideshow-Torre">
